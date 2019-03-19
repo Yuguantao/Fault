@@ -1,0 +1,52 @@
+.head{
+    width: 100%; 
+    height: 66px; 
+    border-bottom: 5px solid #4A6471; 
+    /* background: url(../../src/assets/h_bac.png) top left no-repeat; */
+}
+.head .nav{width: 100%; height: 61px; line-height: 61px;}
+.nav .logo{margin-left:24px; margin-right: 16px;}
+.nav .logo img{vertical-align: top;}
+.search{margin: 0 auto; width: 500px; height: 38px; box-sizing:border-box; position: relative; border-radius: 4px; border: 1px solid #f0f0f0; margin-top: 13px; margin-left:40px;}
+.search .searchInput{width: 100%; height: 38px; padding-right: 90px; line-height: 38px; font-size: 14px; color: #323232; border: none; text-indent: 10px; border-radius: 4px; position: absolute; left: 0; top: 0; z-index: 5;}
+.search .record{z-index: 6; width: 20px; height: 40px; line-height: 40px; position: absolute; right: 114px; top:0; cursor: pointer;}
+.search .record img{width: 18px; height: 24px; vertical-align: middle;}
+.search .sBtn{z-index: 6; position: absolute; top: 1px; right: 1px; width: 80px; height: 36px; line-height: 36px; background-color: #28a3f4; color: #fff; font-size: 16px; text-align: center; border-radius: 4px; cursor: pointer;}
+.dropBox{display: none; position: absolute; width: 582px; min-height: 44px; box-sizing: border-box; border-bottom: 1px solid #d1d1d1; border-left: 1px solid #d1d1d1; border-right: 1px solid #d1d1d1; box-shadow: 0 2px 5px #e2e2e2; top:38px; left: -1px; background-color: #fff; padding: 10px 0;}
+.dropBox li{text-indent: 10px; line-height: 22px; cursor: pointer;}
+/*瀹歌尙娅ヨぐ锟�
+.login{float: right; font-size: 12px;}
+.login .out{cursor: pointer; color: #0077c6;}
+/* 閸愬懎顔愬锟筋瀶 */
+.content{height: auto; padding: 0 30px;}
+.content .topBox{margin: 30px 0 20px;}
+.tableModel{ border-left:1px solid #e1e1e1; border-top:1px solid #e1e1e1; border-radius:10px 10px 0 0; border-collapse:separate; font-family:'瀵邦喛钂嬮梿鍛寸拨'; color:#6c6a6b;}
+.tableModel thead{ border-radius:10px 10px 0 0;}
+.tableModel thead th ,.tableModel tbody td{ height:38px; text-align:center; border-right:1px solid #e1e1e1; border-bottom:1px solid #e1e1e1;}
+.tableModel thead th{ height:42px; background:#f0f5fb; font-size:14px; font-weight:normal; border-bottom: 0;}
+.tableModel thead th:first-child{ border-radius:10px 0 0 0;}
+.tableModel thead th:last-child{ border-radius:0 10px 0 0;}
+.detail{height: 500px; overflow: hidden; border:1px solid #e1e1e1;}
+.detail .tableModel{ border-radius:0; border-collapse: collapse;}
+.tableModel tbody td{ font-size:14px;}
+.sys .bootstrap-select.btn-group:not(.input-group-btn){margin-bottom: 0;}
+.content .sBtn{width: 80px; height: 34px; line-height: 34px; color: #fff; background-color: #28a3f4; float: left; margin-left:10px; border-radius: 4px; text-align: center; cursor: pointer;}
+.content .commit{float:left; width: 80px; border: 1px solid #28a3f4; line-height: 34px; text-align: center; border-radius: 4px; color: #28a3f4; cursor: pointer; background-color:#fff;}
+/* 閺冦儱宸荤亸蹇撴禈閺嶅洦娴涢幑銏犳禈閺嶅洤鐡ф担鎾舵畱閺嶅嘲绱￠崪灞肩瑓閹峰褰嶉崡鏇炲箵闂勩倕鐨崶鐐垼 */
+.form_datetime{ position:relative; width:160px; height: 40px;}
+.form_datetime input{width:100%; height:34px; line-height:34px; padding:0 10px; border:1px solid #ccc; box-sizing:border-box;}
+.form_datetime .add-on{	position:absolute;	right:5px;	top:10px;	width:14px;	height:14px;	}
+.form_datetime .add-on .icon-th{display:block;	width:14px;	height:14px; margin:0;}
+[class*=" datetimepicker-dropdown"]{margin:12px 0 0 6px;}
+[class*=" datetimepicker-dropdown"]::before{ right:6px; top:-7px;}
+[class*=" datetimepicker-dropdown"]::after{ right:7px; top:-6px;}
+[class^="icon-"], [class*=" icon-"] {background-image: url(../../src/assets/glyphicons-halflings.png); background-position: 14px 14px; background-repeat: no-repeat; isplay: inline-block; height: 14px; line-height: 14px; margin-top: 1px; vertical-align: text-top; width: 14px;}
+.bootstrap-select.btn-group .dropdown-menu li a:hover i.check-mark,
+.bootstrap-select.btn-group .dropdown-menu li.selected i.check-mark{background-image:url(../../src/assets/glyphicons-halflings.png);}
+.icon-arrow-left {	background-position: -240px -96px;	}
+.icon-arrow-right {	background-position: -264px -96px;	}
+.icon-ok{	background-position: -288px 0px;	}
+.form_datetime .add-on .icon-th { background-position: -240px 0;}
+.datetimepicker{ margin-left:8px;}
+.glyphicon-ok::before{ content:"";}
+/*閺冦儱宸荤紒鎾存将*/

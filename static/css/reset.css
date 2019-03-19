@@ -1,0 +1,24 @@
+@charset "utf-8";
+/* CSS Document */
+/*======== 全局 ========*/
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, p, blockquote, th, td { margin:0; padding:0; }
+body { font-size:14px; color:#323232; font-family: Microsoft YaHei; background:#fff; line-height:150%; margin: 0; padding: 0; }
+fieldset, img { border:0; }
+ol, ul { list-style:none; }
+h1, h2, h3, h4, h5, h6{ font-size:100%; font-weight: normal;}
+em { font-style:normal; }
+button, select, textarea { outline:none; } 
+textarea { resize:none; } 
+p{ text-align:justify; text-justify:distribute;} 
+a{color: #323232;}
+a:hover { text-decoration:none; }
+a:focus { outline:none; -moz-outline:none;}
+
+.clearfix:before, .clearfix:after { content: " "; display: table; }
+.clearfix:after { clear: both; }
+*, *:after, *:before { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+textarea{font-size:12px; padding:0; margin:0;}
+.fl{float: left;}
+.fr{float: right;}
+.record{display:none;}
+/* #jicai .g{overflow:hidden;overflow-x:scoll} */
