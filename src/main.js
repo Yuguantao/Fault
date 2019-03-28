@@ -5,8 +5,18 @@ import App from './App'
 import router from './router'
 import $ from 'jquery'
 import axios from 'axios'
+
+import qs from 'qs';
+Vue.prototype.$qs = qs;
+
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min'
+
+import ElementUI from 'element-ui'
+
+import 'element-ui/lib/theme-chalk/index.css'
+
+Vue.use(ElementUI)
 
 Vue.prototype.$axios = axios
 

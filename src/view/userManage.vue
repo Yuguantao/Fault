@@ -31,8 +31,8 @@
                         <input type="radio" class="iRadio" name="ccc" checked="checked"  ><label>全部</label>
                     </li>
                     <li data-userType="0"><input type="radio" class="iRadio" name="ccc" ><label>管理员</label></li>
-                    <li data-userType="1"><input type="radio" class="iRadio" name="ccc" ><label>总师级</label></li>
-                    <li data-userType="2"><input type="radio" class="iRadio" name="ccc" ><label>分系统级</label></li>
+                    <li data-userType="1"><input type="radio" class="iRadio" name="ccc" ><label>分系统级</label></li>
+                    <li data-userType="2"><input type="radio" class="iRadio" name="ccc" ><label>一般用户</label></li>
                 </ul>
                 <!-- <form class="public-search fl"> --><div class="public-search fl"><span class="octicon-search02"></span>
                     <input type="text" value="请输入用户名" class="form-control" style="padding-left:8px;" id="search_user">
@@ -44,12 +44,10 @@
             <table class="tableModel" width="100%" cellpadding="0" cellspacing="0">
                 <thead>
                     <tr>
-                        <th width="5%"><input type="checkbox" name="chk_all" ></th>
+                        <th width="10%"><input type="checkbox" name="chk_all" ></th>
                         <th width="15%">用户名</th>
                         <th width="15%">用户级别</th>
-                        <th width="20%">型号</th>
                         <th width="20%">系统</th>
-                        <th width="15%">岗位</th>
                         <th width="10%">操作</th>
                     </tr>
                 </thead>
@@ -86,56 +84,36 @@
                         <tr>
                             <td class="item">用户级别</td>
                             <td class="pl10">
-                                <select class="selectpicker" id="add_userlevel" style="display: none;">
-                                    <option value="0">管理员</option>
-                                    <option value="1">总师</option>
-                                    <option value="2">分系统</option>
-                                </select><div class="btn-group bootstrap-select dropup"><button type="button" class="btn dropdown-toggle selectpicker btn-default" data-toggle="dropdown" data-id="add_userlevel" title="管理员"><span class="filter-option pull-left">管理员</span>&nbsp;<span class="caret"></span></button><div class="dropdown-menu open" style="max-height: 170.141px; overflow: hidden; min-height: 0px;"><ul class="dropdown-menu inner selectpicker" role="menu" style="max-height: 158.141px; overflow-y: auto; min-height: 0px;"><li rel="0" class="selected"><a tabindex="0" class="" style=""><span class="text">管理员</span><i class="glyphicon glyphicon-ok icon-ok check-mark"></i></a></li><li rel="1"><a tabindex="0" class="" style=""><span class="text">总师</span><i class="glyphicon glyphicon-ok icon-ok check-mark"></i></a></li><li rel="2"><a tabindex="0" class="" style=""><span class="text">分系统</span><i class="glyphicon glyphicon-ok icon-ok check-mark"></i></a></li></ul></div></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="item">型号</td>
-                            <td class="pl10">
-                                <select class="selectpicker" id="add_model" style="display: none;">
-                                    <option value="1">设备知识库</option>
-                                </select>
-                                <div class="btn-group bootstrap-select">
-                                    <button type="button" class="btn dropdown-toggle selectpicker btn-default" data-toggle="dropdown" data-id="add_model" title="CZ-5"><span class="filter-option pull-left">设备知识库</span>&nbsp;<span class="caret"></span></button>
-                                    <div class="dropdown-menu open"><ul class="dropdown-menu inner selectpicker" role="menu"><li rel="0" class="selected"><a tabindex="0" class="" style=""><span class="text">设备知识库</span><i class="glyphicon glyphicon-ok icon-ok check-mark"></i></a></li></ul></div></div>
+                                <el-select @change="userSelect" v-model="value" placeholder="请选择" style="width:220px">
+                                    <el-option
+                                    v-for="item in options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                    </el-option>
+                                </el-select>
                             </td>
                         </tr>
                         <tr>
                             <td class="item">系统</td>
                             <td class="pl10">
-                                <div style="width:220px;" class="sys_check" id="add_system"><div class="icheckbox_minimal-blue checked" style="position: relative;"><input type="checkbox" value="全系统" class="sys_check_One" checked="checked" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div><span>全系统</span>
-                                <div class="icheckbox_minimal-blue" style="position: relative;"><input type="checkbox" value="动力系统" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div><span>光电经纬仪</span>
-                                <div class="icheckbox_minimal-blue" style="position: relative;"><input type="checkbox" value="测量系统" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div><span>雷达系统</span>
-                                <div class="icheckbox_minimal-blue" style="position: relative;"><input type="checkbox" value="动力利用系统" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div><span>遥测系统</span>
-                                </div>
-                                <!-- <select class="selectpicker" id="add_system">
-                                    <option value="1">全系统</option>
-                                    <option value="2">动力系统</option>
-                                    <option value="3">测量系统</option>
-                                    <option value="4">动力利用系统</option>
-                                    <option value="5">加注系统</option>
-                                </select> -->
+                                <el-checkbox-group 
+                                    v-model="checkedSystem" @change="selectSystem">
+                                    <el-checkbox v-for="(system,index) in cities"  :label="system" :key="index">{{system}}</el-checkbox>
+                                </el-checkbox-group>
                             </td>
                         </tr>
                         <tr>
-                            <td class="item">岗位</td>
+                            <td class="item">备注信息</td>
                             <td class="pl10">
-                                <select class="selectpicker" id="add_post" style="display: none;">
-                                    <option value="1">总师</option>
-                                    <option value="2">总指挥</option>
-                                    <option value="3">一岗</option>
-                                    <option value="4">二岗</option>
-                                </select><div class="btn-group bootstrap-select"><button type="button" class="btn dropdown-toggle selectpicker btn-default" data-toggle="dropdown" data-id="add_post" title="总师"><span class="filter-option pull-left">总师</span>&nbsp;<span class="caret"></span></button><div class="dropdown-menu open"><ul class="dropdown-menu inner selectpicker" role="menu"><li rel="0" class="selected"><a tabindex="0" class="" style=""><span class="text">总师</span><i class="glyphicon glyphicon-ok icon-ok check-mark"></i></a></li><li rel="1"><a tabindex="0" class="" style=""><span class="text">总指挥</span><i class="glyphicon glyphicon-ok icon-ok check-mark"></i></a></li><li rel="2"><a tabindex="0" class="" style=""><span class="text">一岗</span><i class="glyphicon glyphicon-ok icon-ok check-mark"></i></a></li><li rel="3"><a tabindex="0" class="" style=""><span class="text">二岗</span><i class="glyphicon glyphicon-ok icon-ok check-mark"></i></a></li></ul></div></div>
+                                <input class="form-control" type="text" id="detailMessage">
                             </td>
+										
                         </tr>
                     </tbody></table>
                 </div>
                 <div class="modal-footer" style="text-align:center;">
-                    <button type="button" class="btn btn-primary" id="newUser_add">确认</button>
+                    <button type="button" class="btn btn-primary" id="newUser_add" @click="addNewUser">确认</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
                 </div>
@@ -147,12 +125,27 @@
 </template>
 
 <script>
-
+const cityOptions = ['光电经纬仪', '雷电系统', '遥测系统'];
 export default {
     name:"search",
     data (){
         return{
-            userName:""
+            userName:"",
+            userPermission:"",
+            checkedSystem: [],
+            cities: cityOptions,
+            systemArr:[],
+            options: [{
+                    value: '0',
+                    label: '管理员'
+                }, {
+                    value: '1',
+                    label: '分系统用户'
+                }, {
+                    value: '2',
+                    label: '一般用户'
+                }],
+            value: ''
         }
     },
     mounted(){
@@ -162,12 +155,15 @@ export default {
         setUserName(){
             var self = this;
             self.userName = sessionStorage.getItem("user");
+            self.acc_permission = sessionStorage.getItem("acc_permission");
             if(self.userName){
                 $(".headRight").hide();
                 $("#user").text(self.userName)
-                if(self.userName == "游客用户"){
+                if(self.acc_permission == "2"){
                     $(".visitor a").css("background-color","#999")
                     $(".visitor a").attr("disabled",true).css("pointer-events","none");
+                    $("#useSet").hide()
+                }else if(self.acc_permission == "1"){
                     $("#useSet").hide()
                 }
             }else{
@@ -179,6 +175,44 @@ export default {
         exitUser(){
             this.$router.push({ path: '/login' });
             sessionStorage.removeItem("user")
+        },
+        addNewUser(){
+            var self = this;
+            let userName = $("#add_user").val()
+            let password = $("#add_password").val()
+            let detailMessage = $("#detailMessage").val()
+
+            var param = {
+                    "msg": {
+                        "acc_id":userName,
+                        "acc_pwd":password,
+                        "acc_permission":this.userPermission[0]?this.userPermission[0]:"",
+                        "acc_system":this.systemArr[0],
+                        "acc_remarks":detailMessage
+                    }
+                }
+
+            this.$axios.post('FaultDBManage/adduser/',param                   
+            ).then(function(response){
+                if(response.data.stu == 200){
+                    
+                }else{
+                    alert("用户名密码错误！")
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+        },
+        userSelect(vId){
+            let obj = {};
+            obj = this.options.find((item)=>{
+                return item.value === vId;//
+            });
+            this.userPermission = obj.value
+        },
+        selectSystem(){
+            this.systemArr = []
+            this.systemArr.push(this.checkedSystem)
         }
     }
 }
@@ -242,6 +276,9 @@ export default {
     }
     .modal-body{
         padding: 15px;
+    }
+    .el-input__inner{
+        border-color: #ced4da;
     }
 </style>
 

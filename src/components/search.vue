@@ -30,15 +30,16 @@
                 </div>
             </div>
             <ul class="fl parList">
-                <li class="second getHair">
+                <!-- <li class="second getHair">
                     <span class="fl">系统：</span>
                     <select class="fl">
                         <option value="">设备知识库</option>
                     </select>
-                </li>
+                </li> -->
                 <li class="third testType">
                     <span class="fl">设备：</span>
                     <select class="fl">
+                        <option value="">-请选择-</option>
                         <option value="">光电经纬仪</option>
                         <option value="">雷达系统</option>
                         <option value="">遥测系统</option>
@@ -47,6 +48,7 @@
                 <li class="third testPhase">
                     <span class="fl">型号：</span>
                     <select class="fl">
+                        <option value="">-请选择-</option>
                         <option value="">GD220-Ⅱ</option>
                         <option value="">GD220-Ⅲ</option>
                         <option value="">GDL-5T</option>
@@ -57,6 +59,7 @@
                 <li class="four testPhase">
                     <span class="fl">位置：</span>
                     <select class="fl">
+                        <option value="">-请选择-</option>
                         <option value="">1#</option>
                         <option value="">2#</option>
                     </select>
@@ -66,26 +69,31 @@
             <span class="sBtn" id="sureBtn">查询</span>
             <table class="tableModel" width="100%" cellpadding="0" cellspacing="0">
                 <thead>
-                    <tr>
-                        <th width="10%">故障时间</th>
-                        <th width="10%">故障描述</th>
-                        <th width="10%">故障模式</th>
-                        <th width="10%">故障原因</th>
-                        <th width="10%">故障影响</th>
-                        <th width="10%">检测方法</th>
-                        <th width="10%">排除措施</th>
-                        <th width="10%">改进意见</th>
-                        <th width="10%">人员信息</th>
-                        <th width="10%">备注</th>
+                    <tr style="text-align: center;">
+                        <th width="20%">故障时间</th>
+                        <th width="20%">故障模式</th>
+                        <th width="20%">故障原因</th>
+                        
+                        <th width="20%">人员信息</th>
+                        <th width="20%">操作</th>
                     </tr>
                 </thead>
             </table>
+            
             <div class="detail">
-                <span class="noData1">暂无数据</span>
-                <table class="tableModel" width="100%" cellpadding="0" cellspacing="0">
-                    <tbody id="voiceHtml">
-                    </tbody>
-                </table>
+                <!-- <span class="noData1">暂无数据</span> -->
+                <el-table :data="tableData" border  >
+                    <el-table-column fixed prop="date" width="220" align="center"></el-table-column>
+                    <el-table-column prop="name" width="220" align="center"></el-table-column>
+                    <el-table-column prop="province" width="220" align="center"></el-table-column>
+                    <el-table-column prop="city" width="220" align="center"></el-table-column>
+                    <el-table-column fixed="right" width="180" align="center">
+                        <template>
+                            <el-button type="text" size="small">删除</el-button>
+                            <el-button type="text" size="small">编辑</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
             </div>
             
 	</div>
@@ -100,7 +108,28 @@ export default {
     name:"search",
     data (){
         return{
-            userName:""
+            userName:"",
+            tableData: [{
+                date: '2018-07-20 10:00:00',
+                name: '运动或动力故障型',
+                province: '材质因素',
+                city: '张三',
+            }, {
+                date: '2018-07-20 10:00:00',
+                name: '运动或动力故障型',
+                province: '材质因素',
+                city: '张三',
+            }, {
+                date: '2018-07-20 10:00:00',
+                name: '运动或动力故障型',
+                province: '材质因素',
+                city: '张三',
+            }, {
+                date: '2018-07-20 10:00:00',
+                name: '运动或动力故障型',
+                province: '材质因素',
+                city: '张三',
+            }]
         }
     },
     mounted(){
@@ -198,8 +227,11 @@ export default {
         display: block;
         float: right;
     }
-.topBox{
-    margin: 50px 0 25px;
-}
+    .topBox{
+        margin: 50px 0 25px;
+    }
+    .el-table__footer-wrapper, .el-table__header-wrapper{
+        display: none !important;
+    }
 </style>
 

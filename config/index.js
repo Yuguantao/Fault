@@ -10,18 +10,18 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    // proxyTable: {
-    //   '/DataDriver':{
-    //     target:'http://127.0.0.1:8180/',
+    proxyTable: {
+      '/FaultDBManage':{
+        target:'http://192.168.34.110:8000/',
 
-    //   },
-    //   '/DataDriver/*':{
-    //     target:'http://127.0.0.1:8180/',
-    //   },
-    // },
+      },
+      '/FaultDBManage/*':{
+        target:'http://192.168.34.110:8000/',
+      },
+    },
 
     // Various Dev Server settings
-    host: '127.0.0.1', // can be overwritten by process.env.HOST
+    host: '192.168.34.120', // can be overwritten by process.env.HOST
     port: 8180, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,

@@ -1,16 +1,16 @@
 <template>
     <div class="container">
         <div class="container">
-            <form class="form-signin">
+            <div class="form-signin">
                 <label for="inputEmail" class="sr-only">Email address</label>
                 <input  id="inputEmail" class="form-control" placeholder="用户名" required autofocus>
                 <label for="inputPassword" class="sr-only">Password</label>
                 <input type="password" id="inputPassword" class="form-control" placeholder="密码" required>
                 <div class="buttonBox">
-                    <button class="btn btn-lg btn-primary btn-block" type="submit" id="loginBtn" @click="GetLoginInfo(true)">登录</button>
+                    <button class="btn btn-lg btn-primary btn-block" id="loginBtn" @click="GetLoginInfo">登录</button>
                     <!-- <button class="btn btn-lg btn-primary btn-block"  id="VisitorLogin" @click="GetLoginInfo(false)">游客登录</button> -->
                 </div>
-            </form>
+            </div>
         </div>
         
 
@@ -29,36 +29,29 @@
              
         },
         methods: {
+            GetLoginInfo(){
+                var self = this;
+                var userName = $("#inputEmail").val()
+                var password = $("#inputPassword").val()
 
-            // getSystemInfo(){
-            //     var self = this;                
-            //     self.arr = sessionStorage.getItem("jians");
-            //     self.arr1 = sessionStorage.getItem("jianx");
-            //     this.$axios.get('DataDriver/monitor/sys',{params:{
-            //             numId:this.$store.state.numId
-            //         }}                    
-            //     ).then(function(response){
-
-			//     })
-            // },
-            GetLoginInfo(index){
-                if(index){
-                    if($("#inputPassword").val() != "123"){
-                        alert("用户名密码错误")
-                    }else{
-                        sessionStorage.setItem("user",$("#inputEmail").val());
-                        //sessionStorage.setItem("password",$("#inputPassword").val());
-
-                        this.$router.push({ path: '/FaultAnalysis' }) 
-                    }
-                }else{
-                    sessionStorage.setItem("user","游客用户");
-                    //sessionStorage.setItem("password",$("#inputPassword").val());
-
-                    this.$router.push({ path: '/FaultAnalysis' }) 
+                var param = {
+                    "msg":{
+                            "acc_id":userName,
+                            "acc_pwd":password
+                        }
                 }
-                
-                           
+                this.$axios.post('FaultDBManage/searchuser/',param                   
+                ).then(function(response){
+                    if(response.data.stu == 200){
+                        sessionStorage.setItem("user",response.data.msg[0].fields.acc_id);
+                        sessionStorage.setItem("acc_permission",response.data.msg[0].fields.acc_permission);
+                        this.$router.push({ path: '/FaultAnalysis' })
+                    }else{
+                        alert("用户名密码错误！")
+                    }
+                }.bind(this)).catch(function (error) { 
+                    console.log(error);
+                })                    
             }
         },
 

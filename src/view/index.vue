@@ -59,6 +59,7 @@ export default {
     name:"index",
     data (){
         return{
+            acc_permission:"",
             userName:""
         }
     },
@@ -69,12 +70,15 @@ export default {
         setUserName(){
             var self = this;
             self.userName = sessionStorage.getItem("user");
+            self.acc_permission = sessionStorage.getItem("acc_permission");
             if(self.userName){
                 $(".headRight").hide();
                 $("#user").text(self.userName)
-                if(self.userName !== "admin"){
+                if(self.acc_permission == "2"){
                     $(".visitor a").css("background-color","#999")
                     $(".visitor a").attr("disabled",true).css("pointer-events","none");
+                    $("#useSet").hide()
+                }else if(self.acc_permission == "1"){
                     $("#useSet").hide()
                 }
             }else{
