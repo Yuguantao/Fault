@@ -40,21 +40,55 @@
                 <span class="btn btn-primary fl newSearch"  id="search_sure">搜索</span>
                 <span class="btn btn-success fr" data-toggle="modal" data-target="#newUser">新建用户</span>
                 <span class="btn btn-default fr" data-toggle="modal" style="margin-right:10px;" data-target="#deleteBox">全部删除</span>
-            </div>
-            <table class="tableModel" width="100%" cellpadding="0" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th width="10%"><input type="checkbox" name="chk_all" ></th>
-                        <th width="15%">用户名</th>
-                        <th width="15%">用户级别</th>
-                        <th width="20%">系统</th>
-                        <th width="10%">操作</th>
-                    </tr>
-                </thead>
-                <tbody id="result">
-                
-                </tbody>
-            </table>
+        </div>
+        
+        <el-table class="userTable"
+                    fixed
+                    ref="multipleTable"
+                    :data="userData"
+                    tooltip-effect="dark"
+                    style="width: 100%;cursor:pointer"
+                    height="500">
+                    <el-table-column
+                        type="selection"
+                        width="100"
+                        align="center">
+                    </el-table-column>
+                    <el-table-column
+                        prop="name"
+                        label="用户名"
+                        width="220"
+                        align="center">
+                        <template ></template>
+                    </el-table-column>
+                    <el-table-column
+                        prop="permission"
+                        label="用户级别"
+                        width="120"
+                        align="center">
+                    </el-table-column>
+                    <el-table-column
+                        prop="system"
+                        label="系统"
+                        width="485"
+                        align="center">
+                    </el-table-column>
+                    <el-table-column
+                        prop="uuid"
+                        width="1"
+                        align="center" v-if="false">
+                    </el-table-column>
+                    <el-table-column label="操作" width="150" align="center">
+                        <template >
+                            <el-button
+                            size="mini">编辑</el-button>
+                            <el-button
+                            size="mini"
+                            type="danger">删除</el-button>
+                        </template>
+                    </el-table-column>
+            </el-table>
+
             <!-- 分页 -->
             <table class="pageModel">
                 <tr>
@@ -96,10 +130,10 @@
                         </tr>
                         <tr>
                             <td class="item">系统</td>
-                            <td class="pl10">
+                            <td class="pl10 systemBox">
                                 <el-checkbox-group 
                                     v-model="checkedSystem" @change="selectSystem">
-                                    <el-checkbox v-for="(system,index) in cities"  :label="system" :key="index">{{system}}</el-checkbox>
+                                    <el-checkbox v-for="(system,index) in cities"  :disabled="disabled" :label="system" :key="index">{{system}}</el-checkbox>
                                 </el-checkbox-group>
                             </td>
                         </tr>
@@ -107,8 +141,7 @@
                             <td class="item">备注信息</td>
                             <td class="pl10">
                                 <input class="form-control" type="text" id="detailMessage">
-                            </td>
-										
+                            </td>										
                         </tr>
                     </tbody></table>
                 </div>
@@ -131,10 +164,20 @@ export default {
     data (){
         return{
             userName:"",
+            userData:[
+            //     {
+            //     name: '王小虎',
+            //     permission: '分系统用户',
+            //     system:"'光电经纬仪', '雷电系统', '遥测系统'",
+            //      uuid:""
+            // }
+            ],
+
             userPermission:"",
             checkedSystem: [],
             cities: cityOptions,
             systemArr:[],
+            disabled:false,
             options: [{
                     value: '0',
                     label: '管理员'
@@ -150,11 +193,13 @@ export default {
     },
     mounted(){
         this.setUserName()
+        this.initSearchUser()
     },
     methods: {
         setUserName(){
             var self = this;
             self.userName = sessionStorage.getItem("user");
+            self.password = sessionStorage.getItem("password");
             self.acc_permission = sessionStorage.getItem("acc_permission");
             if(self.userName){
                 $(".headRight").hide();
@@ -170,7 +215,44 @@ export default {
                 alert("请登录！")
                 this.$router.push({ path: '/login' })
             }
-
+        },
+        initSearchUser(){
+            this.userData = []
+            let userName = sessionStorage.getItem("user");
+            let password = sessionStorage.getItem("password");
+            let param = {
+                "msg": {
+                    "acc_id":userName,
+                    "acc_pwd":password,
+                }
+            }
+            this.$axios.post('FaultDBManage/searchuser/',param                   
+            ).then(function(response){
+                if(response.data.stu == 200){
+                    
+                    var userArr = response.data.msg;
+                    for(let i = 0;i<userArr.length;i++){
+                        let userBox = {}
+                        userBox.uuid = userArr[i].pk;
+                        userBox.name = userArr[i].fields.acc_id;
+                        let permissionName;
+                        if(userArr[i].fields.acc_permission == 0){
+                            permissionName = "管理员"
+                        }else if(userArr[i].fields.acc_permission == 1){
+                            permissionName = "分系统用户"
+                        }else{
+                            permissionName = "一般用户"
+                        }
+                        userBox.permission = permissionName;
+                        userBox.system = userArr[i].fields.acc_system
+                        this.userData.push(userBox)
+                    }
+                }else{
+                    
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
         },
         exitUser(){
             this.$router.push({ path: '/login' });
@@ -186,18 +268,20 @@ export default {
                     "msg": {
                         "acc_id":userName,
                         "acc_pwd":password,
-                        "acc_permission":this.userPermission[0]?this.userPermission[0]:"",
-                        "acc_system":this.systemArr[0],
+                        "acc_permission":this.userPermission[0],
+                        "acc_system":this.systemArr[0]?this.systemArr[0]:"",
                         "acc_remarks":detailMessage
                     }
                 }
-
+            
             this.$axios.post('FaultDBManage/adduser/',param                   
             ).then(function(response){
                 if(response.data.stu == 200){
-                    
+                    alert("创建成功")
+                    $("#newUser").hide();
+                    $(".modal-backdrop").hide();
                 }else{
-                    alert("用户名密码错误！")
+                    alert("用户名已存在！")
                 }
             }.bind(this)).catch(function (error) { 
                 console.log(error);
@@ -209,6 +293,11 @@ export default {
                 return item.value === vId;//
             });
             this.userPermission = obj.value
+            if(this.userPermission != "1"){
+                this.disabled = true
+            }else{
+                this.disabled = false
+            }
         },
         selectSystem(){
             this.systemArr = []
@@ -240,6 +329,7 @@ export default {
     }
     .userArray{
         margin: 100px 0 25px;
+        height: 450px;
     }
 
     .navbar-inverse {

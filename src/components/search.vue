@@ -68,7 +68,7 @@
             
             <span class="sBtn" id="sureBtn">查询</span>
             <table class="tableModel" width="100%" cellpadding="0" cellspacing="0">
-                <thead>
+                <!-- <thead>
                     <tr style="text-align: center;">
                         <th width="20%">故障时间</th>
                         <th width="20%">故障模式</th>
@@ -77,17 +77,17 @@
                         <th width="20%">人员信息</th>
                         <th width="20%">操作</th>
                     </tr>
-                </thead>
+                </thead> -->
             </table>
             
-            <div class="detail">
+            <div class="detail" style="cursor:pointer">
                 <!-- <span class="noData1">暂无数据</span> -->
                 <el-table :data="tableData" border  >
-                    <el-table-column fixed prop="date" width="220" align="center"></el-table-column>
-                    <el-table-column prop="name" width="220" align="center"></el-table-column>
-                    <el-table-column prop="province" width="220" align="center"></el-table-column>
-                    <el-table-column prop="city" width="220" align="center"></el-table-column>
-                    <el-table-column fixed="right" width="180" align="center">
+                    <el-table-column fixed prop="date" label="故障时间" width="220" align="center"></el-table-column>
+                    <el-table-column prop="name" width="220" label="故障模式" align="center"></el-table-column>
+                    <el-table-column prop="province" width="360" label="故障原因" align="center"></el-table-column>
+                    <el-table-column prop="city" width="110" label="人员信息" align="center"></el-table-column>
+                    <el-table-column fixed="right" width="150" align="center" label="操作">
                         <template>
                             <el-button type="text" size="small">删除</el-button>
                             <el-button type="text" size="small">编辑</el-button>

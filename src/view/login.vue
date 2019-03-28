@@ -40,10 +40,11 @@
                             "acc_pwd":password
                         }
                 }
-                this.$axios.post('FaultDBManage/searchuser/',param                   
+                this.$axios.post('FaultDBManage/loginuser/',param                   
                 ).then(function(response){
                     if(response.data.stu == 200){
                         sessionStorage.setItem("user",response.data.msg[0].fields.acc_id);
+                        sessionStorage.setItem("password",response.data.msg[0].fields.acc_pwd);
                         sessionStorage.setItem("acc_permission",response.data.msg[0].fields.acc_permission);
                         this.$router.push({ path: '/FaultAnalysis' })
                     }else{
