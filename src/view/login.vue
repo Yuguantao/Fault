@@ -8,7 +8,6 @@
                 <input type="password" id="inputPassword" class="form-control" placeholder="密码" required>
                 <div class="buttonBox">
                     <button class="btn btn-lg btn-primary btn-block" id="loginBtn" @click="GetLoginInfo">登录</button>
-                    <!-- <button class="btn btn-lg btn-primary btn-block"  id="VisitorLogin" @click="GetLoginInfo(false)">游客登录</button> -->
                 </div>
             </div>
         </div>

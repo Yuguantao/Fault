@@ -27,17 +27,17 @@
             <div class="topBox clearfix">
                 <span class="fl">用户级别：</span>
                 <ul class="userLevel fl clearfix">
-                    <li data-userType="3">
-                        <input type="radio" class="iRadio" name="ccc" checked="checked"  ><label>全部</label>
-                    </li>
-                    <li data-userType="0"><input type="radio" class="iRadio" name="ccc" ><label>管理员</label></li>
-                    <li data-userType="1"><input type="radio" class="iRadio" name="ccc" ><label>分系统级</label></li>
-                    <li data-userType="2"><input type="radio" class="iRadio" name="ccc" ><label>一般用户</label></li>
+                    <el-radio-group v-model="radio" @change="filterUser">
+                        <el-radio :label="3">全部</el-radio>
+                        <el-radio :label="0">管理员</el-radio>
+                        <el-radio :label="1">分系统用户</el-radio>
+                        <el-radio :label="2">一般用户</el-radio>
+                    </el-radio-group>
                 </ul>
                 <!-- <form class="public-search fl"> --><div class="public-search fl"><span class="octicon-search02"></span>
-                    <input type="text" value="请输入用户名" class="form-control" style="padding-left:8px;" id="search_user">
+                    <input type="text" placeholder="请输入用户名" class="form-control" style="padding-left:8px;" id="search_user">
             <!--   </form> --></div>
-                <span class="btn btn-primary fl newSearch"  id="search_sure">搜索</span>
+                <span class="btn btn-primary fl newSearch"  id="search_sure" @click="searchUser">搜索</span>
                 <span class="btn btn-success fr" data-toggle="modal" data-target="#newUser">新建用户</span>
                 <span class="btn btn-default fr" data-toggle="modal" style="margin-right:10px;" data-target="#deleteBox">全部删除</span>
         </div>
@@ -88,19 +88,6 @@
                         </template>
                     </el-table-column>
             </el-table>
-
-            <!-- 分页 -->
-            <table class="pageModel">
-                <tr>
-                    <td>
-                        <span class="page_prev"><a href="#">&lt;&lt;</a></span>
-                        <span class="page_num current">1</span>
-                        <span class="page_num"><a href="#">2</a></span>
-                        <span class="page_num"> <a  href="#">3</a></span>
-                        <span class="page_next"><a href="#">&gt;&gt;</a></span>
-                    </td>
-                </tr>
-            </table>
         </div>
         <div class="modal fade" id="newUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
             <div class="modal-dialog userBox">
@@ -164,6 +151,7 @@ export default {
     data (){
         return{
             userName:"",
+            radio:3,
             userData:[
             //     {
             //     name: '王小虎',
@@ -302,6 +290,79 @@ export default {
         selectSystem(){
             this.systemArr = []
             this.systemArr.push(this.checkedSystem)
+        },
+        filterUser(){
+            this.userData = []
+            let param = {
+                    "msg": {
+                    "acc_permission":this.radio
+                    }
+                }
+                
+            this.$axios.post('FaultDBManage/selectuser/',param                   
+            ).then(function(response){
+                if(response.data.stu == 200){
+                    
+                    var userArr = response.data.msg;
+                    for(let i = 0;i<userArr.length;i++){
+                        let userBox = {}
+                        userBox.uuid = userArr[i].pk;
+                        userBox.name = userArr[i].fields.acc_id;
+                        let permissionName;
+                        if(userArr[i].fields.acc_permission == 0){
+                            permissionName = "管理员"
+                        }else if(userArr[i].fields.acc_permission == 1){
+                            permissionName = "分系统用户"
+                        }else{
+                            permissionName = "一般用户"
+                        }
+                        userBox.permission = permissionName;
+                        userBox.system = userArr[i].fields.acc_system
+                        this.userData.push(userBox)
+                    }
+                }else{
+                    
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+        },
+        searchUser(){
+            this.userData = []
+            let username = $("#search_user").val()
+            let param = {
+                    "msg": {
+                    "acc_id":username
+                    }
+                }
+                
+            this.$axios.post('FaultDBManage/selectuser/',param                   
+            ).then(function(response){
+                if(response.data.stu == 200){
+                    
+                    var userArr = response.data.msg;
+                    for(let i = 0;i<userArr.length;i++){
+                        let userBox = {}
+                        userBox.uuid = userArr[i].pk;
+                        userBox.name = userArr[i].fields.acc_id;
+                        let permissionName;
+                        if(userArr[i].fields.acc_permission == 0){
+                            permissionName = "管理员"
+                        }else if(userArr[i].fields.acc_permission == 1){
+                            permissionName = "分系统用户"
+                        }else{
+                            permissionName = "一般用户"
+                        }
+                        userBox.permission = permissionName;
+                        userBox.system = userArr[i].fields.acc_system
+                        this.userData.push(userBox)
+                    }
+                }else{
+                    
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
         }
     }
 }
