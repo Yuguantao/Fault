@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import login from '@/view/login'
 import FaultAnalysis from '@/view/index'
 import search from '@/components/search'
+import addEquipment from '@/components/addEquipment'
 import userManage from '@/view/userManage'
 
 Vue.use(Router)
@@ -35,5 +36,10 @@ export default new Router({
       name: 'userManage',
       component: userManage
     },
+    {
+      path:'/FaultAnalysis/addEquipment',
+      name:'addEquipment',
+      component:addEquipment
+    }
   ]
 })

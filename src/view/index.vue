@@ -29,7 +29,7 @@
                 <li class="visitor">
                     <p>新增设备</p>
                     <img src="../assets/index/computer1.png" alt="">
-                    <a href="mainParaMonitor2.jsp">点击进入</a>
+                    <router-link to= "/FaultAnalysis/addEquipment" >点击进入</router-link>
                 </li>
                 <li class="middle visitor">
                     <p>设备使用信息录入</p>
@@ -50,7 +50,6 @@
         </div>
         <router-view></router-view>
     </div>
-    
     
 </template>
 

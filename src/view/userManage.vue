@@ -51,40 +51,53 @@
                     height="500">
                     <el-table-column
                         type="selection"
-                        width="100"
+                        width="50"
                         align="center">
                     </el-table-column>
                     <el-table-column
                         prop="name"
                         label="用户名"
-                        width="220"
+                        width="150"
+                        show-overflow-tooltip
+                        align="center">
+                        <template ></template>
+                    </el-table-column>
+                    <el-table-column
+                        prop="password"
+                        label="密码"
+                        width="150"
+                        show-overflow-tooltip
                         align="center">
                         <template ></template>
                     </el-table-column>
                     <el-table-column
                         prop="permission"
                         label="用户级别"
-                        width="120"
+                        width="100"
+                        show-overflow-tooltip
                         align="center">
                     </el-table-column>
                     <el-table-column
                         prop="system"
                         label="系统"
-                        width="485"
+                        width="380"
+                        show-overflow-tooltip
                         align="center">
                     </el-table-column>
                     <el-table-column
                         prop="uuid"
-                        width="1"
-                        align="center" v-if="false">
+                        label="uuid"
+                        width="85"
+                        show-overflow-tooltip
+                        align="center">
                     </el-table-column>
                     <el-table-column label="操作" width="150" align="center">
-                        <template >
+                        <template slot-scope="scope">
                             <el-button
-                            size="mini">编辑</el-button>
+                            size="mini" @click="editUserBox(scope.row)" data-toggle="modal" data-target="#editBox">编辑</el-button>
                             <el-button
                             size="mini"
-                            type="danger">删除</el-button>
+                            type="danger" @click="deleteUser(scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
             </el-table>
@@ -134,6 +147,56 @@
                 </div>
                 <div class="modal-footer" style="text-align:center;">
                     <button type="button" class="btn btn-primary" id="newUser_add" @click="addNewUser">确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="editBox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog userBox">
+                <div class="modal-content">
+                <div class="modal-body">
+                    <table width="100%" cellspacing="0" cellpadding="0">
+                        <tbody><tr>
+                            <td width="100" class="item">用户名</td>
+                            <td class="pl10"><input type="text" class="form-control" id="edit_user"></td>
+                        </tr>
+                        <tr>
+                            <td class="item">密码</td>
+                            <td class="pl10"><input type="password" class="form-control" id="edit_password"></td>
+                        </tr>
+                        <tr>
+                            <td class="item">用户级别</td>
+                            <td class="pl10">
+                                <el-select @change="userSelect" v-model="value" placeholder="请选择" style="width:220px">
+                                    <el-option
+                                    v-for="item in options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="item">系统</td>
+                            <td class="pl10 systemBox">
+                                <el-checkbox-group 
+                                    v-model="checkedSystem" @change="selectSystem">
+                                    <el-checkbox v-for="(system,index) in cities"  :disabled="disabled" :label="system" :key="index">{{system}}</el-checkbox>
+                                </el-checkbox-group>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="item">备注信息</td>
+                            <td class="pl10">
+                                <input class="form-control " type="text" id="editDetailMessage">
+                            </td>										
+                        </tr>
+                    </tbody></table>
+                </div>
+                <div class="modal-footer" style="text-align:center;">
+                    <button type="button" class="btn btn-primary" id="newUser_edit" @click="editUser">确认</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
                 </div>
@@ -223,6 +286,7 @@ export default {
                         let userBox = {}
                         userBox.uuid = userArr[i].pk;
                         userBox.name = userArr[i].fields.acc_id;
+                        userBox.password = userArr[i].fields.acc_pwd;
                         let permissionName;
                         if(userArr[i].fields.acc_permission == 0){
                             permissionName = "管理员"
@@ -261,7 +325,7 @@ export default {
                         "acc_remarks":detailMessage
                     }
                 }
-            
+            if(this.userPermission[0] != 1) param.msg.acc_system = ""
             this.$axios.post('FaultDBManage/adduser/',param                   
             ).then(function(response){
                 if(response.data.stu == 200){
@@ -308,6 +372,7 @@ export default {
                         let userBox = {}
                         userBox.uuid = userArr[i].pk;
                         userBox.name = userArr[i].fields.acc_id;
+                        userBox.password = userArr[i].fields.acc_pwd;
                         let permissionName;
                         if(userArr[i].fields.acc_permission == 0){
                             permissionName = "管理员"
@@ -345,6 +410,7 @@ export default {
                         let userBox = {}
                         userBox.uuid = userArr[i].pk;
                         userBox.name = userArr[i].fields.acc_id;
+                        userBox.password = userArr[i].fields.acc_pwd;
                         let permissionName;
                         if(userArr[i].fields.acc_permission == 0){
                             permissionName = "管理员"
@@ -363,6 +429,36 @@ export default {
             }.bind(this)).catch(function (error) { 
                 console.log(error);
             })
+        },
+        editUserBox(row){
+            $("#edit_user").val(row.name);
+            $("#edit_password").val(row.password);
+        },
+        editUser(){
+
+        },
+        deleteUser(row){
+            let param = {
+                    "msg": {
+                        "uuid":row.uuid
+                    }
+                }
+            this.$axios.post('FaultDBManage/deluser/',param                   
+            ).then(function(response){
+                if(response.data.stu == 200){
+                    alert("删除成功！")
+                    var length = this.userData.length;
+                    for (var i = 0; i < length; i++) {
+                        if (this.userData[i].uuid == param.msg.uuid) {                           
+                                this.userData.splice(i, 1);
+                        }
+                    }
+                }else{
+                   alert("删除失败！") 
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })    
         }
     }
 }

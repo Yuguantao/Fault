@@ -12,11 +12,11 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/FaultDBManage':{
-        target:'http://192.168.34.110:8080/',
+        target:'http://192.168.34.110:8000/',
 
       },
       '/FaultDBManage/*':{
-        target:'http://192.168.34.110:8080/',
+        target:'http://192.168.34.110:8000/',
       },
     },
 
