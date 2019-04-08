@@ -27,21 +27,7 @@
                 <div class="modal-body equipmentBox">
                     <table width="100%" cellspacing="0" cellpadding="0">
                         <tbody><tr>
-                            <td width="100" class="item">系统</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput"></td>
-                        </tr>
-                        <tr>
-                            <td class="item">型号</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput"></td>
-                        </tr>
-                        <tr>
-                            <td class="item">编号</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput">
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="item">引入日期</td>
+                            <td width="100" class="item">使用时间</td>
                             <td class="pl10">
                                 <el-date-picker
                                 v-model="time"
@@ -49,6 +35,16 @@
                                 placeholder="选择日期时间"
                                 default-time="12:00:00">
                                 </el-date-picker>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="item">使用人</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput"></td>
+                        </tr>
+                        <tr>
+                            <td class="item">使用时长</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput" onkeyup="value=value.replace(/[^\d]/g,'')">
+
                             </td>
                         </tr>
                         <tr style="height: 90px;vertical-align: text-top;">
@@ -92,12 +88,6 @@
                                     :file-list="fileList">
                                     <el-button size="small" type="primary">点击上传</el-button>
                                     </el-upload>
-                            </td>										
-                        </tr>
-                        <tr>
-                            <td class="item">故障信息</td>
-                            <td class="pl10">
-                                <input type="text" class="form-control">
                             </td>										
                         </tr>
                         <tr>

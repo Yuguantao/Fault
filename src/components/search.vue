@@ -30,71 +30,44 @@
                 </div>
             </div>
             <ul class="fl parList">
-                <!-- <li class="second getHair">
-                    <span class="fl">系统：</span>
-                    <select class="fl">
-                        <option value="">设备知识库</option>
-                    </select>
-                </li> -->
-                <li class="third testType">
-                    <span class="fl">设备：</span>
-                    <select class="fl">
-                        <option value="">-请选择-</option>
-                        <option value="">光电经纬仪</option>
-                        <option value="">雷达系统</option>
-                        <option value="">遥测系统</option>
-                    </select>
-                </li>
-                <li class="third testPhase">
-                    <span class="fl">型号：</span>
-                    <select class="fl">
-                        <option value="">-请选择-</option>
-                        <option value="">GD220-Ⅱ</option>
-                        <option value="">GD220-Ⅲ</option>
-                        <option value="">GDL-5T</option>
-                        <option value="">GD100</option>
-                        <option value="">GD100-ZD</option>
-                    </select>
-                </li>
-                <li class="four testPhase">
-                    <span class="fl">位置：</span>
-                    <select class="fl">
-                        <option value="">-请选择-</option>
-                        <option value="">1#</option>
-                        <option value="">2#</option>
-                    </select>
-                </li>
+                <el-cascader
+                    :options="options"
+                    v-model="equipSelectedOptions"
+                    @change="handleChange">
+                </el-cascader>
             </ul>
             
-            <span class="sBtn" id="sureBtn">查询</span>
-            <table class="tableModel" width="100%" cellpadding="0" cellspacing="0">
-                <!-- <thead>
-                    <tr style="text-align: center;">
-                        <th width="20%">故障时间</th>
-                        <th width="20%">故障模式</th>
-                        <th width="20%">故障原因</th>
-                        
-                        <th width="20%">人员信息</th>
-                        <th width="20%">操作</th>
-                    </tr>
-                </thead> -->
-            </table>
-            
-            <div class="detail" style="cursor:pointer">
-                <!-- <span class="noData1">暂无数据</span> -->
-                <el-table :data="tableData" border  >
-                    <el-table-column fixed prop="date" label="故障时间" width="220" align="center"></el-table-column>
-                    <el-table-column prop="name" width="220" label="故障模式" align="center"></el-table-column>
-                    <el-table-column prop="province" width="360" label="故障原因" align="center"></el-table-column>
-                    <el-table-column prop="city" width="110" label="人员信息" align="center"></el-table-column>
-                    <el-table-column fixed="right" width="150" align="center" label="操作">
-                        <template>
-                            <el-button type="text" size="small">删除</el-button>
-                            <el-button type="text" size="small">编辑</el-button>
-                        </template>
+            <span class="sBtn" id="sureBtn" @click="selectInfo">查询</span>
+  
+            <el-table :data="equipData" class="equipTable"
+                    fixed
+                    ref="multipleTable"
+                    tooltip-effect="dark"
+                    style="width: 100%;cursor:pointer"
+                    height="500">
+                    <el-table-column
+                        type="selection"
+                        width="50"
+                        align="center">
                     </el-table-column>
-                </el-table>
-            </div>
+                <el-table-column fixed show-overflow-tooltip prop="model" label="型号" width="120" align="center"></el-table-column>
+                <el-table-column  show-overflow-tooltip prop="system" width="120" label="系统" align="center"></el-table-column>
+                <el-table-column show-overflow-tooltip prop="number" width="80" label="编号" align="center"></el-table-column>
+                <el-table-column show-overflow-tooltip prop="createTime" width="220" label="创建时间" align="center"></el-table-column>
+                <el-table-column show-overflow-tooltip prop="uuid" width="80" label="uuid" align="center"></el-table-column>
+                <el-table-column show-overflow-tooltip prop="marks" width="220" label="备注信息" align="center"></el-table-column>
+                <el-table-column fixed="right" width="150" align="center" label="操作">
+                    <template>
+                        <template >
+                            <el-button
+                            size="mini">编辑</el-button>
+                            <el-button
+                            size="mini"
+                            type="danger">删除</el-button>
+                        </template>
+                    </template>
+                </el-table-column>
+            </el-table>
             
 	</div>
         <router-view></router-view>
@@ -109,31 +82,201 @@ export default {
     data (){
         return{
             userName:"",
-            tableData: [{
-                date: '2018-07-20 10:00:00',
-                name: '运动或动力故障型',
-                province: '材质因素',
-                city: '张三',
-            }, {
-                date: '2018-07-20 10:00:00',
-                name: '运动或动力故障型',
-                province: '材质因素',
-                city: '张三',
-            }, {
-                date: '2018-07-20 10:00:00',
-                name: '运动或动力故障型',
-                province: '材质因素',
-                city: '张三',
-            }, {
-                date: '2018-07-20 10:00:00',
-                name: '运动或动力故障型',
-                province: '材质因素',
-                city: '张三',
-            }]
+            equipSelectedOptions: [],
+            equipData: [
+            //     {
+            //     model: '2018-07-20 10:00:00',
+            //     system: '运动或动力故障型',
+            //     number: '材质因素',
+            //     createTime: '张三',
+            //     uuid:"",
+            //     marks:""
+            // }
+            ],
+            options:[{
+                value: '光电经纬仪',
+                label: '光电经纬仪',
+                children: [{
+                        value: 'GD220-Ⅱ',
+                        label: 'GD220-Ⅱ',
+                        children: [{
+                            value: '1#',
+                            label: '1#'
+                            }, {
+                            value: '2#',
+                            label: '2#'
+                            }]
+                    },
+                    {
+                        value: 'GD220-Ⅲ',
+                        label: 'GD220-Ⅲ',
+                        children: [{
+                            value: '1#',
+                            label: '1#'
+                            }, {
+                            value: '2#',
+                            label: '2#'
+                            }]
+                    },
+                    {
+                        value: 'GDL-5T',
+                        label: 'GDL-5T',
+                        children: [{
+                            value: '1#',
+                            label: '1#'
+                            }, {
+                            value: '2#',
+                            label: '2#'
+                            }]
+                    },
+                    {
+                        value: 'GD100',
+                        label: 'GD100',
+                        children: [{
+                            value: '1#',
+                            label: '1#'
+                            }, {
+                            value: '2#',
+                            label: '2#'
+                            }]
+                    },
+                    {
+                        value: 'GD100-ZD',
+                        label: 'GD100-ZD',
+                        children: [{
+                            value: '1#',
+                            label: '1#'
+                            }, {
+                            value: '2#',
+                            label: '2#'
+                            }]
+                    }]
+                },
+                {
+                value: '雷达系统',
+                label: '雷达系统',
+                children: [{
+                        value: 'GD220-Ⅱ',
+                        label: 'GD220-Ⅱ',
+                        children: [{
+                            value: '1#',
+                            label: '1#'
+                            }, {
+                            value: '2#',
+                            label: '2#'
+                            }]
+                    },
+                    {
+                        value: 'GD220-Ⅲ',
+                        label: 'GD220-Ⅲ',
+                        children: [{
+                            value: '1#',
+                            label: '1#'
+                            }, {
+                            value: '2#',
+                            label: '2#'
+                            }]
+                    },
+                    {
+                        value: 'GDL-5T',
+                        label: 'GDL-5T',
+                        children: [{
+                            value: '1#',
+                            label: '1#'
+                            }, {
+                            value: '2#',
+                            label: '2#'
+                            }]
+                    },
+                    {
+                        value: 'GD100',
+                        label: 'GD100',
+                        children: [{
+                            value: '1#',
+                            label: '1#'
+                            }, {
+                            value: '2#',
+                            label: '2#'
+                            }]
+                    },
+                    {
+                        value: 'GD100-ZD',
+                        label: 'GD100-ZD',
+                        children: [{
+                            value: '1#',
+                            label: '1#'
+                            }, {
+                            value: '2#',
+                            label: '2#'
+                            }]
+                    }]
+                },
+                {
+                value: '遥测系统',
+                label: '遥测系统',
+                children:[{
+                        value: 'GD220-Ⅱ',
+                        label: 'GD220-Ⅱ',
+                        children: [{
+                            value: '1#',
+                            label: '1#'
+                            }, {
+                            value: '2#',
+                            label: '2#'
+                            }]
+                    },
+                    {
+                        value: 'GD220-Ⅲ',
+                        label: 'GD220-Ⅲ',
+                        children: [{
+                            value: '1#',
+                            label: '1#'
+                            }, {
+                            value: '2#',
+                            label: '2#'
+                            }]
+                    },
+                    {
+                        value: 'GDL-5T',
+                        label: 'GDL-5T',
+                        children: [{
+                            value: '1#',
+                            label: '1#'
+                            }, {
+                            value: '2#',
+                            label: '2#'
+                            }]
+                    },
+                    {
+                        value: 'GD100',
+                        label: 'GD100',
+                        children: [{
+                            value: '1#',
+                            label: '1#'
+                            }, {
+                            value: '2#',
+                            label: '2#'
+                            }]
+                    },
+                    {
+                        value: 'GD100-ZD',
+                        label: 'GD100-ZD',
+                        children: [{
+                            value: '1#',
+                            label: '1#'
+                            }, {
+                            value: '2#',
+                            label: '2#'
+                            }]
+                    }]
+                }
+            ]
+                
         }
     },
     mounted(){
-        this.setUserName()
+        this.setUserName(),
+        this.initEquipInfo()
     },
     methods: {
         setUserName(){
@@ -156,6 +299,75 @@ export default {
         exitUser(){
             this.$router.push({ path: '/login' });
             sessionStorage.removeItem("user")
+        },
+        handleChange(value) {
+            this.equipSelectedOptions = []
+            this.equipSelectedOptions.push(value[0],value[1],value[2])
+        },
+        initEquipInfo(){
+            this.equipData = []
+            // let userName = sessionStorage.getItem("user");
+            // let password = sessionStorage.getItem("password");
+            let param = {
+                "msg": {
+
+                }
+            }
+            this.$axios.post('FaultDBManage/searchinfo/',param                   
+            ).then(function(response){
+                if(response.data.stu == 200){
+                    
+                    var equipArr = response.data.msg;
+                    for(let i = 0;i<equipArr.length;i++){
+                        let equipBox = {}
+                        equipBox.uuid = equipArr[i].fields.uuid;
+                        equipBox.model = equipArr[i].fields.man_sys;
+                        equipBox.system = equipArr[i].fields.man_model;
+                        equipBox.number = equipArr[i].fields.man_num;
+                        equipBox.createTime = equipArr[i].fields.man_creDate;
+                        equipBox.marks = equipArr[i].fields.man_remarks
+                        this.equipData.push(equipBox)
+                    }
+                }else{
+                    
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+        },
+        selectInfo(){
+            this.equipData = []
+            let man_sys = this.equipSelectedOptions[0];
+            let man_model = this.equipSelectedOptions[1];
+            let man_num = this.equipSelectedOptions[2];
+            let param = {
+                "msg": {
+                    "man_sys": man_sys,
+                    "man_model": man_model,
+                    "man_num": man_num
+                }
+            }
+            this.$axios.post('FaultDBManage/searchinfo/',param                   
+            ).then(function(response){
+                if(response.data.stu == 200){
+                    
+                    var equipArr = response.data.msg;
+                    for(let i = 0;i<equipArr.length;i++){
+                        let equipBox = {}
+                        equipBox.uuid = equipArr[i].fields.uuid;
+                        equipBox.model = equipArr[i].fields.man_sys;
+                        equipBox.system = equipArr[i].fields.man_model;
+                        equipBox.number = equipArr[i].fields.man_num;
+                        equipBox.createTime = equipArr[i].fields.man_creDate;
+                        equipBox.marks = equipArr[i].fields.man_remarks
+                        this.equipData.push(equipBox)
+                    }
+                }else{
+                    
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
         }
     }
 }

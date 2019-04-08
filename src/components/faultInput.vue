@@ -27,21 +27,7 @@
                 <div class="modal-body equipmentBox">
                     <table width="100%" cellspacing="0" cellpadding="0">
                         <tbody><tr>
-                            <td width="100" class="item">系统</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput"></td>
-                        </tr>
-                        <tr>
-                            <td class="item">型号</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput"></td>
-                        </tr>
-                        <tr>
-                            <td class="item">编号</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput">
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="item">引入日期</td>
+                            <td width="100" class="item">故障时间</td>
                             <td class="pl10">
                                 <el-date-picker
                                 v-model="time"
@@ -50,13 +36,56 @@
                                 default-time="12:00:00">
                                 </el-date-picker>
                             </td>
+                            <td class="item">故障描述</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput"></td>
                         </tr>
-                        <tr style="height: 90px;vertical-align: text-top;">
+                        <tr>
+                            
+                            <td class="item">故障类型</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+
+                            </td>
+                            <td class="item">故障类型</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="item">故障原因</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+
+                            </td>
+                            <td class="item">故障影响</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="item">故障影响</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+
+                            </td>
+                            <td class="item">检测方法</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="item">排除措施</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+
+                            </td>
+                            <td class="item">改进建议</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+
+                            </td>
+                        </tr>
+                        <tr style="height: 70px;vertical-align: text-top;">
                             <td class="item">视频信息</td>
                             <td class="pl10">
                                 <el-upload
                                     class="upload-demo"
-                                    style="height:95px;"
+                                    style="height:60px;"
                                     action="https://jsonplaceholder.typicode.com/posts/"
                                     :on-preview="handlePreview"
                                     :on-remove="handleRemove"
@@ -70,24 +99,24 @@
                                     
                             </td>										
                         </tr>
-                        <tr style="height: 90px;vertical-align: text-top;">
+                        <tr style="height: 70px;vertical-align: text-top;">
                             <td class="item">音频信息</td>
                             <td class="pl10" style="height:80px;">
                                 <el-upload
                                     class="upload-demo"
-                                    style="height:95px;"
+                                    style="height:60px;"
                                     action="https://jsonplaceholder.typicode.com/posts/"
                                     :file-list="fileList">
                                     <el-button size="small" type="primary">点击上传</el-button>
                                     </el-upload>
                             </td>										
                         </tr>
-                        <tr style="height: 90px;vertical-align: text-top;">
+                        <tr style="height: 70px;vertical-align: text-top;">
                             <td class="item">图像信息</td>
                             <td class="pl10" style="height:80px;">
                                 <el-upload
                                     class="upload-demo"
-                                    style="height:95px;"
+                                    style="height:60px;"
                                     action="https://jsonplaceholder.typicode.com/posts/"
                                     :file-list="fileList">
                                     <el-button size="small" type="primary">点击上传</el-button>
@@ -95,9 +124,9 @@
                             </td>										
                         </tr>
                         <tr>
-                            <td class="item">故障信息</td>
-                            <td class="pl10">
-                                <input type="text" class="form-control">
+                            <td class="item">人员信息</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+
                             </td>										
                         </tr>
                         <tr>
@@ -260,7 +289,7 @@ export default {
         -webkit-box-orient: vertical;
         -webkit-box-direction: normal;
         flex-direction: column;
-        width: 600px;
+        width: 765px;
         height: 720px;
         pointer-events: auto;
         background-clip: padding-box;

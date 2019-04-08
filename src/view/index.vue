@@ -29,22 +29,22 @@
                 <li class="visitor">
                     <p>新增设备</p>
                     <img src="../assets/index/computer1.png" alt="">
-                    <router-link to= "/FaultAnalysis/addEquipment" >点击进入</router-link>
+                    <router-link to= "/addEquipment" >点击进入</router-link>
                 </li>
                 <li class="middle visitor">
                     <p>设备使用信息录入</p>
                     <img src="../assets/index/computer2.png" alt="">
-                    <a href="fundamental0627.jsp">点击进入</a>
+                    <router-link to="/equipmentInput">点击进入</router-link>
                 </li>
                 <li class="visitor">
                     <p>故障信息录入</p>
                     <img src="../assets/index/computer4.png" alt="">
-                    <a href="fundamental0627.jsp">点击进入</a>
+                    <router-link to="/faultInput">点击进入</router-link>
                 </li>
                 <li style="margin-left:13px;">
                     <p>设备信息查询</p>
                     <img src="../assets/index/computer5.png" alt="">
-                    <router-link to= "/FaultAnalysis/search" >点击进入</router-link>
+                    <router-link to= "/search" >点击进入</router-link>
                 </li>
             </ul>
         </div>
