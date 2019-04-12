@@ -32,9 +32,9 @@
                     <router-link to= "/addEquipment" >点击进入</router-link>
                 </li>
                 <li class="middle visitor">
-                    <p>设备使用信息录入</p>
+                    <p>故障库</p>
                     <img src="../assets/index/computer2.png" alt="">
-                    <router-link to="/equipmentInput">点击进入</router-link>
+                    <router-link to="/fault">点击进入</router-link>
                 </li>
                 <li class="visitor">
                     <p>故障信息录入</p>

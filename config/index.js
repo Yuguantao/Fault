@@ -13,11 +13,12 @@ module.exports = {
     proxyTable: {
       '/FaultDBManage':{
         target:'http://192.168.34.110:8000/',
-
+        changeOrigin:true
       },
       '/FaultDBManage/*':{
         target:'http://192.168.34.110:8000/',
-      },
+        changeOrigin:true
+      }
     },
 
     // Various Dev Server settings

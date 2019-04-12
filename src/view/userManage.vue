@@ -438,27 +438,31 @@ export default {
 
         },
         deleteUser(row){
-            let param = {
-                    "msg": {
-                        "uuid":row.uuid
-                    }
-                }
-            this.$axios.post('FaultDBManage/deluser/',param                   
-            ).then(function(response){
-                if(response.data.stu == 200){
-                    alert("删除成功！")
-                    var length = this.userData.length;
-                    for (var i = 0; i < length; i++) {
-                        if (this.userData[i].uuid == param.msg.uuid) {                           
-                                this.userData.splice(i, 1);
+            if(confirm("确认删除？")){
+                if(true){          
+                    let param = {
+                            "msg": {
+                                "uuid":row.uuid
+                            }
                         }
-                    }
-                }else{
-                   alert("删除失败！") 
+                    this.$axios.post('FaultDBManage/deluser/',param                   
+                    ).then(function(response){
+                        if(response.data.stu == 200){
+                            alert("删除成功！")
+                            var length = this.userData.length;
+                            for (var i = 0; i < length; i++) {
+                                if (this.userData[i].uuid == param.msg.uuid) {                           
+                                        this.userData.splice(i, 1);
+                                }
+                            }
+                        }else{
+                            alert("删除失败！") 
+                        }
+                    }.bind(this)).catch(function (error) { 
+                        console.log(error);
+                    })    
                 }
-            }.bind(this)).catch(function (error) { 
-                console.log(error);
-            })    
+            }
         }
     }
 }

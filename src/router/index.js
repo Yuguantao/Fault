@@ -6,6 +6,8 @@ import search from '@/components/search'
 import addEquipment from '@/components/addEquipment'
 import equipmentInput from '@/components/equipmentInput'
 import faultInput from '@/components/faultInput'
+import infoDetail from '@/components/infoDetail'
+import fault from '@/components/fault'
 import userManage from '@/view/userManage'
 
 
@@ -53,6 +55,16 @@ export default new Router({
       path:'/faultInput',
       name:'faultInput',
       component:faultInput
+    },
+    {
+      path:'/infoDetail',
+      name:'infoDetail',
+      component:infoDetail
+    },
+    {
+      path:'/fault',
+      name:'fault',
+      component:fault
     }
   ]
 })

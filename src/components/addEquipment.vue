@@ -26,17 +26,22 @@
             <div class="addEquipmentBox modal-content">
                 <div class="modal-body equipmentBox">
                     <table width="100%" cellspacing="0" cellpadding="0">
+                        <thead>
+                            <tr width="100" class="item">
+                                <td class="pl10" colspan="2" style="text-align:center;">新增设备表</td>
+                            </tr>
+                        </thead>
                         <tbody><tr>
                             <td width="100" class="item">系统</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput"></td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput inputSystem"></td>
                         </tr>
                         <tr>
                             <td class="item">型号</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput"></td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput inputModel"></td>
                         </tr>
                         <tr>
                             <td class="item">编号</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+                            <td class="pl10"><input type="text" class="form-control equipmentInput inputNumber">
 
                             </td>
                         </tr>
@@ -50,6 +55,18 @@
                                 default-time="12:00:00">
                                 </el-date-picker>
                             </td>
+                        </tr>                       
+
+                        <tr style="margin-top:150px;">
+                            <td class="item">备注信息</td>
+                            <td class="pl10">
+                                <el-input
+                                type="textarea"
+                                :autosize="{ minRows: 2, maxRows: 2}"
+                                placeholder="请输入内容"
+                                v-model="textarea">
+                                </el-input>
+                            </td>										
                         </tr>
                         <tr style="height: 90px;vertical-align: text-top;">
                             <td class="item">视频信息</td>
@@ -57,10 +74,11 @@
                                 <el-upload
                                     class="upload-demo"
                                     style="height:95px;"
-                                    action="https://jsonplaceholder.typicode.com/posts/"
+                                    action="FaultDBManage/uploadfile/"
                                     :on-preview="handlePreview"
                                     :on-remove="handleRemove"
                                     :before-remove="beforeRemove"
+                                    :before-upload="beforeAvatarUpload"
                                     multiple
                                     :limit="2"
                                     :on-exceed="handleExceed"
@@ -76,7 +94,7 @@
                                 <el-upload
                                     class="upload-demo"
                                     style="height:95px;"
-                                    action="https://jsonplaceholder.typicode.com/posts/"
+                                    :action="mediaUrl"
                                     :file-list="fileList">
                                     <el-button size="small" type="primary">点击上传</el-button>
                                     </el-upload>
@@ -88,33 +106,16 @@
                                 <el-upload
                                     class="upload-demo"
                                     style="height:95px;"
-                                    action="https://jsonplaceholder.typicode.com/posts/"
+                                    :action="mediaUrl"
                                     :file-list="fileList">
                                     <el-button size="small" type="primary">点击上传</el-button>
                                     </el-upload>
                             </td>										
                         </tr>
-                        <tr>
-                            <td class="item">故障信息</td>
-                            <td class="pl10">
-                                <input type="text" class="form-control">
-                            </td>										
-                        </tr>
-                        <tr>
-                            <td class="item">备注信息</td>
-                            <td class="pl10">
-                                <el-input
-                                type="textarea"
-                                :autosize="{ minRows: 2, maxRows: 3}"
-                                placeholder="请输入内容"
-                                v-model="textarea">
-                                </el-input>
-                            </td>										
-                        </tr>
                         </tbody>
                     </table>
                     <div style="text-align:center;position: absolute;left: 0;right: 0;bottom: 30px;">
-                        <el-button type="primary" style="width:120px;">录入</el-button>
+                        <el-button type="primary" style="width:120px;" @click="addEquipInput">录入</el-button>
                     </div>
                 </div>
 
@@ -134,7 +135,8 @@ export default {
             userName:"",
             time:"",
             textarea:"",
-            fileList: []
+            fileList: [],
+            mediaUrl:""
         }
     },
     mounted(){
@@ -161,6 +163,53 @@ export default {
         exitUser(){
             this.$router.push({ path: '/login' });
             sessionStorage.removeItem("user")
+        },
+        addEquipInput(){
+            
+            let man_sys = $(".inputSystem").val()
+            let man_model = $(".inputModel").val()
+            let man_num = $(".inputNumber").val()
+            let man_impTime = this.time;
+            let man_remarks = this.textarea
+            let param = {
+                "msg": [
+                        {
+                        "man_sys": man_sys,
+                        "man_model": man_model,
+                        "man_num": man_num,
+                        "man_impTime":man_impTime,
+                        "man_remarks": man_remarks
+                        },
+                        {
+                        
+                        },
+                        {
+                        
+                        },
+                        {
+                            
+                        }
+                    ]
+            }
+            this.$axios.post('FaultDBManage/addinfo/',param                   
+            ).then(function(response){
+                if(response.data.msg == "true"){
+                    alert("录入成功")
+                    this.mediaUrl = response.data.url
+                }else{
+                    alert("该设备信息已存在!")
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+        },
+        beforeAvatarUpload(file){
+            this.$axios.post("FaultDBManage/uploadfile/",{
+                file:file,
+                name:"hahaha"
+            }).then((res) =>{
+                alert("上传成功!")
+            })
         },
         handleRemove(file, fileList) {
             console.log(file, fileList);

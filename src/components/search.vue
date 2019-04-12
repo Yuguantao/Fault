@@ -30,7 +30,7 @@
                 </div>
             </div>
             <ul class="fl parList">
-                <el-cascader
+                <el-cascader clearable 
                     :options="options"
                     v-model="equipSelectedOptions"
                     @change="handleChange">
@@ -44,7 +44,8 @@
                     ref="multipleTable"
                     tooltip-effect="dark"
                     style="width: 100%;cursor:pointer"
-                    height="500">
+                    height="500"
+                    @row-click="openDetails">
                     <el-table-column
                         type="selection"
                         width="50"
@@ -59,11 +60,11 @@
                 <el-table-column fixed="right" width="150" align="center" label="操作">
                     <template>
                         <template >
-                            <el-button
-                            size="mini">编辑</el-button>
+                            <!-- <el-button
+                            size="mini" class="handleButton">编辑</el-button> -->
                             <el-button
                             size="mini"
-                            type="danger">删除</el-button>
+                            type="danger" class="handleButton">删除</el-button>
                         </template>
                     </template>
                 </el-table-column>
@@ -368,6 +369,14 @@ export default {
             }.bind(this)).catch(function (error) { 
                 console.log(error);
             })
+        },
+        openDetails(row, event, column){
+            if(event.label == "操作"){
+                alert("hahaha")
+            }else{
+                this.$router.push({ path: '/infoDetail' });
+            }
+            
         }
     }
 }
