@@ -4,6 +4,7 @@ import login from '@/view/login'
 import FaultAnalysis from '@/view/index'
 import search from '@/components/search'
 import addEquipment from '@/components/addEquipment'
+import addEquip from '@/components/addEquip'
 import equipmentInput from '@/components/equipmentInput'
 import faultInput from '@/components/faultInput'
 import infoDetail from '@/components/infoDetail'
@@ -65,6 +66,11 @@ export default new Router({
       path:'/fault',
       name:'fault',
       component:fault
-    }
+    },
+    {
+      path:'/addEquip',
+      name:'addEquip',
+      component:addEquip
+    },
   ]
 })

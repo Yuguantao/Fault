@@ -26,120 +26,127 @@
             <div class="addEquipmentBox modal-content">
                 <div class="modal-body equipmentBox">
                     <table width="100%" cellspacing="0" cellpadding="0">
-                        <tbody><tr>
-                            <td width="100" class="item">故障时间</td>
-                            <td class="pl10">
-                                <el-date-picker
-                                v-model="time"
-                                type="datetime"
-                                placeholder="选择日期时间"
-                                default-time="12:00:00">
-                                </el-date-picker>
-                            </td>
-                            <td class="item">故障描述</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput"></td>
-                        </tr>
-                        <tr>
-                            
-                            <td class="item">故障类型</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+                        <thead>
+                            <tr width="100" class="item">
+                                <td class="pl10" colspan="4" style="text-align:center;">故障信息录入表</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td width="100" class="item">设备选择</td>
+                                <td class="pl10">
+                                    <el-cascader
+                                        v-model="selectedOptions"
+                                        placeholder="请选择系统"
+                                        :options="systemOption"
+                                        @active-item-change="handleItemChange"
+                                        :props="modalOption"
+                                        ></el-cascader>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="100" class="item">故障时间</td>
+                                <td class="pl10">
+                                    <el-date-picker
+                                    v-model="time"
+                                    type="datetime"
+                                    placeholder="选择日期时间"
+                                    default-time="12:00:00">
+                                    </el-date-picker>
+                                </td>
+                                <td class="item">故障描述</td>
+                                <td class="pl10"><input type="text" class="form-control equipmentInput"></td>
+                            </tr>
+                            <tr>
+                                
+                                <td class="item">故障类型</td>
+                                <td class="pl10"><input type="text" class="form-control equipmentInput">
 
-                            </td>
-                            <td class="item">故障类型</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+                                </td>
+                                <td class="item">故障现象</td>
+                                <td class="pl10"><input type="text" class="form-control equipmentInput">
 
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="item">故障原因</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="item">故障原因</td>
+                                <td class="pl10"><input type="text" class="form-control equipmentInput">
 
-                            </td>
-                            <td class="item">故障影响</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+                                </td>
+                                <td class="item">故障影响</td>
+                                <td class="pl10"><input type="text" class="form-control equipmentInput">
 
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="item">故障影响</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="item">检测方法</td>
+                                <td class="pl10"><input type="text" class="form-control equipmentInput">
 
-                            </td>
-                            <td class="item">检测方法</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+                                </td>
+                                <td class="item">排除措施</td>
+                                <td class="pl10"><input type="text" class="form-control equipmentInput">
 
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="item">排除措施</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="item">改进建议</td>
+                                <td class="pl10"><input type="text" class="form-control equipmentInput">
 
-                            </td>
-                            <td class="item">改进建议</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput">
+                                </td>
+                                <td class="item">人员信息</td>
+                                <td class="pl10"><input type="text" class="form-control equipmentInput">
 
-                            </td>
-                        </tr>
-                        <tr style="height: 70px;vertical-align: text-top;">
-                            <td class="item">视频信息</td>
-                            <td class="pl10">
-                                <el-upload
-                                    class="upload-demo"
-                                    style="height:60px;"
-                                    action="https://jsonplaceholder.typicode.com/posts/"
-                                    :on-preview="handlePreview"
-                                    :on-remove="handleRemove"
-                                    :before-remove="beforeRemove"
-                                    multiple
-                                    :limit="2"
-                                    :on-exceed="handleExceed"
-                                    :file-list="fileList">
-                                    <el-button size="small" type="primary">点击上传</el-button>
+                                </td>
+                            </tr>
+                            <tr style="height: 70px;vertical-align: text-top;">
+                                <td class="item">音视频信息</td>
+                                <td class="pl10">
+                                    <el-upload
+                                        class="upload-demo"
+                                        style="height:95px;width:257px;"
+                                        show-overflow-tooltip
+                                        ref="upload"
+                                        action="123"
+                                        :on-change="addFileV"
+                                        :on-preview="handlePreview"
+                                        :on-remove="handleRemoveV"                                   
+                                        :file-list="fileListVideo"
+                                        multiple
+                                        :auto-upload="false">
+                                        <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
+                                    </el-upload>                                   
+                                </td>										
+                            </tr>
+                            <tr style="height: 70px;vertical-align: text-top;">
+                                <td class="item">图像信息</td>
+                                <td class="pl10" style="height:80px;">
+                                    <el-upload
+                                        class="upload-demo"
+                                        style="height:95px;width:257px;"
+                                        show-overflow-tooltip
+                                        ref="upload"
+                                        action="123"
+                                        :on-change="addFileI"
+                                        :on-preview="handlePreview"
+                                        :on-remove="handleRemoveI"
+                                        :file-list="fileListImg"
+                                        multiple
+                                        :auto-upload="false">
+                                        <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
                                     </el-upload>
-                                    
-                            </td>										
-                        </tr>
-                        <tr style="height: 70px;vertical-align: text-top;">
-                            <td class="item">音频信息</td>
-                            <td class="pl10" style="height:80px;">
-                                <el-upload
-                                    class="upload-demo"
-                                    style="height:60px;"
-                                    action="https://jsonplaceholder.typicode.com/posts/"
-                                    :file-list="fileList">
-                                    <el-button size="small" type="primary">点击上传</el-button>
-                                    </el-upload>
-                            </td>										
-                        </tr>
-                        <tr style="height: 70px;vertical-align: text-top;">
-                            <td class="item">图像信息</td>
-                            <td class="pl10" style="height:80px;">
-                                <el-upload
-                                    class="upload-demo"
-                                    style="height:60px;"
-                                    action="https://jsonplaceholder.typicode.com/posts/"
-                                    :file-list="fileList">
-                                    <el-button size="small" type="primary">点击上传</el-button>
-                                    </el-upload>
-                            </td>										
-                        </tr>
-                        <tr>
-                            <td class="item">人员信息</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput">
-
-                            </td>										
-                        </tr>
-                        <tr>
-                            <td class="item">备注信息</td>
-                            <td class="pl10">
-                                <el-input
-                                type="textarea"
-                                :autosize="{ minRows: 2, maxRows: 3}"
-                                placeholder="请输入内容"
-                                v-model="textarea">
-                                </el-input>
-                            </td>										
-                        </tr>
+                                </td>										
+                            </tr>
+                            <tr>
+                                <td class="item">备注信息</td>
+                                <td class="pl10">
+                                    <el-input
+                                    type="textarea"
+                                    :autosize="{ minRows: 2, maxRows: 3}"
+                                    placeholder="请输入内容"
+                                    v-model="textarea">
+                                    </el-input>
+                                </td>										
+                            </tr>
                         </tbody>
                     </table>
                     <div style="text-align:center;position: absolute;left: 0;right: 0;bottom: 30px;">
@@ -163,11 +170,21 @@ export default {
             userName:"",
             time:"",
             textarea:"",
-            fileList: []
+            fileListVideo: [],
+            fileListImg: [],
+            selectedOptions:[],
+            systemOption:[],
+            modalOption:{
+                value:'label',
+                label:"name",
+                children: "children"
+            }
         }
     },
     mounted(){
-        this.setUserName()
+        this.setUserName(),
+        this.setStyle(),
+        this.initSystem()
     },
     methods: {
         setUserName(){
@@ -191,18 +208,150 @@ export default {
             this.$router.push({ path: '/login' });
             sessionStorage.removeItem("user")
         },
-        handleRemove(file, fileList) {
-            console.log(file, fileList);
+        setStyle(){
+            $(".el-upload-list").css({
+                "width": "257px",
+                "height": "65px",
+                "overflow-x":"hidden",
+                "overflow-y": "auto",})
+        },
+        initSystem(){
+            let param = {
+                        "msg": {
+                                "search_man": "光电经纬仪"
+                            }
+                        }
+
+
+            this.$axios.post('FaultDBManage/searchinfo/',param,                
+            ).then(function(response){
+                if(response.data.msg.length>0){
+                    var sysArr = response.data.msg
+                    sysArr.map(item => {
+                        this.$set(item, "name", item);
+                        this.$set(item, "children", []);
+                    });
+                    this.systemOption = sysArr;
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+        },
+        initModal(systemId){
+            let param = {
+                        "msg": {
+                                "man_sys": systemId
+                            }
+                        }
+            this.$axios.post('FaultDBManage/searchinfo/',param,                
+            ).then(function(response){
+                if(response.data.msg.length>0){
+                    var modalArr = response.data.msg
+                                       
+                    // for(var j = 0;j<this.systemOption.length;j++){
+                    //     if(this.systemOption[j].label = val[0]){
+                    //         for(var i = 0;i<modalArr.length;i++){                           
+                    //             var temp = {}
+                    //             temp.label = modalArr[i]
+                    //             temp.value = modalArr[i]
+                    //             temp.children = []
+                    //             this.systemOption[j].children.push(temp)
+                    //         }
+                    //     }
+  
+                    // }
+                    modalArr.map(item => {
+                        this.$set(item, "name", item);
+                        this.$set(item, "children", []);
+                    });
+                    this.systemOption.map((item, i) => {
+                        if (item.name === systemId) {
+                        item.children = modalArr;
+                        }
+                    });
+
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+        },
+        initNumber(systemId,modalId){
+            let param = {
+                        "msg": {
+                                "man_sys": systemId,
+                                "man_model": modalId
+                            }
+                        }
+
+            this.$axios.post('FaultDBManage/searchinfo/',param,                
+            ).then(function(response){
+                if(response.data.msg.length>0){
+                    var numberArr = response.data.msg
+                                       
+                    // for(var j = 0;j<this.systemOption.length;j++){
+                    //     if(this.systemOption[j].label = val[0]){
+                    //         for(var i = 0;i<modalArr.length;i++){                           
+                    //             var temp = {}
+                    //             temp.label = modalArr[i]
+                    //             temp.value = modalArr[i]
+                    //             temp.children = []
+                    //             this.systemOption[j].children.push(temp)
+                    //         }
+                    //     }
+  
+                    // }
+                    numberArr.map(item => {
+                        this.$set(item, "name", item);
+                        this.$set(item, "children", []);
+                    });
+                    this.systemOption.map((item, i) => {
+                        if (item.name === systemId) {
+                            item.children.map((city, idx) => {
+                                city.children = numberArr;
+                            });
+                        }
+                    });
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+        },
+        handleItemChange(val){
+            if (val.length === 1) {
+                this.initModal(val[0]);
+            } else if (val.length === 2) {
+                this.initNumber(val[0], val[1]);
+            }
+
+        },
+        addFileV(file, fileList){
+            this.fileListVideo = []
+            for(var i = 0; i<fileList.length;i++){
+                this.fileListVideo.push(fileList[i].raw)
+            }
+            
+        },
+        addFileI(file, fileList){
+            this.fileListImg = []
+            for(var i = 0; i<fileList.length;i++){
+                this.fileListImg.push(fileList[i].raw)
+            }
+        },
+        handleRemoveV(file, fileList) {
+            this.fileListVideo = []
+            for(var i = 0; i<fileList.length;i++){
+                this.fileListVideo.push(fileList[i].raw)
+            }
+        },
+        handleRemoveI(file, fileList) {
+            this.fileListImg = []
+            for(var i = 0; i<fileList.length;i++){
+                this.fileListImg.push(fileList[i].raw)
+            }
         },
         handlePreview(file) {
-            console.log(file);
+            
         },
-        handleExceed(files, fileList) {
-            this.$message.warning(`当前限制选择 2 个文件，本次选择了 ${files.length} 个文件，共上传了 ${fileList.length} 个文件`);
-        },
-        beforeRemove(file, fileList) {
-            return this.$confirm(`确定移除 ${ file.name }？`);
-        }
     }
 }
 </script>

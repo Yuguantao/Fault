@@ -53,7 +53,7 @@
                                     </div>
                                     <div class="icon" style="left:360px;">
 											<a class="mf-a" ></a>
-											<span class="mf-fn">生产/设计单位</span>
+											<span class="mf-fn">生产单位</span>
 											<span class="mf-fnv"></span>
                                     </div>
                                     <div class="icon" style="top:80px;">

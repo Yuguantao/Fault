@@ -28,20 +28,23 @@
                     <table width="100%" cellspacing="0" cellpadding="0">
                         <thead>
                             <tr width="100" class="item">
-                                <td class="pl10" colspan="2" style="text-align:center;">新增设备表</td>
+                                <td class="pl10" colspan="4" style="text-align:center;">新增设备表</td>
                             </tr>
                         </thead>
                         <tbody><tr>
                             <td width="100" class="item">系统</td>
                             <td class="pl10"><input type="text" class="form-control equipmentInput inputSystem"></td>
-                        </tr>
-                        <tr>
                             <td class="item">型号</td>
                             <td class="pl10"><input type="text" class="form-control equipmentInput inputModel"></td>
                         </tr>
+
                         <tr>
                             <td class="item">编号</td>
                             <td class="pl10"><input type="text" class="form-control equipmentInput inputNumber">
+
+                            </td>
+                            <td class="item">功能用途</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput inputUse">
 
                             </td>
                         </tr>
@@ -57,6 +60,37 @@
                             </td>
                         </tr>                       
 
+                        <tr>
+                            <td class="item">主要技术指标</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput inputTechnical">
+
+                            </td>
+                            <td class="item">存放地点</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput inputPlace">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="item">责任部门</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput responsible">
+
+                            </td>
+                            <td class="item">责任人</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput responsibler">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="item">生产厂家</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput manufacturer">
+
+                            </td>
+                            <td class="item">厂家联系人</td>
+                            <td class="pl10"><input type="text" class="form-control equipmentInput ManufacturerContact">
+
+                            </td>
+                        </tr>
+
                         <tr style="margin-top:150px;">
                             <td class="item">备注信息</td>
                             <td class="pl10">
@@ -68,47 +102,74 @@
                                 </el-input>
                             </td>										
                         </tr>
-                        <tr style="height: 90px;vertical-align: text-top;">
+                        <tr style="height: 90px;vertical-align: text-top;width:;overflow:hidden;">
                             <td class="item">音视频信息</td>
                             <td class="pl10">
                                 <el-upload
                                     class="upload-demo"
-                                    style="height:95px;"
-                                    action="FaultDBManage/uploadfile/"
+                                    style="height:95px;width:257px;"
+                                    show-overflow-tooltip
+                                    ref="upload"
+                                    action="123"
+                                    :on-change="addFileV"
                                     :on-preview="handlePreview"
-                                    :on-remove="handleRemove"
-                                    :before-remove="beforeRemove"
-                                    :before-upload="beforeAvatarUpload"
-                                    multiple
-                                    :limit="2"
-                                    :on-exceed="handleExceed"
-                                    :file-list="fileList">
-                                    <el-button size="small" type="primary">点击上传</el-button>
-                                    </el-upload>
+                                    :on-remove="handleRemoveV"
                                     
+                                    :file-list="fileListVideo"
+                                    multiple
+                                    :auto-upload="false">
+                                    <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
+                                </el-upload>                               
                             </td>										
                         </tr>
                         <tr style="height: 90px;vertical-align: text-top;">
                             <td class="item">图像信息</td>
-                            <td class="pl10" style="height:80px;">
+                            <td class="pl10">
                                 <el-upload
                                     class="upload-demo"
-                                    style="height:95px;"
-                                    :action="mediaUrl"
-                                    :file-list="fileList">
-                                    <el-button size="small" type="primary">点击上传</el-button>
-                                    </el-upload>
+                                    style="height:95px;width:257px;"
+                                    show-overflow-tooltip
+                                    ref="upload"
+                                    action="123"
+                                    :on-change="addFileI"
+                                    :on-preview="handlePreview"
+                                    :on-remove="handleRemoveI"
+                                    :file-list="fileListImg"
+                                    multiple
+                                    :auto-upload="false">
+                                    <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
+                                </el-upload>
+                            </td>										
+                        </tr>
+                        <tr style="height: 90px;vertical-align: text-top;">
+                            <td class="item">备附件说明</td>
+                            <td class="pl10">
+                                <!-- <el-upload
+                                    class="upload-demo"
+                                    style="height:95px;width:257px;"
+                                    show-overflow-tooltip
+                                    ref="upload"
+                                    action="123"
+                                    :on-change="addFileA"
+                                    :on-preview="handlePreview"
+                                    :on-remove="handleRemoveA"
+                                    :file-list="fileListAttach"
+                                    multiple
+                                    :auto-upload="false">
+                                    <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
+                                </el-upload> -->
+                                <input type="text" class="form-control equipmentInput attach">
                             </td>										
                         </tr>
                         </tbody>
                     </table>
-                    <div style="text-align:center;position: absolute;left: 0;right: 0;bottom: 30px;">
+                    <div style="text-align:center;position: absolute;left: 0;right: 0;bottom: 10px;">
                         <el-button type="primary" style="width:120px;" @click="addEquipInput">录入</el-button>
                     </div>
                 </div>
 
             </div>
-        </div>
+        </div>       
         <router-view></router-view>
     </div>
     
@@ -123,12 +184,15 @@ export default {
             userName:"",
             time:"",
             textarea:"",
-            fileList: [],
-            mediaUrl:""
+            fileListVideo: [],
+            fileListImg: [],
+            fileListAttach: [],
+            mediaUrl:"",
         }
     },
     mounted(){
-        this.setUserName()
+        this.setUserName(),
+        this.setStyle()
     },
     methods: {
         setUserName(){
@@ -153,33 +217,51 @@ export default {
             sessionStorage.removeItem("user")
         },
         addEquipInput(){
-            
+            let param = new FormData()
+
             let man_sys = $(".inputSystem").val()
             let man_model = $(".inputModel").val()
             let man_num = $(".inputNumber").val()
+            let man_porpuse = $(".inputUse").val()
+            let man_qualifi  = $(".inputTechnical").val()
+            let man_place = $(".inputPlace").val()
+            let man_department = $(".responsible").val()
+            let man_persion = $(".responsibler").val()
+            let man_mfrs = $(".manufacturer").val()
+            let man_mfrspersion = $(".ManufacturerContact").val()
+            let man_enclosure = $(".attach").val()
+
             let man_impTime = this.time;
             let man_remarks = this.textarea
-            let param = {
-                "msg": [
-                        {
-                        "man_sys": man_sys,
-                        "man_model": man_model,
-                        "man_num": man_num,
-                        "man_impTime":man_impTime,
-                        "man_remarks": man_remarks
-                        },
-                        {
-                        
-                        },
-                        {
-                        
-                        },
-                        {
-                            
-                        }
-                    ]
+
+            let a = this.fileListVideo
+            let b = this.fileListImg
+            let c = this.fileListAttach
+            
+            let d = a.concat(b)
+            let fileList = d.concat(c)
+
+            param.append("tablename","managetable")
+            param.append("man_sys",man_sys)
+            param.append("man_model",man_model)
+            param.append("man_num",man_num)
+            param.append("man_porpuse",man_porpuse)
+            param.append("man_qualifi",man_qualifi)
+            param.append("man_place",man_place)
+            param.append("man_department",man_department)
+            param.append("man_persion",man_persion)
+            param.append("man_mfrs",man_mfrs)
+            param.append("man_mfrspersion",man_mfrspersion)
+            param.append("man_remarks",man_remarks)
+            param.append("man_impTime",man_impTime)
+            param.append("man_enclosure",man_enclosure)
+
+            for(var i = 0;i<fileList.length;i++){
+                param.append("files",fileList[i])
             }
-            this.$axios.post('FaultDBManage/addinfo/',param                   
+            
+
+            this.$axios.post('FaultDBManage/addinfo/',param,{headers: {'Content-Type':'application/x-www-form-urlencoded'}}                
             ).then(function(response){
                 if(response.data.msg == "true"){
                     alert("录入成功")
@@ -191,25 +273,53 @@ export default {
                 console.log(error);
             })
         },
-        beforeAvatarUpload(file){
-            file.man_uuid = "98dad39e-5426-11e9-ac7b-8cec4bb1995b" 
-            this.$axios.post("FaultDBManage/uploadfile/",{
-                file:file,            
-            }).then((res) =>{
-                alert("上传成功!")
-            })
+        addFileV(file, fileList){
+            this.mediaUrl = file
+            this.fileListVideo = []
+            for(var i = 0; i<fileList.length;i++){
+                this.fileListVideo.push(fileList[i].raw)
+            }
+            
         },
-        handleRemove(file, fileList) {
-            console.log(file, fileList);
+        addFileI(file, fileList){
+            this.fileListImg = []
+            for(var i = 0; i<fileList.length;i++){
+                this.fileListImg.push(fileList[i].raw)
+            }
+        },
+        addFileA(file, fileList){
+            this.fileListAttach = []
+            for(var i = 0; i<fileList.length;i++){
+                this.fileListAttach.push(fileList[i].raw)
+            }
+        },
+        handleRemoveV(file, fileList) {
+            this.fileListVideo = []
+            for(var i = 0; i<fileList.length;i++){
+                this.fileListVideo.push(fileList[i].raw)
+            }
+        },
+        handleRemoveI(file, fileList) {
+            this.fileListImg = []
+            for(var i = 0; i<fileList.length;i++){
+                this.fileListImg.push(fileList[i].raw)
+            }
+        },
+        handleRemoveA(file, fileList) {
+            this.fileListAttach = []
+            for(var i = 0; i<fileList.length;i++){
+                this.fileListAttach.push(fileList[i].raw)
+            }
         },
         handlePreview(file) {
-            console.log(file);
+            
         },
-        handleExceed(files, fileList) {
-            this.$message.warning(`当前限制选择 2 个文件，本次选择了 ${files.length} 个文件，共上传了 ${fileList.length} 个文件`);
-        },
-        beforeRemove(file, fileList) {
-            return this.$confirm(`确定移除 ${ file.name }？`);
+        setStyle(){
+            $(".el-upload-list").css({
+                "width": "257px",
+                "height": "65px",
+                "overflow-x":"hidden",
+                "overflow-y": "auto",})
         }
     }
 }
@@ -297,8 +407,8 @@ export default {
         -webkit-box-orient: vertical;
         -webkit-box-direction: normal;
         flex-direction: column;
-        width: 600px;
-        height: 720px;
+        width: 780px;
+        height: 770px;
         pointer-events: auto;
         background-clip: padding-box;
         border: 1px solid rgba(0,0,0,.2);
@@ -322,10 +432,16 @@ export default {
         padding: 5px 0;
     }
     .container-addEquipmentBox{
-        margin-top:70px;
+        margin-top:45px;
     }
     .equipmentInput{
         width: 220px;
     }
+    /* .el-upload-list{
+        width: 257px;
+        height: 62px !important;
+        overflow-x:hidden;
+        overflow-y: auto !important;
+    } */
 </style>
 
