@@ -133,11 +133,12 @@ export default {
     methods: {
         setUserName(){
             var self = this;
+            self.acc_permission = sessionStorage.getItem("acc_permission");
             self.userName = sessionStorage.getItem("user");
-            if(self.userName){
+            if(self.acc_permission){
                 $(".headRight").hide();
                 $("#user").text(self.userName)
-                if(self.userName !== "admin"){
+                if(self.acc_permission != 0){
                     $(".visitor a").css("background-color","#999")
                     $(".visitor a").attr("disabled",true).css("pointer-events","none");
                     $("#useSet").hide()

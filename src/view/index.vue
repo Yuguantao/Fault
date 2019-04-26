@@ -1,7 +1,7 @@
 <template>
-    <div class="container container-box">
+    <div class="container-box container-fluid">
         <div class="navbar navbar-inverse navbar-fixed-top" style="top:35px">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="head">
                     <div class="headLeft fl">
                         <router-link to= "/FaultAnalysis" style="display:block;font-size: 25px;color: #fff;">故障数据库管理系统</router-link>
@@ -24,7 +24,7 @@
         </div>
         
 
-        <div class="container projects index">
+        <div class="container-fluid projects index">
             <ul class="content row">
                 <li class="visitor">
                     <p>新增设备</p>
@@ -127,12 +127,12 @@ export default {
     .icon-arrow-left{background-position: -240px -96px;}
     .icon-arrow-right {background-position: -264px -96px;}
 
-    .container.index{
+    .container-fluid.index{
         margin: 450px auto 0;
     }
-    .container {
-        padding-right: 15px;
-        padding-left: 15px;
+    .container-fluid {
+        padding-right: 40px;
+        padding-left: 40px;
         margin-right: auto;
         margin-left: auto;
     }

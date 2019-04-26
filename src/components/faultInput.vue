@@ -1,7 +1,7 @@
 <template>
-    <div class="container container-box">
+    <div class="container-fluid container-box">
         <div class="navbar navbar-inverse navbar-fixed-top" style="top:35px">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="head">
                     <div class="headLeft fl">
                         <router-link to= "/FaultAnalysis" style="display:block;font-size: 25px;color: #fff;">故障数据库管理系统</router-link>
@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <div class="container container-addEquipmentBox">
+        <div class="container-fluid container-addEquipmentBox">
             <div class="addEquipmentBox modal-content">
                 <div class="modal-body equipmentBox">
                     <table width="100%" cellspacing="0" cellpadding="0">
@@ -32,16 +32,36 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr style="line-height: 60px;">
                                 <td width="100" class="item">设备选择</td>
-                                <td class="pl10">
-                                    <el-cascader
-                                        v-model="selectedOptions"
-                                        placeholder="请选择系统"
-                                        :options="systemOption"
-                                        @active-item-change="handleItemChange"
-                                        :props="modalOption"
-                                        ></el-cascader>
+                                <td class="pl10" colspan="3">
+                                        <div>
+                                            <el-select v-model="systemValue" @change="gainModal" placeholder="请选择系统" style="width:30%;">
+                                                <el-option
+                                                v-for="item in systemOptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                            <el-select v-model="modalValue" @change="gainNumber" placeholder="请选择型号" style="width:30%;">
+                                                <el-option
+                                                v-for="item in modalOptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                            <el-select v-model="numValue" @change="gainUuid" placeholder="请选择编号" style="width:30%;">
+                                                <el-option
+                                                v-for="item in numOptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                        </div>
+                                        
                                 </td>
                             </tr>
                             <tr>
@@ -51,50 +71,52 @@
                                     v-model="time"
                                     type="datetime"
                                     placeholder="选择日期时间"
-                                    default-time="12:00:00">
+                                    default-time="12:00:00"
+                                    value-format="yyyy-MM-dd HH:mm:ss"
+                                    format="yyyy-MM-dd HH:mm:ss">
                                     </el-date-picker>
                                 </td>
                                 <td class="item">故障描述</td>
-                                <td class="pl10"><input type="text" class="form-control equipmentInput"></td>
+                                <td class="pl10"><input type="text" class="form-control equipmentInput fau_desc"></td>
                             </tr>
                             <tr>
                                 
                                 <td class="item">故障类型</td>
-                                <td class="pl10"><input type="text" class="form-control equipmentInput">
+                                <td class="pl10"><input type="text" class="form-control equipmentInput fau_type">
 
                                 </td>
                                 <td class="item">故障现象</td>
-                                <td class="pl10"><input type="text" class="form-control equipmentInput">
+                                <td class="pl10"><input type="text" class="form-control equipmentInput fau_phen">
 
                                 </td>
                             </tr>
                             <tr>
                                 <td class="item">故障原因</td>
-                                <td class="pl10"><input type="text" class="form-control equipmentInput">
+                                <td class="pl10"><input type="text" class="form-control equipmentInput fau_reason">
 
                                 </td>
                                 <td class="item">故障影响</td>
-                                <td class="pl10"><input type="text" class="form-control equipmentInput">
+                                <td class="pl10"><input type="text" class="form-control equipmentInput fau_effect">
 
                                 </td>
                             </tr>
                             <tr>
                                 <td class="item">检测方法</td>
-                                <td class="pl10"><input type="text" class="form-control equipmentInput">
+                                <td class="pl10"><input type="text" class="form-control equipmentInput fau_check">
 
                                 </td>
                                 <td class="item">排除措施</td>
-                                <td class="pl10"><input type="text" class="form-control equipmentInput">
+                                <td class="pl10"><input type="text" class="form-control equipmentInput fau_measure">
 
                                 </td>
                             </tr>
                             <tr>
                                 <td class="item">改进建议</td>
-                                <td class="pl10"><input type="text" class="form-control equipmentInput">
+                                <td class="pl10"><input type="text" class="form-control equipmentInput fau_advise">
 
                                 </td>
                                 <td class="item">人员信息</td>
-                                <td class="pl10"><input type="text" class="form-control equipmentInput">
+                                <td class="pl10"><input type="text" class="form-control equipmentInput fau_peopleInfo">
 
                                 </td>
                             </tr>
@@ -150,7 +172,7 @@
                         </tbody>
                     </table>
                     <div style="text-align:center;position: absolute;left: 0;right: 0;bottom: 30px;">
-                        <el-button type="primary" style="width:120px;">录入</el-button>
+                        <el-button type="primary" style="width:120px;" @click="addEquipFault">录入</el-button>
                     </div>
                 </div>
 
@@ -173,12 +195,12 @@ export default {
             fileListVideo: [],
             fileListImg: [],
             selectedOptions:[],
-            systemOption:[],
-            modalOption:{
-                value:'label',
-                label:"name",
-                children: "children"
-            }
+            systemOptions:[],
+            modalOptions:[],
+            numOptions:[],
+            systemValue:"",
+            modalValue:"",
+            numValue:""
         }
     },
     mounted(){
@@ -189,11 +211,12 @@ export default {
     methods: {
         setUserName(){
             var self = this;
+            self.acc_permission = sessionStorage.getItem("acc_permission");
             self.userName = sessionStorage.getItem("user");
-            if(self.userName){
+            if(self.acc_permission){
                 $(".headRight").hide();
                 $("#user").text(self.userName)
-                if(self.userName !== "admin"){
+                if(self.acc_permission != 0){
                     $(".visitor a").css("background-color","#999")
                     $(".visitor a").attr("disabled",true).css("pointer-events","none");
                     $("#useSet").hide()
@@ -222,22 +245,29 @@ export default {
                             }
                         }
 
-
+            
             this.$axios.post('FaultDBManage/searchinfo/',param,                
             ).then(function(response){
+                this.systemOptions = []
+                this.modalOptions  = []
+                this.numOptions = []
                 if(response.data.msg.length>0){
                     var sysArr = response.data.msg
-                    sysArr.map(item => {
-                        this.$set(item, "name", item);
-                        this.$set(item, "children", []);
-                    });
-                    this.systemOption = sysArr;
+                    for(var i = 0;i<sysArr.length;i++){
+                        var item = {}
+                        item.value = sysArr[i]
+                        item.label = sysArr[i]
+                        this.systemOptions.push(item)
+                    }                    
+                    
                 }
             }.bind(this)).catch(function (error) { 
                 console.log(error);
             })
+
         },
-        initModal(systemId){
+        gainModal(){
+            let systemId = this.systemValue
             let param = {
                         "msg": {
                                 "man_sys": systemId
@@ -245,84 +275,76 @@ export default {
                         }
             this.$axios.post('FaultDBManage/searchinfo/',param,                
             ).then(function(response){
+                this.modalOptions  = []
+                this.numOptions = []
                 if(response.data.msg.length>0){
                     var modalArr = response.data.msg
-                                       
-                    // for(var j = 0;j<this.systemOption.length;j++){
-                    //     if(this.systemOption[j].label = val[0]){
-                    //         for(var i = 0;i<modalArr.length;i++){                           
-                    //             var temp = {}
-                    //             temp.label = modalArr[i]
-                    //             temp.value = modalArr[i]
-                    //             temp.children = []
-                    //             this.systemOption[j].children.push(temp)
-                    //         }
-                    //     }
-  
-                    // }
-                    modalArr.map(item => {
-                        this.$set(item, "name", item);
-                        this.$set(item, "children", []);
-                    });
-                    this.systemOption.map((item, i) => {
-                        if (item.name === systemId) {
-                        item.children = modalArr;
-                        }
-                    });
-
+    
+                    for(var i = 0;i<modalArr.length;i++){                           
+                        var temp = {}
+                        temp.label = modalArr[i]
+                        temp.value = modalArr[i]
+                        
+                        this.modalOptions.push(temp)
+                    }
                 }
             }.bind(this)).catch(function (error) { 
                 console.log(error);
             })
+            if (this.modalValue) {
+                this.modalValue = '';
+            }
+            if (this.numValue) {
+                this.numValue = '';
+            }
         },
-        initNumber(systemId,modalId){
+        gainNumber(){
+            let systemId = this.systemValue
+            let modalId = this.modalValue
             let param = {
                         "msg": {
                                 "man_sys": systemId,
                                 "man_model": modalId
                             }
                         }
-
             this.$axios.post('FaultDBManage/searchinfo/',param,                
             ).then(function(response){
+                this.numOptions = []
                 if(response.data.msg.length>0){
                     var numberArr = response.data.msg
-                                       
-                    // for(var j = 0;j<this.systemOption.length;j++){
-                    //     if(this.systemOption[j].label = val[0]){
-                    //         for(var i = 0;i<modalArr.length;i++){                           
-                    //             var temp = {}
-                    //             temp.label = modalArr[i]
-                    //             temp.value = modalArr[i]
-                    //             temp.children = []
-                    //             this.systemOption[j].children.push(temp)
-                    //         }
-                    //     }
-  
-                    // }
-                    numberArr.map(item => {
-                        this.$set(item, "name", item);
-                        this.$set(item, "children", []);
-                    });
-                    this.systemOption.map((item, i) => {
-                        if (item.name === systemId) {
-                            item.children.map((city, idx) => {
-                                city.children = numberArr;
-                            });
-                        }
-                    });
+                    for(var i = 0;i<numberArr.length;i++){                           
+                        var temp = {}
+                        temp.label = numberArr[i]
+                        temp.value = numberArr[i]
+                        this.numOptions.push(temp)
+                    }
                 }
             }.bind(this)).catch(function (error) { 
                 console.log(error);
             })
-        },
-        handleItemChange(val){
-            if (val.length === 1) {
-                this.initModal(val[0]);
-            } else if (val.length === 2) {
-                this.initNumber(val[0], val[1]);
+            if (this.numValue) {
+                this.numValue = '';
             }
-
+        },
+        gainUuid(){
+            let systemId = this.systemValue
+            let modalId = this.modalValue
+            let numId = this.numValue
+            let param = {
+                        "msg": {
+                                "man_sys": systemId,
+                                "man_model": modalId,
+                                "man_num": numId
+                            }
+                        }
+            this.$axios.post('FaultDBManage/searchinfo/',param,                
+            ).then(function(response){
+                if(response.data.msg.length>0){
+                    sessionStorage.setItem("faultSysUuid",response.data.msg[0].fields.uuid);
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
         },
         addFileV(file, fileList){
             this.fileListVideo = []
@@ -352,6 +374,64 @@ export default {
         handlePreview(file) {
             
         },
+        addEquipFault(){
+            let param = new FormData()
+
+            let fau_manInfo = sessionStorage.getItem("faultSysUuid")
+            let fau_useInfo = sessionStorage.getItem("faultSysUuid")
+
+            let fau_desc = $(".fau_desc").val()
+            let fau_type = $(".fau_type").val()
+            let fau_phen = $(".fau_phen").val()
+            let fau_reason = $(".fau_reason").val()
+            let fau_effect  = $(".fau_effect").val()
+            let fau_check = $(".fau_check").val()
+            let fau_measure = $(".fau_measure").val()
+            let fau_advise = $(".fau_advise").val()
+            let fau_peopleInfo = $(".fau_peopleInfo").val()
+
+
+            let fau_time = this.time;
+            let fau_remarks = this.textarea
+
+            let a = this.fileListVideo
+            let b = this.fileListImg
+
+            
+            let fileList = a.concat(b)
+
+            param.append("tablename","faulttable")
+            param.append("fau_manInfo",fau_manInfo)
+            param.append("fau_useInfo",fau_useInfo)
+            param.append("fau_desc",fau_desc)
+            param.append("fau_type",fau_type)
+            param.append("fau_phen",fau_phen)
+            param.append("fau_reason",fau_reason)
+            param.append("fau_effect",fau_effect)
+            param.append("fau_check",fau_check)
+            param.append("fau_measure",fau_measure)
+            param.append("fau_advise",fau_advise)
+            param.append("fau_peopleInfo",fau_peopleInfo)
+            param.append("fau_time",fau_time)
+            param.append("fau_remarks",fau_remarks)
+
+            for(var i = 0;i<fileList.length;i++){
+                param.append("files",fileList[i])
+            }
+            
+
+            this.$axios.post('FaultDBManage/addinfo/',param,{headers: {'Content-Type':'application/x-www-form-urlencoded'}}                
+            ).then(function(response){
+                if(response.data.msg == "true"){
+                    alert("录入成功")
+                    this.mediaUrl = response.data.url
+                }else{
+                    alert("该设备信息已存在!")
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+        }
     }
 }
 </script>
@@ -362,12 +442,12 @@ export default {
     @import "../../static/css/voicePlus.css";
 
 
-    .container.index{
+    .container-fluid.index{
         margin: 450px auto 0;
     }
-    .container {
-        padding-right: 15px;
-        padding-left: 15px;
+    .container-fluid {
+        padding-right: 40px;
+        padding-left: 40px;
         margin-right: auto;
         margin-left: auto;
     }

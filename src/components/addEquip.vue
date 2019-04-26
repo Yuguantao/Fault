@@ -1,7 +1,7 @@
 <template>
-    <div class="container container-box">
+    <div class="container-fluid container-box">
         <div class="navbar navbar-inverse navbar-fixed-top" style="top:35px">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="head">
                     <div class="headLeft fl">
                         <router-link to= "/FaultAnalysis" style="display:block;font-size: 25px;color: #fff;">故障数据库管理系统</router-link>
@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <div class="container container-addEquipmentBox">
+        <div class="container-fluid container-addEquipmentBox">
             <div class="addEquipmentBox modal-content">
                 <div class="modal-body equipmentBox">
                     <table width="100%" cellspacing="0" cellpadding="0">
@@ -55,7 +55,9 @@
                                 v-model="time"
                                 type="datetime"
                                 placeholder="选择日期时间"
-                                default-time="12:00:00">
+                                default-time="12:00:00"
+                                value-format="yyyy-MM-dd HH:mm:ss"
+                                format="yyyy-MM-dd HH:mm:ss">
                                 </el-date-picker>
                             </td>
                         </tr>                       
@@ -197,11 +199,12 @@ export default {
     methods: {
         setUserName(){
             var self = this;
+            self.acc_permission = sessionStorage.getItem("acc_permission");
             self.userName = sessionStorage.getItem("user");
-            if(self.userName){
+            if(self.acc_permission){
                 $(".headRight").hide();
                 $("#user").text(self.userName)
-                if(self.userName !== "admin"){
+                if(self.acc_permission != 0){
                     $(".visitor a").css("background-color","#999")
                     $(".visitor a").attr("disabled",true).css("pointer-events","none");
                     $("#useSet").hide()
@@ -331,12 +334,12 @@ export default {
     @import "../../static/css/voicePlus.css";
 
 
-    .container.index{
+    .container-fluid.index{
         margin: 450px auto 0;
     }
-    .container {
-        padding-right: 15px;
-        padding-left: 15px;
+    .container-fluid {
+        padding-right: 40px;
+        padding-left: 40px;
         margin-right: auto;
         margin-left: auto;
     }

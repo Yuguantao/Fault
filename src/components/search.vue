@@ -1,7 +1,7 @@
 <template>
-    <div class="container container-box">
+    <div class="container-fluid container-box">
         <div class="navbar navbar-inverse navbar-fixed-top" style="top:35px">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="head">
                     <div class="headLeft fl">
                         <router-link to= "/FaultAnalysis" style="display:block;font-size: 25px;color: #fff;">故障数据库管理系统</router-link>
@@ -23,21 +23,40 @@
             </div>
         </div>
 
-        <div class="container fl">
+        <div class="container-fluid fl">
             <div class="topBox clearfix">
                 <span class="fl" style="line-height:34px;">设备信息查询：</span>
                 <div class="fl sys1">
                 </div>
             </div>
             <ul class="fl parList">
-                <el-cascader clearable 
-                    :options="options"
-                    v-model="equipSelectedOptions"
-                    @change="handleChange">
-                </el-cascader>
+                <el-select v-model="systemValue" @change="gainModal" placeholder="请选择系统" style="width:30%;">
+                    <el-option
+                    v-for="item in systemOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                    </el-option>
+                </el-select>
+                <el-select v-model="modalValue" @change="gainNumber" placeholder="请选择型号" style="width:30%;">
+                    <el-option
+                    v-for="item in modalOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                    </el-option>
+                </el-select>
+                <el-select v-model="numValue" @change="selectInfo" placeholder="请选择编号" style="width:30%;">
+                    <el-option
+                    v-for="item in numOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                    </el-option>
+                </el-select>
             </ul>
             
-            <span class="sBtn" id="sureBtn" @click="selectInfo">查询</span>
+            <!-- <span class="sBtn" id="sureBtn" @click="selectInfo">查询</span> -->
   
             <el-table :data="equipData" class="equipTable"
                     fixed
@@ -46,26 +65,141 @@
                     style="width: 100%;cursor:pointer"
                     height="500"
                     @row-click="openDetails">
-                    <el-table-column
-                        type="selection"
-                        width="50"
-                        align="center">
-                    </el-table-column>
-                <el-table-column fixed show-overflow-tooltip prop="model" label="型号" width="120" align="center"></el-table-column>
-                <el-table-column  show-overflow-tooltip prop="system" width="120" label="系统" align="center"></el-table-column>
-                <el-table-column show-overflow-tooltip prop="number" width="80" label="编号" align="center"></el-table-column>
-                <el-table-column show-overflow-tooltip prop="createTime" width="220" label="创建时间" align="center"></el-table-column>
-                <el-table-column show-overflow-tooltip prop="uuid" width="80" label="uuid" align="center"></el-table-column>
-                <el-table-column show-overflow-tooltip prop="marks" width="220" label="备注信息" align="center"></el-table-column>
-                <el-table-column fixed="right" width="150" align="center" label="操作">
-                    <template>
-                        <template >
-                            <!-- <el-button
-                            size="mini" class="handleButton">编辑</el-button> -->
-                            <el-button
-                            size="mini"
-                            type="danger" class="handleButton">删除</el-button>
+                    
+                <el-table-column fixed show-overflow-tooltip prop="system" label="系统" width="150" align="center">
+                    <template slot-scope="scope">
+                        <template  v-if="scope.row.edit">
+                            <el-input v-model="scope.row.system" placeholder="系统"></el-input>
                         </template>
+                        <span v-else>{{ scope.row.system }}</span>                        
+                    </template>
+                </el-table-column>
+                <el-table-column  fixed show-overflow-tooltip prop="model" width="120" label="型号" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.edit">
+                            <el-input v-model="scope.row.model" placeholder="型号"></el-input>
+                        </template>
+                        <span v-else>{{ scope.row.model }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column fixed show-overflow-tooltip prop="number" width="80" label="编号" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.edit">
+                            <el-input v-model="scope.row.number" placeholder="编号"></el-input>
+                        </template>
+                        <span v-else>{{ scope.row.number }}</span>                       
+                    </template>
+                </el-table-column>
+                <el-table-column sortable prop="createTime" width="250" label="创建时间" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.edit">
+                            <el-date-picker
+                                v-model="scope.row.createTime"
+                                type="datetime"
+                                format="yyyy-MM-dd HH:mm:ss"
+                                value-format="yyyy-MM-dd HH:mm:ss"
+                                placeholder="创建时间">
+                            </el-date-picker>
+                        </template>
+                        <span v-else>{{ scope.row.createTime }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column show-overflow-tooltip prop="man_porpuse" width="220" label="功能用途" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.edit">
+                            <el-input v-model="scope.row.man_porpuse" placeholder="功能用途"></el-input>
+                        </template>
+                        <span v-else>{{ scope.row.man_porpuse }}</span> 
+                    </template>
+                </el-table-column>
+                <el-table-column show-overflow-tooltip prop="man_qualifi" width="220" label="主要技术指标" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.edit">
+                            <el-input v-model="scope.row.man_qualifi" placeholder="主要技术指标"></el-input>
+                        </template>
+                        <span v-else>{{ scope.row.man_qualifi }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column show-overflow-tooltip prop="man_place" width="120" label="存放地点" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.edit">
+                            <el-input v-model="scope.row.man_place" placeholder="存放地点"></el-input>
+                        </template>
+                        <span v-else>{{ scope.row.man_place }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column show-overflow-tooltip prop="man_department" width="220" label="责任部门" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.edit">
+                            <el-input v-model="scope.row.man_department" placeholder="责任部门"></el-input>
+                        </template>
+                        <span v-else>{{ scope.row.man_department }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column show-overflow-tooltip prop="man_persion" width="220" label="责任人" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.edit">
+                            <el-input v-model="scope.row.man_persion" placeholder="责任人"></el-input>
+                        </template>
+                        <span v-else>{{ scope.row.man_persion }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column show-overflow-tooltip prop="man_mfrs" width="220" label="生产厂家" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.edit">
+                            <el-input v-model="scope.row.man_mfrs" placeholder="生产厂家"></el-input>
+                        </template>
+                        <span v-else>{{ scope.row.man_mfrs }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column show-overflow-tooltip prop="man_mfrspersion" width="220" label="厂家联系人" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.edit">
+                            <el-input v-model="scope.row.man_mfrspersion" placeholder="厂家联系人"></el-input>
+                        </template>
+                        <span v-else>{{ scope.row.man_mfrspersion }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column show-overflow-tooltip v-if="false" prop="uuid" width="80" label="uuid" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.edit">
+                            <el-input v-model="scope.row.uuid" placeholder=""></el-input>
+                        </template>
+                        <span v-else>{{ scope.row.uuid }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column show-overflow-tooltip prop="marks" width="270" label="备注信息" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.edit">
+                            <el-input v-model="scope.row.marks" placeholder="备注信息"></el-input>
+                        </template>
+                        <span v-else>{{ scope.row.marks }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column fixed="right" width="150" align="center" label="操作" v-if = "whetherShow">
+                    <template slot-scope="scope">
+                        <el-button
+                            v-if="!scope.row.edit"
+                            v-model="scope.$index"
+                            @click="handleEdit(scope.$index, scope.row)"
+                            size="mini" class="handleButton">编辑</el-button>
+                        <el-button 
+                            type="success" 
+                            size="mini"
+                            v-model="scope.$index" 
+                            v-if="scope.row.edit"
+                            @click="exitEquipInfo(scope.row)">保存</el-button>
+                        <el-button
+                            size="mini"
+                            v-if="!scope.row.edit"
+                            v-model="scope.$index"
+                            type="danger" class="handleButton" >删除</el-button>
+                        <el-button
+                            v-else
+                            size="mini"
+                            type="danger"
+                            v-model="scope.$index"
+                            @click="handleCancle(scope.$index, scope.row)">取消</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -78,218 +212,42 @@
 </template>
 
 <script>
+import { setTimeout } from 'timers';
 export default {
     name:"search",
     data (){
         return{
             userName:"",
-            equipSelectedOptions: [],
-            equipData: [
-            //     {
-            //     model: '2018-07-20 10:00:00',
-            //     system: '运动或动力故障型',
-            //     number: '材质因素',
-            //     createTime: '张三',
-            //     uuid:"",
-            //     marks:""
-            // }
-            ],
-            options:[{
-                value: '光电经纬仪',
-                label: '光电经纬仪',
-                children: [{
-                        value: 'GD220-Ⅱ',
-                        label: 'GD220-Ⅱ',
-                        children: [{
-                            value: '1#',
-                            label: '1#'
-                            }, {
-                            value: '2#',
-                            label: '2#'
-                            }]
-                    },
-                    {
-                        value: 'GD220-Ⅲ',
-                        label: 'GD220-Ⅲ',
-                        children: [{
-                            value: '1#',
-                            label: '1#'
-                            }, {
-                            value: '2#',
-                            label: '2#'
-                            }]
-                    },
-                    {
-                        value: 'GDL-5T',
-                        label: 'GDL-5T',
-                        children: [{
-                            value: '1#',
-                            label: '1#'
-                            }, {
-                            value: '2#',
-                            label: '2#'
-                            }]
-                    },
-                    {
-                        value: 'GD100',
-                        label: 'GD100',
-                        children: [{
-                            value: '1#',
-                            label: '1#'
-                            }, {
-                            value: '2#',
-                            label: '2#'
-                            }]
-                    },
-                    {
-                        value: 'GD100-ZD',
-                        label: 'GD100-ZD',
-                        children: [{
-                            value: '1#',
-                            label: '1#'
-                            }, {
-                            value: '2#',
-                            label: '2#'
-                            }]
-                    }]
-                },
-                {
-                value: '雷达系统',
-                label: '雷达系统',
-                children: [{
-                        value: 'GD220-Ⅱ',
-                        label: 'GD220-Ⅱ',
-                        children: [{
-                            value: '1#',
-                            label: '1#'
-                            }, {
-                            value: '2#',
-                            label: '2#'
-                            }]
-                    },
-                    {
-                        value: 'GD220-Ⅲ',
-                        label: 'GD220-Ⅲ',
-                        children: [{
-                            value: '1#',
-                            label: '1#'
-                            }, {
-                            value: '2#',
-                            label: '2#'
-                            }]
-                    },
-                    {
-                        value: 'GDL-5T',
-                        label: 'GDL-5T',
-                        children: [{
-                            value: '1#',
-                            label: '1#'
-                            }, {
-                            value: '2#',
-                            label: '2#'
-                            }]
-                    },
-                    {
-                        value: 'GD100',
-                        label: 'GD100',
-                        children: [{
-                            value: '1#',
-                            label: '1#'
-                            }, {
-                            value: '2#',
-                            label: '2#'
-                            }]
-                    },
-                    {
-                        value: 'GD100-ZD',
-                        label: 'GD100-ZD',
-                        children: [{
-                            value: '1#',
-                            label: '1#'
-                            }, {
-                            value: '2#',
-                            label: '2#'
-                            }]
-                    }]
-                },
-                {
-                value: '遥测系统',
-                label: '遥测系统',
-                children:[{
-                        value: 'GD220-Ⅱ',
-                        label: 'GD220-Ⅱ',
-                        children: [{
-                            value: '1#',
-                            label: '1#'
-                            }, {
-                            value: '2#',
-                            label: '2#'
-                            }]
-                    },
-                    {
-                        value: 'GD220-Ⅲ',
-                        label: 'GD220-Ⅲ',
-                        children: [{
-                            value: '1#',
-                            label: '1#'
-                            }, {
-                            value: '2#',
-                            label: '2#'
-                            }]
-                    },
-                    {
-                        value: 'GDL-5T',
-                        label: 'GDL-5T',
-                        children: [{
-                            value: '1#',
-                            label: '1#'
-                            }, {
-                            value: '2#',
-                            label: '2#'
-                            }]
-                    },
-                    {
-                        value: 'GD100',
-                        label: 'GD100',
-                        children: [{
-                            value: '1#',
-                            label: '1#'
-                            }, {
-                            value: '2#',
-                            label: '2#'
-                            }]
-                    },
-                    {
-                        value: 'GD100-ZD',
-                        label: 'GD100-ZD',
-                        children: [{
-                            value: '1#',
-                            label: '1#'
-                            }, {
-                            value: '2#',
-                            label: '2#'
-                            }]
-                    }]
-                }
-            ]
-                
+            equipData: [],
+            selectedOptions:[],
+            systemOptions:[],
+            modalOptions:[],
+            numOptions:[],
+            systemValue:"",
+            modalValue:"",
+            numValue:"",
+            whetherShow:"",
+            infoDetail_old:[]               
         }
     },
     mounted(){
         this.setUserName(),
-        this.initEquipInfo()
+        this.initEquipInfo(),
+        this.initSystem()
     },
     methods: {
         setUserName(){
             var self = this;
+            this.whetherShow = self.$store.state.whetherShow
+            self.acc_permission = sessionStorage.getItem("acc_permission");
             self.userName = sessionStorage.getItem("user");
-            if(self.userName){
+            if(self.acc_permission){
                 $(".headRight").hide();
                 $("#user").text(self.userName)
-                if(self.userName !== "admin"){
+                if(self.acc_permission != 0){
                     $(".visitor a").css("background-color","#999")
                     $(".visitor a").attr("disabled",true).css("pointer-events","none");
-                    $("#useSet").hide()
+                    $("#useSet").hide()                   
                 }
             }else{
                 alert("请登录！")
@@ -300,10 +258,6 @@ export default {
         exitUser(){
             this.$router.push({ path: '/login' });
             sessionStorage.removeItem("user")
-        },
-        handleChange(value) {
-            this.equipSelectedOptions = []
-            this.equipSelectedOptions.push(value[0],value[1],value[2])
         },
         initEquipInfo(){
             this.equipData = []
@@ -322,11 +276,19 @@ export default {
                     for(let i = 0;i<equipArr.length;i++){
                         let equipBox = {}
                         equipBox.uuid = equipArr[i].fields.uuid;
-                        equipBox.model = equipArr[i].fields.man_sys;
-                        equipBox.system = equipArr[i].fields.man_model;
+                        equipBox.system = equipArr[i].fields.man_sys;
+                        equipBox.model = equipArr[i].fields.man_model;
                         equipBox.number = equipArr[i].fields.man_num;
                         equipBox.createTime = equipArr[i].fields.man_creDate;
                         equipBox.marks = equipArr[i].fields.man_remarks
+                        equipBox.man_mfrs = equipArr[i].fields.man_mfrs
+                        equipBox.man_porpuse = equipArr[i].fields.man_porpuse
+                        equipBox.man_qualifi = equipArr[i].fields.man_qualifi
+                        equipBox.man_department = equipArr[i].fields.man_department
+                        equipBox.man_place = equipArr[i].fields.man_place
+                        equipBox.man_mfrspersion = equipArr[i].fields.man_mfrspersion
+                        equipBox.man_persion = equipArr[i].fields.man_persion
+                        equipBox.edit = false
                         this.equipData.push(equipBox)
                     }
                 }else{
@@ -338,9 +300,9 @@ export default {
         },
         selectInfo(){
             this.equipData = []
-            let man_sys = this.equipSelectedOptions[0];
-            let man_model = this.equipSelectedOptions[1];
-            let man_num = this.equipSelectedOptions[2];
+            let man_sys = this.systemValue;
+            let man_model = this.modalValue;
+            let man_num = this.numValue;
             let param = {
                 "msg": {
                     "man_sys": man_sys,
@@ -356,11 +318,19 @@ export default {
                     for(let i = 0;i<equipArr.length;i++){
                         let equipBox = {}
                         equipBox.uuid = equipArr[i].fields.uuid;
-                        equipBox.model = equipArr[i].fields.man_sys;
-                        equipBox.system = equipArr[i].fields.man_model;
+                        equipBox.system = equipArr[i].fields.man_sys;
+                        equipBox.model = equipArr[i].fields.man_model;
                         equipBox.number = equipArr[i].fields.man_num;
                         equipBox.createTime = equipArr[i].fields.man_creDate;
                         equipBox.marks = equipArr[i].fields.man_remarks
+                        equipBox.man_mfrs = equipArr[i].fields.man_mfrs
+                        equipBox.man_porpuse = equipArr[i].fields.man_porpuse
+                        equipBox.man_qualifi = equipArr[i].fields.man_qualifi
+                        equipBox.man_department = equipArr[i].fields.man_department
+                        equipBox.man_persion = equipArr[i].fields.man_persion
+                        equipBox.man_mfrspersion = equipArr[i].fields.man_mfrspersion
+                        equipBox.man_persion = equipArr[i].fields.man_persion
+                        equipBox.edit = false
                         this.equipData.push(equipBox)
                     }
                 }else{
@@ -372,11 +342,210 @@ export default {
         },
         openDetails(row, event, column){
             if(event.label == "操作"){
-                alert("hahaha")
+                if(column.target.innerText == "编辑"){
+                    
+                }else if(column.target.innerText == "删除"){
+                    this.deleteInfo(row)
+                }  
+            }else if(column.target.nodeName =="INPUT"){
+                
             }else{
+                sessionStorage.setItem("systemUuid",row.uuid);
+                sessionStorage.setItem("systemName",row.system+" > "+row.model+" > "+row.number);
+                sessionStorage.setItem("system",row.system);
+                sessionStorage.setItem("model",row.model);
+                sessionStorage.setItem("number",row.number);
+                sessionStorage.setItem("inputTime",row.createTime);
+                sessionStorage.setItem("man_mfrs",row.man_mfrs);
                 this.$router.push({ path: '/infoDetail' });
             }
             
+        },
+        initSystem(){
+            let param = {
+                        "msg": {
+                                "search_man": "光电经纬仪"
+                            }
+                        }           
+            this.$axios.post('FaultDBManage/searchinfo/',param,                
+            ).then(function(response){
+                this.systemOptions = []
+                this.modalOptions  = []
+                this.numOptions = []
+                if(response.data.msg.length>0){
+                    var sysArr = response.data.msg
+                    for(var i = 0;i<sysArr.length;i++){
+                        var item = {}
+                        item.value = sysArr[i]
+                        item.label = sysArr[i]
+                        this.systemOptions.push(item)
+                    }                    
+                    
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+
+        },
+        gainModal(){
+            let systemId = this.systemValue
+            let param = {
+                        "msg": {
+                                "man_sys": systemId
+                            }
+                        }
+            this.$axios.post('FaultDBManage/searchinfo/',param,                
+            ).then(function(response){
+                this.modalOptions  = []
+                this.numOptions = []
+                if(response.data.msg.length>0){
+                    var modalArr = response.data.msg
+    
+                    for(var i = 0;i<modalArr.length;i++){                           
+                        var temp = {}
+                        temp.label = modalArr[i]
+                        temp.value = modalArr[i]
+                        
+                        this.modalOptions.push(temp)
+                    }
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+            if (this.modalValue) {
+                this.modalValue = '';
+            }
+            if (this.numValue) {
+                this.numValue = '';
+            }
+        },
+        gainNumber(){
+            let systemId = this.systemValue
+            let modalId = this.modalValue
+            let param = {
+                        "msg": {
+                                "man_sys": systemId,
+                                "man_model": modalId
+                            }
+                        }
+            this.$axios.post('FaultDBManage/searchinfo/',param,                
+            ).then(function(response){
+                this.numOptions = []
+                if(response.data.msg.length>0){
+                    var numberArr = response.data.msg
+                    for(var i = 0;i<numberArr.length;i++){                           
+                        var temp = {}
+                        temp.label = numberArr[i]
+                        temp.value = numberArr[i]
+                        this.numOptions.push(temp)
+                    }
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+            if (this.numValue) {
+                this.numValue = '';
+            }
+        },
+        deleteInfo(row){
+            if(confirm("确认删除？")){
+                if(true){          
+                    let param = {
+                                "msg": [
+                                    {
+                                    "uuid":"["+row.uuid+"]"
+                                    },
+                                    {},{},{}
+                                ]
+                            }
+
+                    this.$axios.post('FaultDBManage/delinfo/',param                   
+                    ).then(function(response){
+                        if(response.data.stu == 200){
+                            alert("删除成功！")
+                            this.initEquipInfo()
+                        }else{
+                            alert("删除失败！") 
+                        }
+                    }.bind(this)).catch(function (error) { 
+                        console.log(error);
+                    })    
+                }
+            }
+        },
+        handleEdit(index,row){
+            alert("1111")
+            row.edit = true;
+            this.infoDetail_old = []
+            for (var prop in row) {
+                let a = row[prop]
+                this.infoDetail_old.push(a)
+            }
+            
+
+
+        },
+        handleCancle(index,row){
+            setTimeout(function(){
+                row.edit = false;
+            },200)           
+        },
+        exitEquipInfo(row){
+            let oldArr = this.infoDetail_old
+
+            let param = {
+                        "msg": [
+                            {
+                                "uuid":row.uuid,
+                                "man_sys_old": oldArr[1],
+                                "man_model_old": oldArr[2],
+                                "man_num_old":oldArr[3],
+                                "man_creDate_old":oldArr[4],
+                                "man_remarks_old":oldArr[5],
+                                "man_mfrs_old":oldArr[6],
+                                "man_porpuse_old":oldArr[7],
+                                "man_qualifi_old":oldArr[8],
+                                "man_department_old":oldArr[9],
+                                "man_persion_old":oldArr[12],
+                                "man_mfrspersion_old":oldArr[11], 
+                                "man_place_old":oldArr[10],
+
+                                "man_sys": row.system,
+                                "man_model": row.model,
+                                "man_num":row.num,
+                                "man_creDate":row.createTime,
+                                "man_remarks":row.marks,
+                                "man_mfrs":row.man_mfrs,
+                                "man_porpuse":row.man_porpuse,
+                                "man_qualifi":row.man_qualifi,
+                                "man_department":row.man_department,
+                                "man_persion":row.man_persion,
+                                "man_mfrspersion":row.man_mfrspersion, 
+                                "man_place":row.man_place
+                            },
+                            {
+                            
+                            },
+                            {
+                            
+                            },
+                            {
+                                
+                            }
+                        ]
+            }
+            this.$axios.post('FaultDBManage/alterinfo/',param                   
+            ).then(function(response){
+                if(response.data.stu == 200){
+                    alert("修改成功！")
+                    this.initEquipInfo()
+                }else{
+                    alert("修改失败！") 
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+
         }
     }
 }
@@ -388,12 +557,12 @@ export default {
     @import "../../static/css/voicePlus.css";
 
 
-    .container.index{
+    .container-fluid.index{
         margin: 450px auto 0;
     }
-    .container {
-        padding-right: 15px;
-        padding-left: 15px;
+    .container-fluid {
+        padding-right: 40px;
+        padding-left: 40px;
         margin-right: auto;
         margin-left: auto;
     }

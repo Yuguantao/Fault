@@ -45,6 +45,11 @@
                         sessionStorage.setItem("user",response.data.msg[0].fields.acc_id);
                         sessionStorage.setItem("password",response.data.msg[0].fields.acc_pwd);
                         sessionStorage.setItem("acc_permission",response.data.msg[0].fields.acc_permission);
+                        if(sessionStorage.getItem("acc_permission") == "2"){
+                            this.$store.state.whetherShow = false
+                        }else{
+                            this.$store.state.whetherShow = true
+                        }
                         this.$router.push({ path: '/FaultAnalysis' })
                     }else{
                         alert("用户名密码错误！")

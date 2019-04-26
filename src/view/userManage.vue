@@ -1,7 +1,7 @@
 <template>
-    <div class="container container-box">
+    <div class="container-fluid container-box">
         <div class="navbar navbar-inverse navbar-fixed-top" style="top:35px">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="head">
                     <div class="headLeft fl">
                         <router-link to= "/FaultAnalysis" style="display:block;font-size: 25px;color: #fff;">故障数据库管理系统</router-link>
@@ -23,7 +23,7 @@
             </div>
         </div>
         <router-view></router-view>
-        <div class="container userArray">
+        <div class="container-fluid userArray">
             <div class="topBox clearfix">
                 <span class="fl">用户级别：</span>
                 <ul class="userLevel fl clearfix">
@@ -73,14 +73,21 @@
                     <el-table-column
                         prop="permission"
                         label="用户级别"
-                        width="100"
+                        width="160"
                         show-overflow-tooltip
                         align="center">
                     </el-table-column>
                     <el-table-column
                         prop="system"
                         label="系统"
-                        width="380"
+                        width="400"
+                        show-overflow-tooltip
+                        align="center">
+                    </el-table-column>
+                    <el-table-column
+                        prop="acc_remarks"
+                        label="备注"
+                        width="400"
                         show-overflow-tooltip
                         align="center">
                     </el-table-column>
@@ -88,10 +95,11 @@
                         prop="uuid"
                         label="uuid"
                         width="85"
+                        v-if="false"
                         show-overflow-tooltip
                         align="center">
                     </el-table-column>
-                    <el-table-column label="操作" width="150" align="center">
+                    <el-table-column fixed="right" label="操作" width="150" align="center">
                         <template slot-scope="scope">
                             <el-button
                             size="mini" @click="editUserBox(scope.row)" data-toggle="modal" data-target="#editBox">编辑</el-button>
@@ -208,25 +216,17 @@
 </template>
 
 <script>
-const cityOptions = ['光电经纬仪', '雷电系统', '遥测系统'];
+
 export default {
     name:"search",
     data (){
         return{
             userName:"",
             radio:3,
-            userData:[
-            //     {
-            //     name: '王小虎',
-            //     permission: '分系统用户',
-            //     system:"'光电经纬仪', '雷电系统', '遥测系统'",
-            //      uuid:""
-            // }
-            ],
-
+            userData:[],
             userPermission:"",
             checkedSystem: [],
-            cities: cityOptions,
+            cities: [],
             systemArr:[],
             disabled:false,
             options: [{
@@ -239,12 +239,16 @@ export default {
                     value: '2',
                     label: '一般用户'
                 }],
-            value: ''
+            value: '',
+            results:[],
+            oldChecksystem:[],
+            oldInfo:[]
         }
     },
     mounted(){
         this.setUserName()
-        this.initSearchUser()
+        this.initSearchUser(),
+        this.initSystem()
     },
     methods: {
         setUserName(){
@@ -266,6 +270,28 @@ export default {
                 alert("请登录！")
                 this.$router.push({ path: '/login' })
             }
+        },
+        initSystem(){
+            let param = {
+                        "msg": {
+                                "search_man": "光电经纬仪"
+                            }
+                        }           
+            this.$axios.post('FaultDBManage/searchinfo/',param,                
+            ).then(function(response){
+                this.cities = []
+
+                if(response.data.msg.length>0){
+                    var sysArr = response.data.msg
+                    for(var i = 0;i<sysArr.length;i++){  
+                        this.cities.push(sysArr[i])
+                    }                    
+                    
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+
         },
         initSearchUser(){
             this.userData = []
@@ -297,6 +323,7 @@ export default {
                         }
                         userBox.permission = permissionName;
                         userBox.system = userArr[i].fields.acc_system
+                        userBox.acc_remarks = userArr[i].fields.acc_remarks
                         this.userData.push(userBox)
                     }
                 }else{
@@ -330,8 +357,7 @@ export default {
             ).then(function(response){
                 if(response.data.stu == 200){
                     alert("创建成功")
-                    $("#newUser").hide();
-                    $(".modal-backdrop").hide();
+                    $("#newUser").modal('hide');                   
                 }else{
                     alert("用户名已存在！")
                 }
@@ -347,6 +373,9 @@ export default {
             this.userPermission = obj.value
             if(this.userPermission != "1"){
                 this.disabled = true
+                this.checkedSystem = []
+                this.oldChecksystem = []
+                this.systemArr = []
             }else{
                 this.disabled = false
             }
@@ -383,6 +412,7 @@ export default {
                         }
                         userBox.permission = permissionName;
                         userBox.system = userArr[i].fields.acc_system
+                        userBox.acc_remarks = userArr[i].fields.acc_remarks
                         this.userData.push(userBox)
                     }
                 }else{
@@ -421,6 +451,7 @@ export default {
                         }
                         userBox.permission = permissionName;
                         userBox.system = userArr[i].fields.acc_system
+                        userBox.acc_remarks = userArr[i].fields.acc_remarks
                         this.userData.push(userBox)
                     }
                 }else{
@@ -431,11 +462,90 @@ export default {
             })
         },
         editUserBox(row){
+            this.oldInfo = []
             $("#edit_user").val(row.name);
             $("#edit_password").val(row.password);
+            $("#editDetailMessage").val(row.acc_remarks)
+            this.getSystem(row)
+            this.getPermission(row)
+            this.oldInfo.push(row,this.oldChecksystem,this.value)
+            
+
         },
         editUser(){
+            let permissionName
+            if(this.oldInfo[0].permission == "管理员"){
+                permissionName = 0
+            }else if(this.oldInfo[0].permission == "分系统用户"){
+                permissionName = 1
+            }else{
+                permissionName = 2
+            }
+            let param = {
+                        "msg": {
+                            "uuid":this.oldInfo[0].uuid,
+                            "acc_id_old":this.oldInfo[0].name,
+                            "acc_id":$("#edit_user").val(),
+                            "acc_pwd_old":this.oldInfo[0].password,
+                            "acc_pwd":$("#edit_password").val(),
+                            "acc_remarks_old":this.oldInfo[0].acc_remarks,
+                            "acc_remarks":$("#editDetailMessage").val(),
+                            "acc_permission_old":permissionName,
+                            "acc_permission":this.value,
+                            "acc_system":this.systemArr[0]?this.systemArr[0]:"",
+                            "acc_system_old":this.oldInfo[1],
+                        }
+                    }
+            this.$axios.post('FaultDBManage/alteruser/',param                   
+            ).then(function(response){
+                if(response.data.stu == 200){
+                    alert("修改成功！")
+                    this.initSearchUser()
+                    $("#editBox").modal('hide')
 
+                }else{
+                    alert("修改失败！")
+                    //$("#editBox").modal('hide')
+                }
+                this.checkedSystem = []
+                this.value = ""
+                this.disabled = false
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+
+        },
+        getSystem(row){
+            this.checkedSystem = []
+            this.oldChecksystem = []
+            let strValue = row.system;
+            let regex = /'([^']*)'/g;
+            let currentResult;
+            this.results = [];
+            while ((currentResult = regex.exec(strValue)) !== null) {
+                this.results.push(currentResult[1]);
+            }
+            for (let i = 0; i < this.results.length; i++) {
+                this.checkedSystem.push(this.results[i])
+                this.oldChecksystem.push(this.results[i])
+            }
+        },
+        getPermission(row){
+            this.value = ""
+            if(row.permission == "管理员"){
+                this.value = "0"
+                this.disabled = true
+                //this.oldChecksystem = []
+                this.checkedSystem = []
+            }else if(row.permission == "分系统用户"){
+                this.value = "1"
+                this.disabled = false
+            }else{
+                this.value = "2"
+                this.disabled = true
+                //this.oldChecksystem = []
+                this.checkedSystem = []
+            }
         },
         deleteUser(row){
             if(confirm("确认删除？")){
@@ -463,7 +573,7 @@ export default {
                     })    
                 }
             }
-        }
+        },
     }
 }
 </script>
@@ -479,12 +589,12 @@ export default {
         height: 66px;
         border-bottom: 5px solid #4A6471;
     }
-    .container.index{
+    .container-fluid.index{
         margin: 450px auto 0;
     }
-    .container {
-        padding-right: 15px;
-        padding-left: 15px;
+    .container-fluid {
+        padding-right: 40px;
+        padding-left: 40px;
         margin-right: auto;
         margin-left: auto;
     }
@@ -519,7 +629,7 @@ export default {
 	.iradio_minimal-blue,.iradio_minimal-blue.checked{ float:left; top: 2px;}
     label{margin-right: 5px; font-weight: normal; margin-right: 5px;}
     
-    .container .topBox {
+    .container-fluid .topBox {
         margin: 30px 0;
     }
     .fl{

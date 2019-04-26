@@ -1,7 +1,7 @@
 <template>
-    <div class="container container-box">
+    <div class="container-fluid container-box">
         <div class="navbar navbar-inverse navbar-fixed-top" style="top:35px">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="head">
                     <div class="headLeft fl">
                         <router-link to= "/FaultAnalysis" style="display:block;font-size: 25px;color: #fff;">故障数据库管理系统</router-link>
@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <div class="container searchBox">
+        <div class="container-fluid searchBox">
             <el-input
                 placeholder="在搜索框输入需要查询的故障类型，点击搜索"
                 style="width:500px;"
@@ -31,7 +31,7 @@
             </el-input>
             <el-button type="primary">搜索</el-button>
         </div>
-        <div class="container searchResult">
+        <div class="container-fluid searchResult">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" name="first"></el-tab-pane>
                 <el-tab-pane label="系统" name="second"></el-tab-pane>
@@ -62,11 +62,12 @@ export default {
     methods: {
         setUserName(){
             var self = this;
+            self.acc_permission = sessionStorage.getItem("acc_permission");
             self.userName = sessionStorage.getItem("user");
-            if(self.userName){
+            if(self.acc_permission){
                 $(".headRight").hide();
                 $("#user").text(self.userName)
-                if(self.userName !== "admin"){
+                if(self.acc_permission != 0){
                     $(".visitor a").css("background-color","#999")
                     $(".visitor a").attr("disabled",true).css("pointer-events","none");
                     $("#useSet").hide()
@@ -94,12 +95,12 @@ export default {
     @import "../../static/css/voicePlus.css";
 
 
-    .container.index{
+    .container-fluid.index{
         margin: 450px auto 0;
     }
-    .container {
-        padding-right: 15px;
-        padding-left: 15px;
+    .container-fluid {
+        padding-right: 40px;
+        padding-left: 40px;
         margin-right: auto;
         margin-left: auto;
     }
