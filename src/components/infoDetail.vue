@@ -108,28 +108,119 @@
                                         style="cursor:pointer"
                                         height="300" 
                                         @row-click="openDetails"> 
-                                    <el-table-column fixed show-overflow-tooltip sortable prop="fau_time" label="故障时间" width="190" align="center"></el-table-column>
-                                    <el-table-column  show-overflow-tooltip prop="fau_type" width="110" label="故障类型" align="center"></el-table-column>
-                                    <el-table-column  show-overflow-tooltip prop="fau_desc" width="110" label="故障描述" align="center"></el-table-column>
-                                    <el-table-column  show-overflow-tooltip prop="fau_phen" width="110" label="故障现象" align="center"></el-table-column>
-                                    <el-table-column  show-overflow-tooltip prop="fau_reason" width="110" label="故障原因" align="center"></el-table-column>
-                                    <el-table-column  show-overflow-tooltip prop="fau_effect" width="110" label="故障影响" align="center"></el-table-column>
-                                    <el-table-column  show-overflow-tooltip prop="fau_check" width="110" label="检测方法" align="center"></el-table-column>
-                                    <el-table-column  show-overflow-tooltip prop="fau_measure" width="110" label="排除措施" align="center"></el-table-column>
-                                    <el-table-column  show-overflow-tooltip prop="fau_advise" width="110" label="改进建议" align="center"></el-table-column>
-                                    <el-table-column show-overflow-tooltip prop="fau_peopleInfo" width="80" label="人员信息" align="center"></el-table-column>
-                                    <el-table-column  show-overflow-tooltip prop="fau_remarks" width="110" label="备注" align="center"></el-table-column>
-                                    <el-table-column v-if="false" show-overflow-tooltip prop="uuid" width="80" label="uuid" align="center"></el-table-column>
-                                    
-                                    <el-table-column fixed="right" width="150" align="center" label="操作" v-if="whetherShow">
-                                        <template>
-                                            <template >
-                                                <el-button
-                                                size="mini">编辑</el-button>
-                                                <el-button
-                                                size="mini"
-                                                type="danger" class="handleButton">删除</el-button>
+                                    <el-table-column fixed show-overflow-tooltip sortable prop="fau_time" label="故障时间" width="190" align="center">
+                                        <template slot-scope="scope">
+                                            <template v-if="scope.row.edit">
+                                                <el-input v-model="scope.row.fau_time" placeholder="故障时间"></el-input>
                                             </template>
+                                            <span v-else>{{ scope.row.fau_time }}</span> 
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column  show-overflow-tooltip prop="fau_type" width="110" label="故障类型" align="center">
+                                        <template slot-scope="scope">
+                                            <template v-if="scope.row.edit">
+                                                <el-input v-model="scope.row.fau_type" placeholder="故障类型"></el-input>
+                                            </template>
+                                            <span v-else>{{ scope.row.fau_type }}</span> 
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column  show-overflow-tooltip prop="fau_desc" width="110" label="故障描述" align="center">
+                                        <template slot-scope="scope">
+                                            <template v-if="scope.row.edit">
+                                                <el-input v-model="scope.row.fau_desc" placeholder="故障描述"></el-input>
+                                            </template>
+                                            <span v-else>{{ scope.row.fau_desc }}</span> 
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column  show-overflow-tooltip prop="fau_phen" width="110" label="故障现象" align="center">
+                                        <template slot-scope="scope">
+                                            <template v-if="scope.row.edit">
+                                                <el-input v-model="scope.row.fau_phen" placeholder="故障现象"></el-input>
+                                            </template>
+                                            <span v-else>{{ scope.row.fau_phen }}</span> 
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column  show-overflow-tooltip prop="fau_reason" width="110" label="故障原因" align="center">
+                                        <template slot-scope="scope">
+                                            <template v-if="scope.row.edit">
+                                                <el-input v-model="scope.row.fau_reason" placeholder="故障原因"></el-input>
+                                            </template>
+                                            <span v-else>{{ scope.row.fau_reason }}</span> 
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column  show-overflow-tooltip prop="fau_effect" width="110" label="故障影响" align="center">
+                                        <template slot-scope="scope">
+                                            <template v-if="scope.row.edit">
+                                                <el-input v-model="scope.row.fau_effect" placeholder="故障影响"></el-input>
+                                            </template>
+                                            <span v-else>{{ scope.row.fau_effect }}</span> 
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column  show-overflow-tooltip prop="fau_check" width="110" label="检测方法" align="center">
+                                        <template slot-scope="scope">
+                                            <template v-if="scope.row.edit">
+                                                <el-input v-model="scope.row.fau_check" placeholder="检测方法"></el-input>
+                                            </template>
+                                            <span v-else>{{ scope.row.fau_check }}</span> 
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column  show-overflow-tooltip prop="fau_measure" width="110" label="排除措施" align="center">
+                                        <template slot-scope="scope">
+                                            <template v-if="scope.row.edit">
+                                                <el-input v-model="scope.row.fau_measure" placeholder="排除措施"></el-input>
+                                            </template>
+                                            <span v-else>{{ scope.row.fau_measure }}</span> 
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column  show-overflow-tooltip prop="fau_advise" width="110" label="改进建议" align="center">
+                                        <template slot-scope="scope">
+                                            <template v-if="scope.row.edit">
+                                                <el-input v-model="scope.row.fau_advise" placeholder="改进建议"></el-input>
+                                            </template>
+                                            <span v-else>{{ scope.row.fau_advise }}</span> 
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column show-overflow-tooltip prop="fau_peopleInfo" width="80" label="人员信息" align="center">
+                                        <template slot-scope="scope">
+                                            <template v-if="scope.row.edit">
+                                                <el-input v-model="scope.row.fau_peopleInfo" placeholder="人员信息"></el-input>
+                                            </template>
+                                            <span v-else>{{ scope.row.fau_peopleInfo }}</span> 
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column  show-overflow-tooltip prop="fau_remarks" width="110" label="备注" align="center">
+                                        <template slot-scope="scope">
+                                            <template v-if="scope.row.edit">
+                                                <el-input v-model="scope.row.fau_remarks" placeholder="备注"></el-input>
+                                            </template>
+                                            <span v-else>{{ scope.row.fau_remarks }}</span> 
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column v-if="false" show-overflow-tooltip prop="uuid" width="80" label="uuid" align="center"></el-table-column>                                   
+                                    <el-table-column fixed="right" width="150" align="center" label="操作" v-if="whetherShow">
+                                        <template slot-scope="scope">
+                                            <el-button
+                                                v-if="!scope.row.edit"
+                                                v-model="scope.$index"
+                                                @click="handleEdit(scope.$index, scope.row)"
+                                                size="mini" class="handleButton">编辑</el-button>
+                                            <el-button 
+                                                type="success" 
+                                                size="mini"
+                                                v-model="scope.$index" 
+                                                v-if="scope.row.edit"
+                                                @click="exitfaultInfo(scope.row)">保存</el-button>
+                                            <el-button
+                                                size="mini"
+                                                v-if="!scope.row.edit"
+                                                v-model="scope.$index"
+                                                type="danger" class="handleButton" >删除</el-button>
+                                            <el-button
+                                                v-else
+                                                size="mini"
+                                                type="danger"
+                                                v-model="scope.$index"
+                                                @click="handleCancle(scope.$index, scope.row)">取消</el-button>
                                         </template>
                                     </el-table-column>
                                 </el-table>
@@ -185,7 +276,8 @@ export default {
             inputTime:"",
             product:"",
             faultTable: [],
-            whetherShow:""
+            whetherShow:"",
+            faultinfo_old:[]
         }
     },
     mounted(){
@@ -237,7 +329,7 @@ export default {
                     var faultArr = response.data.faumsg;
                     for(let i = 0;i<faultArr.length;i++){
                         let faultBox = {}
-                        faultBox.uuid = faultArr[i].fields.fau_manInfo;
+                        faultBox.uuid = faultArr[i].pk;
                         faultBox.fau_time = faultArr[i].fields.fau_time;
                         faultBox.fau_type = faultArr[i].fields.fau_type;
                         faultBox.fau_phen = faultArr[i].fields.fau_phen;
@@ -250,6 +342,7 @@ export default {
                         faultBox.fau_advise = faultArr[i].fields.fau_advise
                         faultBox.fau_peopleInfo = faultArr[i].fields.fau_peopleInfo
                         faultBox.fau_desc = faultArr[i].fields.fau_desc
+                        faultBox.edit = false
                         this.faultTable.push(faultBox)
                     }
                 }else{
@@ -262,9 +355,15 @@ export default {
         },
         openDetails(row, event, column){
             if(event.label == "操作"){
-                this.deleteFaultInfo(row)
-            }else{
+                if(column.target.innerText == "编辑"){
+                    
+                }else if(column.target.innerText == "删除"){
+                    this.deleteFaultInfo(row)
+                }  
+            }else if(column.target.nodeName =="INPUT"){
                 
+            }else{
+
             }
             
         },
@@ -275,9 +374,9 @@ export default {
                     let param = {
                                 "msg": [
                                     {},
-                                    {
+                                    {},{
                                         "uuid":"["+row.uuid+"]"
-                                    },{},{}
+                                    },{}
                                 ]
                             }
 
@@ -294,6 +393,75 @@ export default {
                     })    
                 }
             }
+        },
+        handleEdit(index,row){
+            row.edit = true;
+            this.faultinfo_old = []
+            for (var prop in row) {
+                let a = row[prop]
+                this.faultinfo_old.push(a)
+            }
+            console.log(this.faultinfo_old)
+        },
+        handleCancle(index,row){
+            setTimeout(function(){
+                row.edit = false;
+            },200)           
+        },
+        exitfaultInfo(row){
+            let oldArr = this.faultinfo_old
+
+            let param = {
+                        "msg": [
+                            {
+
+                            },
+                            {
+                            
+                            },
+                            {
+                                "uuid":row.uuid,
+                                "fau_time_old":oldArr[1],
+                                "fau_phen_old":oldArr[3],
+                                "fau_desc_old":oldArr[12],
+                                "fau_type_old":oldArr[2],
+                                "fau_reason_old":oldArr[4],
+                                "fau_effect_old":oldArr[8],
+                                "fau_check_old":oldArr[6],
+                                "fau_measure_old":oldArr[9],
+                                "fau_advise_old":oldArr[10],
+                                "fau_peopleInfo_old":oldArr[11],
+                                "fau_remarks_old":oldArr[7],
+
+                                "fau_time":row.fau_time,
+                                "fau_phen":row.fau_phen,
+                                "fau_desc":row.fau_desc,
+                                "fau_type":row.fau_type,
+                                "fau_reason":row.fau_reason,
+                                "fau_effect":row.fau_effect,
+                                "fau_check":row.fau_check,
+                                "fau_measure":row.fau_measure,
+                                "fau_advise":row.fau_advise,
+                                "fau_peopleInfo":row.fau_peopleInfo,
+                                "fau_remarks":row.fau_remarks,
+
+                            },
+                            {
+                                
+                            }
+                        ]
+            }
+            this.$axios.post('FaultDBManage/alterinfo/',param                   
+            ).then(function(response){
+                if(response.data.stu == 200){
+                    alert("修改成功！")
+                    this.getInfoDetail()
+                }else{
+                    alert("修改失败！") 
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
         }
     }
 }

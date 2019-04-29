@@ -233,7 +233,8 @@ export default {
     mounted(){
         this.setUserName(),
         this.initEquipInfo(),
-        this.initSystem()
+        this.initSystem(),
+        this.init()
     },
     methods: {
         setUserName(){
@@ -327,7 +328,7 @@ export default {
                         equipBox.man_porpuse = equipArr[i].fields.man_porpuse
                         equipBox.man_qualifi = equipArr[i].fields.man_qualifi
                         equipBox.man_department = equipArr[i].fields.man_department
-                        equipBox.man_persion = equipArr[i].fields.man_persion
+                        equipBox.man_place = equipArr[i].fields.man_place
                         equipBox.man_mfrspersion = equipArr[i].fields.man_mfrspersion
                         equipBox.man_persion = equipArr[i].fields.man_persion
                         equipBox.edit = false
@@ -474,16 +475,12 @@ export default {
             }
         },
         handleEdit(index,row){
-            alert("1111")
             row.edit = true;
             this.infoDetail_old = []
             for (var prop in row) {
                 let a = row[prop]
                 this.infoDetail_old.push(a)
             }
-            
-
-
         },
         handleCancle(index,row){
             setTimeout(function(){
@@ -512,7 +509,7 @@ export default {
 
                                 "man_sys": row.system,
                                 "man_model": row.model,
-                                "man_num":row.num,
+                                "man_num":row.number,
                                 "man_creDate":row.createTime,
                                 "man_remarks":row.marks,
                                 "man_mfrs":row.man_mfrs,
@@ -539,6 +536,29 @@ export default {
                 if(response.data.stu == 200){
                     alert("修改成功！")
                     this.initEquipInfo()
+                }else{
+                    alert("修改失败！") 
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+
+        },
+        init(){
+            let param ={
+                    "msg": {
+                        "fau_uuid":"c539e508-5f86-11e9-89d8-8cec4bb1995b"
+                        }
+                    }
+            this.$axios.post('FaultDBManage/searchinfo/',param                   
+            ).then(function(response){
+                if(response.data.stu == 200){
+                    let arr = response.data.urlmsg[1].fields.url_file
+                    arr  = arr.substr(1)
+                    arr = arr.substr(0, arr.length-1);
+                    let brr = arr.split(",")
+                    console.log(brr)
+
                 }else{
                     alert("修改失败！") 
                 }

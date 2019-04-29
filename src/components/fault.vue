@@ -29,14 +29,14 @@
                 v-model="searchInput"
                 clearable>
             </el-input>
-            <el-button type="primary">搜索</el-button>
+            <el-button type="primary" @click="searchKeyword">搜索</el-button>
         </div>
         <div class="container-fluid searchResult">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" name="first"></el-tab-pane>
-                <el-tab-pane label="系统" name="second"></el-tab-pane>
+                <!-- <el-tab-pane label="系统" name="second"></el-tab-pane>
                 <el-tab-pane label="型号" name="third"></el-tab-pane>
-                <el-tab-pane label="编号" name="fourth"></el-tab-pane>
+                <el-tab-pane label="编号" name="fourth"></el-tab-pane> -->
             </el-tabs>
             
         </div>
@@ -84,6 +84,26 @@ export default {
         },
         handleClick(tab, event) {
             console.log(tab, event);
+        },
+        searchKeyword(){
+            let keyword = this.searchInput
+            keyword = "描述描述"
+            let param = {
+                    "msg": {
+                            "fau_type": keyword
+                        }
+                    }
+            this.$axios.post('FaultDBManage/analysis/',param                   
+            ).then(function(response){
+                if(response.data.stu == 200){
+                    
+                    this.initEquipInfo()
+                }else{
+                     
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
         }
     }
 }
