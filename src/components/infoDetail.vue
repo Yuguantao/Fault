@@ -124,6 +124,14 @@
                                             <span v-else>{{ scope.row.fau_type }}</span> 
                                         </template>
                                     </el-table-column>
+                                    <el-table-column  show-overflow-tooltip prop="fau_num" width="100" label="故障次数" align="center">
+                                        <template slot-scope="scope">
+                                            <template v-if="scope.row.edit">
+                                                <el-input v-model="scope.row.fau_num" placeholder="故障次数"></el-input>
+                                            </template>
+                                            <span v-else>{{ scope.row.fau_num }}</span> 
+                                        </template>
+                                    </el-table-column>
                                     <el-table-column  show-overflow-tooltip prop="fau_desc" width="110" label="故障描述" align="center">
                                         <template slot-scope="scope">
                                             <template v-if="scope.row.edit">
@@ -229,27 +237,24 @@
                     </div>
                     <div class="container-fluid" style="width:100%;height:285px">
                         <div class="basicInfoHead" style="position:relative;width:100%;height:280px;">
-                            <div class="icon" style="width: 100%;">
-                                <a class="mf-a"></a>
-                                <span class="mf-fn">故障现象</span>
-                                <div class="mf-fnv faultDiv">
-                                    <p>{{}}</p>
-                                </div>
-                            </div>
-                            <div class="icon" style="top:95px;width: 100%;">
-                                <a class="mf-a"></a>
-                                <span class="mf-fn">故障原因</span>
-                                <div class="mf-fnv faultDiv">
-                                    <p>{{}}</p>
-                                </div>
-                            </div>
-                            <div class="icon" style="top:188px;width: 100%;">
-                                <a class="mf-a"></a>
-                                <span class="mf-fn">改进建议</span>
-                                <div class="mf-fnv faultDiv">
-                                    <p>{{}}</p>
-                                </div>
-                            </div>
+                            <el-table   :data="videoTable"
+                                        ref="multipleTable"
+                                        tooltip-effect="dark"
+                                        style="cursor:pointer"
+                                        height="250" > 
+                                    <el-table-column fixed show-overflow-tooltip sortable prop="data" label="时间" width="190" align="center"></el-table-column>
+                                    <el-table-column fixed show-overflow-tooltip prop="name" label="名称" width="400" align="center"></el-table-column>
+                                    <el-table-column fixed show-overflow-tooltip prop="url" label="路径" v-if="false" width="400" align="center"></el-table-column>
+                                    <el-table-column fixed="right" width="150" align="center" label="操作">
+                                        <template slot-scope="scope">
+                                            <el-button
+                                                v-model="scope.$index"
+                                                @click="playVideo(scope.$index, scope.row)"
+                                                type="text" size="small" class="handleButton">查看</el-button>
+                                        </template>
+                                    </el-table-column>
+                            </el-table>
+                            
                             
                         </div>
                     </div>
@@ -263,8 +268,12 @@
 </template>
 
 <script>
+
+import MyVideo from "./video"
+
 export default {
     name:"infoDetail",
+    components: {MyVideo},
     data (){
         return{
             userName:"",
@@ -277,7 +286,8 @@ export default {
             product:"",
             faultTable: [],
             whetherShow:"",
-            faultinfo_old:[]
+            faultinfo_old:[],
+            videoTable:[],
         }
     },
     mounted(){
@@ -342,6 +352,7 @@ export default {
                         faultBox.fau_advise = faultArr[i].fields.fau_advise
                         faultBox.fau_peopleInfo = faultArr[i].fields.fau_peopleInfo
                         faultBox.fau_desc = faultArr[i].fields.fau_desc
+                        faultBox.fau_num = faultArr[i].fields.fau_num
                         faultBox.edit = false
                         this.faultTable.push(faultBox)
                     }
@@ -363,7 +374,7 @@ export default {
             }else if(column.target.nodeName =="INPUT"){
                 
             }else{
-
+                this.getVideoInfo(row)
             }
             
         },
@@ -432,6 +443,7 @@ export default {
                                 "fau_advise_old":oldArr[10],
                                 "fau_peopleInfo_old":oldArr[11],
                                 "fau_remarks_old":oldArr[7],
+                                "fau_num_old":oldArr[13],
 
                                 "fau_time":row.fau_time,
                                 "fau_phen":row.fau_phen,
@@ -444,6 +456,7 @@ export default {
                                 "fau_advise":row.fau_advise,
                                 "fau_peopleInfo":row.fau_peopleInfo,
                                 "fau_remarks":row.fau_remarks,
+                                "fau_num":row.fau_num,
 
                             },
                             {
@@ -462,6 +475,58 @@ export default {
             }.bind(this)).catch(function (error) { 
                 console.log(error);
             })
+        },
+        getVideoInfo(row){
+            this.videoTable = []
+            let param = {
+                        "msg": {
+                            "fau_uuid":row.uuid
+                            }
+                        }
+            this.$axios.post('FaultDBManage/searchinfo/',param                   
+            ).then(function(response){
+                if(response.data.stu == 200){
+                    var faultVedioArr = response.data.urlmsg;
+                    let urlArrName = []
+                    for(let i = 0;i<faultVedioArr.length;i++){
+
+                        let urlArr = faultVedioArr[i].fields.url_file
+                            urlArr = urlArr.substr(1)
+                            urlArr = urlArr.substr(0, urlArr.length-1);
+                            urlArr = urlArr.split(",")
+                            for(var h = 0;h<urlArr.length;h++){
+                                let brr = [];
+                                brr = urlArr[h].split("/")
+                                urlArrName.push(brr[brr.length-1])
+                            }
+
+                        for(var j = 0;j<urlArr.length;j++){
+                            let faultVideoBox = {}
+                                faultVideoBox.data = faultVedioArr[i].fields.url_creDate;
+                                faultVideoBox.name = urlArrName[j];
+                                let url = "http://192.168.34.110:9999"+urlArr[j].trim().substr(1)
+                                url = encodeURI(url);
+                                faultVideoBox.url = url.replace("#","%23")
+                                
+                            this.videoTable.push(faultVideoBox)
+                        }
+                        
+
+                    }
+                }else{
+                    
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+        },
+        playVideo(index,row){
+            console.log(row.url)
+            sessionStorage.setItem("url",row.url);
+            this.$store.state.videoSrc = row.url
+            this.show = true
+            let routeData = this.$router.resolve({ path: '/video' });
+            window.open(routeData.href, '_blank');
         }
     }
 }

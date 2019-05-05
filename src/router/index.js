@@ -10,6 +10,7 @@ import faultInput from '@/components/faultInput'
 import infoDetail from '@/components/infoDetail'
 import fault from '@/components/fault'
 import userManage from '@/view/userManage'
+import video from '@/components/video'
 
 
 Vue.use(Router)
@@ -71,6 +72,11 @@ export default new Router({
       path:'/addEquip',
       name:'addEquip',
       component:addEquip
+    },
+    {
+      path:'/video',
+      name:'video',
+      component:video
     },
   ]
 })

@@ -38,6 +38,14 @@
                 <el-tab-pane label="型号" name="third"></el-tab-pane>
                 <el-tab-pane label="编号" name="fourth"></el-tab-pane> -->
             </el-tabs>
+            <div class="container-fluid">
+                <ul>
+                    <li v-for="(data,index) in items">
+                        <p>{{data.fields.fau_desc}}</p>
+                    </li>
+                </ul>
+            </div>
+
             
         </div>
         <router-view></router-view>
@@ -53,7 +61,8 @@ export default {
         return{
             userName:"",
             searchInput:"",
-            activeName:"first"
+            activeName:"first",
+            items:[]
         }
     },
     mounted(){
@@ -86,8 +95,8 @@ export default {
             console.log(tab, event);
         },
         searchKeyword(){
+            this.items = []
             let keyword = this.searchInput
-            keyword = "描述描述"
             let param = {
                     "msg": {
                             "fau_type": keyword
@@ -96,8 +105,7 @@ export default {
             this.$axios.post('FaultDBManage/analysis/',param                   
             ).then(function(response){
                 if(response.data.stu == 200){
-                    
-                    this.initEquipInfo()
+                    this.items = response.data.msg
                 }else{
                      
                 }

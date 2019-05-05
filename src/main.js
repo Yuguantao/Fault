@@ -17,6 +17,28 @@ import ElementUI from 'element-ui'
 
 import 'element-ui/lib/theme-chalk/index.css'
 
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import {
+    faPlay,
+    faPause,
+    faStop,
+    faVolumeUp,
+    faVolumeMute,
+    faExpand,
+} from '@fortawesome/free-solid-svg-icons'
+library.add(
+    faPlay,
+    faPause,
+    faStop,
+    faVolumeUp,
+    faVolumeMute,
+    faExpand,
+);
+
+Vue.component('font-awesome-icon', FontAwesomeIcon);
+
+
 Vue.use(ElementUI)
 
 Vue.prototype.$axios = axios

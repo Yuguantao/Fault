@@ -91,30 +91,39 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td class="item">故障次数</td>
+                                <td class="pl10"><input type="text" class="form-control equipmentInput fau_num">
+
+                                </td>
                                 <td class="item">故障原因</td>
                                 <td class="pl10"><input type="text" class="form-control equipmentInput fau_reason">
 
                                 </td>
+                            </tr>
+                            <tr>
+                                
                                 <td class="item">故障影响</td>
                                 <td class="pl10"><input type="text" class="form-control equipmentInput fau_effect">
 
                                 </td>
-                            </tr>
-                            <tr>
                                 <td class="item">检测方法</td>
                                 <td class="pl10"><input type="text" class="form-control equipmentInput fau_check">
 
                                 </td>
+                            </tr>
+                            <tr>
+                                
                                 <td class="item">排除措施</td>
                                 <td class="pl10"><input type="text" class="form-control equipmentInput fau_measure">
 
                                 </td>
-                            </tr>
-                            <tr>
                                 <td class="item">改进建议</td>
                                 <td class="pl10"><input type="text" class="form-control equipmentInput fau_advise">
 
                                 </td>
+                            </tr>
+                            <tr>
+                                
                                 <td class="item">人员信息</td>
                                 <td class="pl10"><input type="text" class="form-control equipmentInput fau_peopleInfo">
 
@@ -171,7 +180,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div style="text-align:center;position: absolute;left: 0;right: 0;bottom: 30px;">
+                    <div style="text-align:center;position: absolute;right: 50px;bottom: 15px;">
                         <el-button type="primary" style="width:120px;" @click="addEquipFault">录入</el-button>
                     </div>
                 </div>
@@ -382,6 +391,7 @@ export default {
 
             let fau_desc = $(".fau_desc").val()
             let fau_type = $(".fau_type").val()
+            let fau_num = $(".fau_num").val()
             let fau_phen = $(".fau_phen").val()
             let fau_reason = $(".fau_reason").val()
             let fau_effect  = $(".fau_effect").val()
@@ -405,6 +415,7 @@ export default {
             param.append("fau_useInfo",fau_useInfo)
             param.append("fau_desc",fau_desc)
             param.append("fau_type",fau_type)
+            param.append("fau_num",fau_num)
             param.append("fau_phen",fau_phen)
             param.append("fau_reason",fau_reason)
             param.append("fau_effect",fau_effect)
