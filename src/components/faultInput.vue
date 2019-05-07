@@ -92,7 +92,7 @@
                             </tr>
                             <tr>
                                 <td class="item">故障次数</td>
-                                <td class="pl10"><input type="text" class="form-control equipmentInput fau_num">
+                                <td class="pl10"><input type="number" class="form-control equipmentInput fau_num">
 
                                 </td>
                                 <td class="item">故障原因</td>
@@ -139,7 +139,7 @@
                                         ref="upload"
                                         action="123"
                                         :on-change="addFileV"
-                                        :on-preview="handlePreview"
+                                        :on-preview="handlePreviewV"
                                         :on-remove="handleRemoveV"                                   
                                         :file-list="fileListVideo"
                                         multiple
@@ -158,7 +158,7 @@
                                         ref="upload"
                                         action="123"
                                         :on-change="addFileI"
-                                        :on-preview="handlePreview"
+                                        :on-preview="handlePreviewI"
                                         :on-remove="handleRemoveI"
                                         :file-list="fileListImg"
                                         multiple
@@ -358,29 +358,52 @@ export default {
         addFileV(file, fileList){
             this.fileListVideo = []
             for(var i = 0; i<fileList.length;i++){
-                this.fileListVideo.push(fileList[i].raw)
+                if(fileList[i].raw){
+                    this.fileListVideo.push(fileList[i].raw)
+                }else{
+                    this.fileListVideo.push(fileList[i])
+                }
+                
             }
             
         },
         addFileI(file, fileList){
             this.fileListImg = []
             for(var i = 0; i<fileList.length;i++){
-                this.fileListImg.push(fileList[i].raw)
+                if(fileList[i].raw){
+                    this.fileListImg.push(fileList[i].raw)
+                }else{
+                    this.fileListImg.push(fileList[i])
+                }
+                
             }
         },
         handleRemoveV(file, fileList) {
             this.fileListVideo = []
             for(var i = 0; i<fileList.length;i++){
-                this.fileListVideo.push(fileList[i].raw)
+                if(fileList[i].raw){
+                    this.fileListVideo.push(fileList[i].raw)
+                }else{
+                    this.fileListVideo.push(fileList[i])
+                }
+                
             }
         },
         handleRemoveI(file, fileList) {
             this.fileListImg = []
             for(var i = 0; i<fileList.length;i++){
-                this.fileListImg.push(fileList[i].raw)
+                if(fileList[i].raw){
+                    this.fileListImg.push(fileList[i].raw)
+                }else{
+                    this.fileListImg.push(fileList[i])
+                }
+                
             }
         },
-        handlePreview(file) {
+        handlePreviewV(file) {
+            
+        },
+        handlePreviewI(file) {
             
         },
         addEquipFault(){

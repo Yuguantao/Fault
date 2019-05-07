@@ -277,17 +277,26 @@ export default {
             })
         },
         addFileV(file, fileList){
-            this.mediaUrl = file
             this.fileListVideo = []
             for(var i = 0; i<fileList.length;i++){
-                this.fileListVideo.push(fileList[i].raw)
+                if(fileList[i].raw){
+                    this.fileListVideo.push(fileList[i].raw)
+                }else{
+                    this.fileListVideo.push(fileList[i])
+                }
+                
             }
             
         },
         addFileI(file, fileList){
             this.fileListImg = []
             for(var i = 0; i<fileList.length;i++){
-                this.fileListImg.push(fileList[i].raw)
+                if(fileList[i].raw){
+                    this.fileListImg.push(fileList[i].raw)
+                }else{
+                    this.fileListImg.push(fileList[i])
+                }
+                
             }
         },
         addFileA(file, fileList){
@@ -299,13 +308,23 @@ export default {
         handleRemoveV(file, fileList) {
             this.fileListVideo = []
             for(var i = 0; i<fileList.length;i++){
-                this.fileListVideo.push(fileList[i].raw)
+                if(fileList[i].raw){
+                    this.fileListVideo.push(fileList[i].raw)
+                }else{
+                    this.fileListVideo.push(fileList[i])
+                }
+                
             }
         },
         handleRemoveI(file, fileList) {
             this.fileListImg = []
             for(var i = 0; i<fileList.length;i++){
-                this.fileListImg.push(fileList[i].raw)
+                if(fileList[i].raw){
+                    this.fileListImg.push(fileList[i].raw)
+                }else{
+                    this.fileListImg.push(fileList[i])
+                }
+                
             }
         },
         handleRemoveA(file, fileList) {

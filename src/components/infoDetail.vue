@@ -66,27 +66,13 @@
                                         <span class="mf-fn">累计工作时长</span>
                                         <span class="mf-fnv" style="width: 125px;"></span>
                                     </div>
-                                    <div class="icon" style="top:80px;left:300px;">
-                                        <a class="mf-a"></a>
-                                        <span class="mf-fn">发生故障次数</span>
-                                        <span class="mf-fnv" style="width: 125px;"></span>
-                                    </div>
 								</div>
                         </div>
                     </div>
                     <div class="container-fluid" style="height: 280px;border-bottom: 2px dashed #ccc5c5;">
-                        <div class="basicInfoHead" style="position:relative;">
-                            <span class="me-e">使用信息</span>
-                            <el-table class="equipTable"
-                                    ref="multipleTable"
-                                    tooltip-effect="dark"
-                                    style="cursor:pointer"
-                                    height="250"> 
-                                <el-table-column fixed show-overflow-tooltip prop="model" label="使用时间" width="190" align="center"></el-table-column>
-                                <el-table-column  show-overflow-tooltip prop="system" width="170" label="使用人" align="center"></el-table-column>
-                                <el-table-column show-overflow-tooltip prop="number" width="120" label="使用时长" align="center"></el-table-column>
-                                <el-table-column show-overflow-tooltip prop="marks" width="300" label="备注信息" align="center"></el-table-column>
-                            </el-table>
+                        <div class="basicInfoHead" style="position:relative;width:100%;height:100%;">
+                            <span class="me-e">故障发生次数</span>
+                            <div id="numCharts" style="{width: 100%;height: calc(100% - 16px);}"></div>                           
                         </div>
                     </div>
                     <div class="container-fluid">
@@ -235,13 +221,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="container-fluid" style="width:100%;height:285px">
-                        <div class="basicInfoHead" style="position:relative;width:100%;height:280px;">
+                    <div class="container-fluid" style="width:100%;height:270px">
+                        <div class="basicInfoHead" style="position:relative;width:100%;height:270px;">
+                            <span class="me-e">故障音视频信息</span>
                             <el-table   :data="videoTable"
                                         ref="multipleTable"
                                         tooltip-effect="dark"
                                         style="cursor:pointer"
-                                        height="250" > 
+                                        height="230" > 
                                     <el-table-column fixed show-overflow-tooltip sortable prop="data" label="时间" width="190" align="center"></el-table-column>
                                     <el-table-column fixed show-overflow-tooltip prop="name" label="名称" width="400" align="center"></el-table-column>
                                     <el-table-column fixed show-overflow-tooltip prop="url" label="路径" v-if="false" width="400" align="center"></el-table-column>
@@ -268,12 +255,17 @@
 </template>
 
 <script>
+// 引入基本模板
+let echarts = require('echarts/lib/echarts')
+// 引入柱状图组件
+require('echarts/lib/chart/line')
+// 引入提示框和title组件
+require('echarts/lib/component/tooltip')
+require('echarts/lib/component/title')
 
-import MyVideo from "./video"
 
 export default {
     name:"infoDetail",
-    components: {MyVideo},
     data (){
         return{
             userName:"",
@@ -293,6 +285,7 @@ export default {
     mounted(){
         this.setUserName()
         this.getInfoDetail()
+        this.drawLine()
     },
     methods: {
         setUserName(){
@@ -469,6 +462,7 @@ export default {
                 if(response.data.stu == 200){
                     alert("修改成功！")
                     this.getInfoDetail()
+                    this.drawLine()
                 }else{
                     alert("修改失败！") 
                 }
@@ -521,12 +515,57 @@ export default {
             })
         },
         playVideo(index,row){
-            console.log(row.url)
             sessionStorage.setItem("url",row.url);
-            this.$store.state.videoSrc = row.url
-            this.show = true
-            let routeData = this.$router.resolve({ path: '/video' });
+            let routeData
+            if(row.name.indexOf("docx")>-1||row.name.indexOf("doc")>-1||row.name.indexOf("xls")>-1||row.name.indexOf("xlsx")>-1){
+                routeData = this.$router.resolve({ path: '/word' });
+            }else if(row.name.indexOf("jpg")>-1||row.name.indexOf("png")>-1){
+                routeData = this.$router.resolve({ path: '/picture' });
+            }else if(row.name.indexOf("mp3")>-1||row.name.indexOf("mid")>-1||row.name.indexOf("wav")>-1){
+                routeData = this.$router.resolve({ path: '/audio' });
+            }else{
+                routeData = this.$router.resolve({ path: '/video' });
+            }           
             window.open(routeData.href, '_blank');
+        },
+        drawLine(){
+            // 基于准备好的dom，初始化echarts实例
+            let myChart = echarts.init(document.getElementById('numCharts'))
+            // 绘制图表
+
+            
+            let man_uuid = sessionStorage.getItem("systemUuid")
+            let param ={
+                    "msg": {
+                            "man_uuid": man_uuid,
+                            "starttime":"",
+                            "endtime":""
+                        }
+                    }
+            this.$axios.post('FaultDBManage/statisfau/',param                   
+            ).then(function(response){
+                if(response.data.stu == 200){
+                    var xArr = response.data.x;
+                    var yArr = response.data.y;
+                    myChart.setOption({
+                        tooltip: {},
+                        xAxis: {
+                            data: xArr
+                        },
+                        yAxis: {},
+                        series: [{
+                            name: '次数',
+                            type: 'line',
+                            data: yArr
+                        }]
+                    });                  
+                }else{
+                    
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+                       
         }
     }
 }
@@ -628,7 +667,7 @@ export default {
         border-bottom: 1px solid #B3C0D1;
         margin-bottom:5px;
     }
-    span.me-e{width:66px;display: block;font-family: Youyuan;font-size: 13px;font-weight: bold;color: #333;margin-top: 15px;border-left: 4px solid #3A9EE0;padding-left: 6px;height: 16px;line-height: 16px;}
+    span.me-e{width:150px;display: block;font-family: Youyuan;font-size: 13px;font-weight: bold;color: #333;margin-top: 15px;border-left: 4px solid #3A9EE0;padding-left: 6px;height: 16px;line-height: 16px;}
 	div.basicInfoHead a.mf-a{display:block;background:url(../assets/icon.png) center center no-repeat;width:10px;height:15px;float:left;}
     .icon{
         position: absolute;

@@ -11,6 +11,9 @@ import infoDetail from '@/components/infoDetail'
 import fault from '@/components/fault'
 import userManage from '@/view/userManage'
 import video from '@/components/video'
+import word from '@/components/word'
+import picture from '@/components/picture'
+import audio from '@/components/audio'
 
 
 Vue.use(Router)
@@ -77,6 +80,21 @@ export default new Router({
       path:'/video',
       name:'video',
       component:video
+    },
+    {
+      path:'/word',
+      name:'word',
+      component:word
+    },
+    {
+      path:'/picture',
+      name:'picture',
+      component:picture
+    },
+    {
+      path:'/audio',
+      name:'audio',
+      component:audio
     },
   ]
 })
