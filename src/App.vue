@@ -21,7 +21,6 @@ export default {
   #app{
       width:100%;
       height:900px;
-      background: -webkit-gradient(linear, center top, center bottom, from(rgba(139, 190, 214, 0.507)), to(rgb(112, 111, 111)));
       margin:90px auto 0;
     }
 </style>

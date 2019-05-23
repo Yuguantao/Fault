@@ -1,29 +1,12 @@
 <template>
     <div class="container-fluid container-box">
-        <div class="navbar navbar-inverse navbar-fixed-top" style="top:35px">
-            <div class="container-fluid">
-                <div class="head">
-                    <div class="headLeft fl">
-                        <router-link to= "/FaultAnalysis" style="display:block;font-size: 25px;color: #fff;">故障数据库管理系统</router-link>
-                    </div>
-                    <div class="fr clearfix">
-                        <div class="headRight fl"><a href="login">登录</a></div>
-                        <div class="login" style="width:235px;">
-                            <span class="user" id="user"></span>
-                            <span>　|</span>
-                            <span class="out" @click="exitUser()">退出</span>
-                            <router-link to="/userManage" class="fr" id="useSet">
-                                <img src="../assets/index/useSet.png" width="20" height="23" class="fl" style="margin:14px 5px 0;">
-                                <span class="fl UserManage">配置</span>
-                            </router-link>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid container-addEquipmentBox">
-            <div class="addEquipmentBox modal-content">
+
+        <vHead></vHead>
+        <el-container class="container-fluid container-addEquipmentBox" >
+            <el-aside style="width:200px;height:100%;margin-top:52px;">
+                <vNavMenu></vNavMenu>
+            </el-aside>
+            <el-main class="addEquipmentBox modal-content">
                 <div class="modal-body equipmentBox">
                     <table width="100%" cellspacing="0" cellpadding="0">
                         <thead>
@@ -36,15 +19,16 @@
                                 <td width="100" class="item">设备选择</td>
                                 <td class="pl10" colspan="3">
                                         <div>
-                                            <el-select v-model="systemValue" @change="gainModal" placeholder="请选择系统" style="width:30%;">
+                                            <el-select v-model="systemValue" @change="gainModal" placeholder="请选择系统" style="width:20%;">
                                                 <el-option
+                                                :disabled="(acc_system.indexOf(item.label) >-1&&acc_permission != 0)||(acc_system.indexOf(item.label) <=-1&&acc_permission == 0)? false:true"
                                                 v-for="item in systemOptions"
                                                 :key="item.value"
                                                 :label="item.label"
                                                 :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="modalValue" @change="gainNumber" placeholder="请选择型号" style="width:30%;">
+                                            <el-select v-model="modalValue" @change="gainNumber" placeholder="请选择型号" style="width:20%;">
                                                 <el-option
                                                 v-for="item in modalOptions"
                                                 :key="item.value"
@@ -52,7 +36,7 @@
                                                 :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="numValue" @change="gainUuid" placeholder="请选择编号" style="width:30%;">
+                                            <el-select v-model="numValue" @change="gainUuid" placeholder="请选择编号" style="width:20%;">
                                                 <el-option
                                                 v-for="item in numOptions"
                                                 :key="item.value"
@@ -82,8 +66,16 @@
                             <tr>
                                 
                                 <td class="item">故障类型</td>
-                                <td class="pl10"><input type="text" class="form-control equipmentInput fau_type">
-
+                                <td class="pl10">
+                                    <!-- <input type="text" class="form-control equipmentInput fau_type"> -->
+                                    <el-select v-model="faultTypeValue" placeholder="请选择故障类型">
+                                        <el-option
+                                        v-for="item in faultTypeOptions"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                        </el-option>
+                                    </el-select>
                                 </td>
                                 <td class="item">故障现象</td>
                                 <td class="pl10"><input type="text" class="form-control equipmentInput fau_phen">
@@ -185,8 +177,8 @@
                     </div>
                 </div>
 
-            </div>
-        </div>
+            </el-main>
+        </el-container>
         <router-view></router-view>
     </div>
     
@@ -209,19 +201,25 @@ export default {
             numOptions:[],
             systemValue:"",
             modalValue:"",
-            numValue:""
+            numValue:"",
+            acc_system:'',
+            acc_permission:'',
+            faultTypeValue:'',
+            faultTypeOptions:[]
         }
     },
     mounted(){
         this.setUserName(),
         this.setStyle(),
-        this.initSystem()
+        this.initSystem(),
+        this.getFaultType()
     },
     methods: {
         setUserName(){
             var self = this;
             self.acc_permission = sessionStorage.getItem("acc_permission");
             self.userName = sessionStorage.getItem("user");
+            self.acc_system = sessionStorage.getItem("acc_system")
             if(self.acc_permission){
                 $(".headRight").hide();
                 $("#user").text(self.userName)
@@ -413,7 +411,7 @@ export default {
             let fau_useInfo = sessionStorage.getItem("faultSysUuid")
 
             let fau_desc = $(".fau_desc").val()
-            let fau_type = $(".fau_type").val()
+            let fau_type = this.faultTypeValue
             let fau_num = $(".fau_num").val()
             let fau_phen = $(".fau_phen").val()
             let fau_reason = $(".fau_reason").val()
@@ -465,6 +463,40 @@ export default {
             }.bind(this)).catch(function (error) { 
                 console.log(error);
             })
+        },
+        getFaultType(){
+            let param = {
+                            "msg": [
+                                {
+                                
+                                }, 
+                                {
+
+                                },
+                                {
+                                "uuid":""
+                                },
+                                {
+                                    
+                                }
+                            ]
+                        }
+            this.$axios.post('FaultDBManage/fautype/',param,                
+            ).then(function(response){
+                if(response.data.msg.length>0){
+                    var faultTypeArr = response.data.msg
+    
+                    for(var i = 0;i<faultTypeArr.length;i++){                           
+                        var temp = {}
+                        temp.label = faultTypeArr[i].fields.fatp_name
+                        temp.value = faultTypeArr[i].fields.fatp_name
+                        
+                        this.faultTypeOptions.push(temp)
+                    }
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
         }
     }
 }
@@ -473,39 +505,12 @@ export default {
 <style scoped>
     @import "../../static/css/reset.css";
     @import "../../static/css/index.css";
-    @import "../../static/css/voicePlus.css";
-
-
     .container-fluid.index{
         margin: 450px auto 0;
     }
-    .container-fluid {
-        padding-right: 40px;
-        padding-left: 40px;
-        margin-right: auto;
-        margin-left: auto;
-    }
-    .navbar-inverse {
-        background-color: rgba(0,0,0,0);
-        border-color: #080808;
-    }
-    .navbar-fixed-top {
-        top: 0;
-        border-width: 0 0 1px;
-    }
-
-
-    .navbar-fixed-bottom, .navbar-fixed-top {
-        position: fixed;
-        right: 0;
-        left: 0;
-        z-index: 1030;
-    }
-    .navbar {
-        position: relative;
-        min-height: 50px;
-        margin-bottom: 20px;
-        border: 1px solid transparent;
+    .container-fluid{
+        padding-right:0px;
+        padding-left:0px;
     }
     .content h4{font-size:16px; line-height:32px; padding-left:10px; width:100px; float:left; margin-bottom:20px;}
     .noData1,.noData2{font-size:20px; display:none; text-align:center; margin-top:150px;}
@@ -575,9 +580,6 @@ export default {
     }
     .equipmentBox td{
         padding: 5px 0;
-    }
-    .container-addEquipmentBox{
-        margin-top:70px;
     }
     .equipmentInput{
         width: 220px;

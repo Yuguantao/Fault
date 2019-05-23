@@ -1,115 +1,102 @@
 <template>
     <div class="container-fluid container-box">
-        <div class="navbar navbar-inverse navbar-fixed-top" style="top:35px">
-            <div class="container-fluid">
-                <div class="head">
-                    <div class="headLeft fl">
-                        <router-link to= "/FaultAnalysis" style="display:block;font-size: 25px;color: #fff;">故障数据库管理系统</router-link>
-                    </div>
-                    <div class="fr clearfix">
-                        <div class="headRight fl"><a href="login">登录</a></div>
-                        <div class="login" style="width:235px;">
-                            <span class="user" id="user"></span>
-                            <span>　|</span>
-                            <span class="out" @click="exitUser()">退出</span>
-                            <router-link to="/userManage" class="fr" id="useSet">
-                                <img src="../assets/index/useSet.png" width="20" height="23" class="fl" style="margin:14px 5px 0;">
-                                <span class="fl UserManage">配置</span>
-                            </router-link>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <vHead></vHead>
         <router-view></router-view>
-        <div class="container-fluid userArray">
-            <div class="topBox clearfix">
-                <span class="fl">用户级别：</span>
-                <ul class="userLevel fl clearfix">
-                    <el-radio-group v-model="radio" @change="filterUser">
-                        <el-radio :label="3">全部</el-radio>
-                        <el-radio :label="0">管理员</el-radio>
-                        <el-radio :label="1">分系统用户</el-radio>
-                        <el-radio :label="2">一般用户</el-radio>
-                    </el-radio-group>
-                </ul>
-                <!-- <form class="public-search fl"> --><div class="public-search fl"><span class="octicon-search02"></span>
-                    <input type="text" placeholder="请输入用户名" class="form-control" style="padding-left:8px;" id="search_user">
-            <!--   </form> --></div>
-                <span class="btn btn-primary fl newSearch"  id="search_sure" @click="searchUser">搜索</span>
-                <span class="btn btn-success fr" data-toggle="modal" data-target="#newUser">新建用户</span>
-                <span class="btn btn-default fr" data-toggle="modal" style="margin-right:10px;" data-target="#deleteBox">全部删除</span>
-        </div>
-        
-        <el-table class="userTable"
-                    fixed
-                    ref="multipleTable"
-                    :data="userData"
-                    tooltip-effect="dark"
-                    style="width: 100%;cursor:pointer"
-                    height="500">
-                    <el-table-column
-                        type="selection"
-                        width="50"
-                        align="center">
-                    </el-table-column>
-                    <el-table-column
-                        prop="name"
-                        label="用户名"
-                        width="150"
-                        show-overflow-tooltip
-                        align="center">
-                        <template ></template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="password"
-                        label="密码"
-                        width="150"
-                        show-overflow-tooltip
-                        align="center">
-                        <template ></template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="permission"
-                        label="用户级别"
-                        width="160"
-                        show-overflow-tooltip
-                        align="center">
-                    </el-table-column>
-                    <el-table-column
-                        prop="system"
-                        label="系统"
-                        width="400"
-                        show-overflow-tooltip
-                        align="center">
-                    </el-table-column>
-                    <el-table-column
-                        prop="acc_remarks"
-                        label="备注"
-                        width="400"
-                        show-overflow-tooltip
-                        align="center">
-                    </el-table-column>
-                    <el-table-column
-                        prop="uuid"
-                        label="uuid"
-                        width="85"
-                        v-if="false"
-                        show-overflow-tooltip
-                        align="center">
-                    </el-table-column>
-                    <el-table-column fixed="right" label="操作" width="150" align="center">
-                        <template slot-scope="scope">
-                            <el-button
-                            size="mini" @click="editUserBox(scope.row)" data-toggle="modal" data-target="#editBox">编辑</el-button>
-                            <el-button
-                            size="mini"
-                            type="danger" @click="deleteUser(scope.row)">删除</el-button>
-                        </template>
-                    </el-table-column>
-            </el-table>
-        </div>
+        <el-container>
+            <el-aside style="width:200px;height:100%;margin-top:52px;">
+                <vNavMenu></vNavMenu>
+            </el-aside>
+            <el-main>
+                <div class="container-fluid userArray">
+                    <div class="topBox clearfix">
+                        <span class="fl">用户级别：</span>
+                        <ul class="userLevel fl clearfix">
+                            <el-radio-group v-model="radio" @change="filterUser">
+                                <el-radio :label="3">全部</el-radio>
+                                <el-radio :label="0">管理员</el-radio>
+                                <el-radio :label="1">分系统用户</el-radio>
+                                <el-radio :label="2">一般用户</el-radio>
+                            </el-radio-group>
+                        </ul>
+                        <!-- <form class="public-search fl"> --><div class="public-search fl"><span class="octicon-search02"></span>
+                            <input type="text" placeholder="请输入用户名" class="form-control" style="padding-left:8px;" id="search_user">
+                    <!--   </form> --></div>
+                        <button type="button" class="el-button el-button--primary fl newSearch" id="search_sure" @click="searchUser"><span>搜索</span></button>
+                        <span class="btn btn-success fr" data-toggle="modal" data-target="#newUser">新建用户</span>
+                        <span class="btn btn-default fr" data-toggle="modal" style="margin-right:10px;" data-target="#deleteBox">全部删除</span>
+                    </div>
+            
+                    <el-table class="userTable"
+                            fixed
+                            ref="multipleTable"
+                            :data="userData"
+                            tooltip-effect="dark"
+                            style="width: 100%;cursor:pointer"
+                            :header-cell-style="tableHeaderColor"
+                            height="500">
+                            <el-table-column
+                                type="selection"
+                                width="50"
+                                align="center">
+                            </el-table-column>
+                            <el-table-column
+                                prop="name"
+                                label="用户名"
+                                width="190"
+                                show-overflow-tooltip
+                                align="center">
+                                <template ></template>
+                            </el-table-column>
+                            <el-table-column
+                                prop="password"
+                                label="密码"
+                                width="150"
+                                show-overflow-tooltip
+                                align="center">
+                                <template ></template>
+                            </el-table-column>
+                            <el-table-column
+                                prop="permission"
+                                label="用户级别"
+                                width="180"
+                                show-overflow-tooltip
+                                align="center">
+                            </el-table-column>
+                            <el-table-column
+                                prop="system"
+                                label="系统"
+                                width="400"
+                                show-overflow-tooltip
+                                align="center">
+                            </el-table-column>
+                            <el-table-column
+                                prop="acc_remarks"
+                                label="备注"
+                                width="400"
+                                show-overflow-tooltip
+                                align="center">
+                            </el-table-column>
+                            <el-table-column
+                                prop="uuid"
+                                label="uuid"
+                                width="85"
+                                v-if="false"
+                                show-overflow-tooltip
+                                align="center">
+                            </el-table-column>
+                            <el-table-column fixed="right" label="操作" width="150" align="center">
+                                <template slot-scope="scope">
+                                    <el-button
+                                    size="mini" @click="editUserBox(scope.row)" data-toggle="modal" data-target="#editBox">编辑</el-button>
+                                    <el-button
+                                    size="mini"
+                                    type="danger" @click="deleteUser(scope.row)">删除</el-button>
+                                </template>
+                            </el-table-column>
+                    </el-table>
+                </div>
+            </el-main>                 
+        </el-container>
         <div class="modal fade" id="newUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
             <div class="modal-dialog userBox">
                 <div class="modal-content">
@@ -336,6 +323,11 @@ export default {
         exitUser(){
             this.$router.push({ path: '/login' });
             sessionStorage.removeItem("user")
+        },
+        tableHeaderColor({ row, column, rowIndex, columnIndex }) {
+            if (rowIndex === 0) {
+                return 'background-color: lightblue;color: #fff;font-weight: 500;'
+            }
         },
         addNewUser(){
             var self = this;
@@ -584,47 +576,14 @@ export default {
     @import "../../static/css/bootstrap-select.min.css";
     @import "../../static/css/skinBlue.css";
     @import "../../static/css/UserManage.css";
-    .head{
-        width: 100%;
-        height: 66px;
-        border-bottom: 5px solid #4A6471;
-    }
+
     .container-fluid.index{
         margin: 450px auto 0;
     }
-    .container-fluid {
-        padding-right: 40px;
-        padding-left: 40px;
-        margin-right: auto;
-        margin-left: auto;
-    }
     .userArray{
-        margin: 100px 0 25px;
         height: 450px;
     }
 
-    .navbar-inverse {
-        background-color: rgba(0,0,0,0);
-        border-color: #080808;
-    }
-    .navbar-fixed-top {
-        top: 0;
-        border-width: 0 0 1px;
-    }
-
-
-    .navbar-fixed-bottom, .navbar-fixed-top {
-        position: fixed;
-        right: 0;
-        left: 0;
-        z-index: 1030;
-    }
-    .navbar {
-        position: relative;
-        min-height: 50px;
-        margin-bottom: 20px;
-        border: 1px solid transparent;
-    }
     .icheckbox_minimal-blue,.icheckbox_minimal-blue.checked{display: inline-block; top: 3px;}
 	.iradio_minimal-blue,.iradio_minimal-blue.checked{ float:left; top: 2px;}
     label{margin-right: 5px; font-weight: normal; margin-right: 5px;}
@@ -641,5 +600,11 @@ export default {
     .el-input__inner{
         border-color: #ced4da;
     }
+    .container-box {
+            margin-right: auto;
+            margin-left: auto;
+            padding-right:0px;
+            padding-left:0px;
+        }
 </style>
 

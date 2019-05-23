@@ -1,211 +1,197 @@
 <template>
     <div class="container-fluid container-box">
-        <div class="navbar navbar-inverse navbar-fixed-top" style="top:35px">
-            <div class="container-fluid">
-                <div class="head">
-                    <div class="headLeft fl">
-                        <router-link to= "/FaultAnalysis" style="display:block;font-size: 25px;color: #fff;">故障数据库管理系统</router-link>
-                    </div>
-                    <div class="fr clearfix">
-                        <div class="headRight fl"><a href="login">登录</a></div>
-                        <div class="login" style="width:235px;">
-                            <span class="user" id="user"></span>
-                            <span>　|</span>
-                            <span class="out" @click="exitUser()">退出</span>
-                            <router-link to="/userManage" class="fr" id="useSet">
-                                <img src="../assets/index/useSet.png" width="20" height="23" class="fl" style="margin:14px 5px 0;">
-                                <span class="fl UserManage">配置</span>
-                            </router-link>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="container-fluid fl">
-            <div class="topBox clearfix">
-                <span class="fl" style="line-height:34px;">设备信息查询：</span>
-                <div class="fl sys1">
-                </div>
-            </div>
-            <ul class="fl parList">
-                <el-select v-model="systemValue" @change="gainModal" placeholder="请选择系统" style="width:30%;">
-                    <el-option
-                    v-for="item in systemOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                    </el-option>
-                </el-select>
-                <el-select v-model="modalValue" @change="gainNumber" placeholder="请选择型号" style="width:30%;">
-                    <el-option
-                    v-for="item in modalOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                    </el-option>
-                </el-select>
-                <el-select v-model="numValue" @change="selectInfo" placeholder="请选择编号" style="width:30%;">
-                    <el-option
-                    v-for="item in numOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                    </el-option>
-                </el-select>
-            </ul>
-            
-            <!-- <span class="sBtn" id="sureBtn" @click="selectInfo">查询</span> -->
-  
-            <el-table :data="equipData" class="equipTable"
-                    fixed
-                    ref="multipleTable"
-                    tooltip-effect="dark"
-                    style="width: 100%;cursor:pointer"
-                    height="500"
-                    @row-click="openDetails">
-                    
-                <el-table-column fixed show-overflow-tooltip prop="system" label="系统" width="150" align="center">
-                    <template slot-scope="scope">
-                        <template  v-if="scope.row.edit">
-                            <el-input v-model="scope.row.system" placeholder="系统"></el-input>
-                        </template>
-                        <span v-else>{{ scope.row.system }}</span>                        
-                    </template>
-                </el-table-column>
-                <el-table-column  fixed show-overflow-tooltip prop="model" width="120" label="型号" align="center">
-                    <template slot-scope="scope">
-                        <template v-if="scope.row.edit">
-                            <el-input v-model="scope.row.model" placeholder="型号"></el-input>
-                        </template>
-                        <span v-else>{{ scope.row.model }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column fixed show-overflow-tooltip prop="number" width="80" label="编号" align="center">
-                    <template slot-scope="scope">
-                        <template v-if="scope.row.edit">
-                            <el-input v-model="scope.row.number" placeholder="编号"></el-input>
-                        </template>
-                        <span v-else>{{ scope.row.number }}</span>                       
-                    </template>
-                </el-table-column>
-                <el-table-column sortable prop="createTime" width="250" label="创建时间" align="center">
-                    <template slot-scope="scope">
-                        <template v-if="scope.row.edit">
-                            <el-date-picker
-                                v-model="scope.row.createTime"
-                                type="datetime"
-                                format="yyyy-MM-dd HH:mm:ss"
-                                value-format="yyyy-MM-dd HH:mm:ss"
-                                placeholder="创建时间">
-                            </el-date-picker>
-                        </template>
-                        <span v-else>{{ scope.row.createTime }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column show-overflow-tooltip prop="man_porpuse" width="220" label="功能用途" align="center">
-                    <template slot-scope="scope">
-                        <template v-if="scope.row.edit">
-                            <el-input v-model="scope.row.man_porpuse" placeholder="功能用途"></el-input>
-                        </template>
-                        <span v-else>{{ scope.row.man_porpuse }}</span> 
-                    </template>
-                </el-table-column>
-                <el-table-column show-overflow-tooltip prop="man_qualifi" width="220" label="主要技术指标" align="center">
-                    <template slot-scope="scope">
-                        <template v-if="scope.row.edit">
-                            <el-input v-model="scope.row.man_qualifi" placeholder="主要技术指标"></el-input>
-                        </template>
-                        <span v-else>{{ scope.row.man_qualifi }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column show-overflow-tooltip prop="man_place" width="120" label="存放地点" align="center">
-                    <template slot-scope="scope">
-                        <template v-if="scope.row.edit">
-                            <el-input v-model="scope.row.man_place" placeholder="存放地点"></el-input>
-                        </template>
-                        <span v-else>{{ scope.row.man_place }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column show-overflow-tooltip prop="man_department" width="220" label="责任部门" align="center">
-                    <template slot-scope="scope">
-                        <template v-if="scope.row.edit">
-                            <el-input v-model="scope.row.man_department" placeholder="责任部门"></el-input>
-                        </template>
-                        <span v-else>{{ scope.row.man_department }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column show-overflow-tooltip prop="man_persion" width="220" label="责任人" align="center">
-                    <template slot-scope="scope">
-                        <template v-if="scope.row.edit">
-                            <el-input v-model="scope.row.man_persion" placeholder="责任人"></el-input>
-                        </template>
-                        <span v-else>{{ scope.row.man_persion }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column show-overflow-tooltip prop="man_mfrs" width="220" label="生产厂家" align="center">
-                    <template slot-scope="scope">
-                        <template v-if="scope.row.edit">
-                            <el-input v-model="scope.row.man_mfrs" placeholder="生产厂家"></el-input>
-                        </template>
-                        <span v-else>{{ scope.row.man_mfrs }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column show-overflow-tooltip prop="man_mfrspersion" width="220" label="厂家联系人" align="center">
-                    <template slot-scope="scope">
-                        <template v-if="scope.row.edit">
-                            <el-input v-model="scope.row.man_mfrspersion" placeholder="厂家联系人"></el-input>
-                        </template>
-                        <span v-else>{{ scope.row.man_mfrspersion }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column show-overflow-tooltip v-if="false" prop="uuid" width="80" label="uuid" align="center">
-                    <template slot-scope="scope">
-                        <template v-if="scope.row.edit">
-                            <el-input v-model="scope.row.uuid" placeholder=""></el-input>
-                        </template>
-                        <span v-else>{{ scope.row.uuid }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column show-overflow-tooltip prop="marks" width="270" label="备注信息" align="center">
-                    <template slot-scope="scope">
-                        <template v-if="scope.row.edit">
-                            <el-input v-model="scope.row.marks" placeholder="备注信息"></el-input>
-                        </template>
-                        <span v-else>{{ scope.row.marks }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column fixed="right" width="150" align="center" label="操作" v-if = "whetherShow">
-                    <template slot-scope="scope">
-                        <el-button
-                            v-if="!scope.row.edit"
-                            v-model="scope.$index"
-                            @click="handleEdit(scope.$index, scope.row)"
-                            size="mini" class="handleButton">编辑</el-button>
-                        <el-button 
-                            type="success" 
-                            size="mini"
-                            v-model="scope.$index" 
-                            v-if="scope.row.edit"
-                            @click="exitEquipInfo(scope.row)">保存</el-button>
-                        <el-button
-                            size="mini"
-                            v-if="!scope.row.edit"
-                            v-model="scope.$index"
-                            type="danger" class="handleButton" >删除</el-button>
-                        <el-button
-                            v-else
-                            size="mini"
-                            type="danger"
-                            v-model="scope.$index"
-                            @click="handleCancle(scope.$index, scope.row)">取消</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            
-	</div>
+        <vHead></vHead>
         <router-view></router-view>
+        <el-container class="container-fluid fl">
+            <el-aside style="width:200px;height:100%;margin-top:52px;">
+                <vNavMenu></vNavMenu>
+            </el-aside>
+            <el-main>
+                <div class="topBox clearfix">
+                    <div class="fl sys1">
+                    </div>
+                </div>
+                <ul class="fl parList">
+                    <el-select v-model="systemValue" @change="gainModal" placeholder="请选择系统" style="width:30%;">
+                        <el-option
+                        v-for="item in systemOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-select v-model="modalValue" @change="gainNumber" placeholder="请选择型号" style="width:30%;">
+                        <el-option
+                        v-for="item in modalOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-select v-model="numValue" @change="selectInfo" placeholder="请选择编号" style="width:30%;">
+                        <el-option
+                        v-for="item in numOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                </ul>
+                
+                <span class="sBtn" id="sureBtn" @click="addEquip" v-if="acc_permission != 2">新增设备</span>
+    
+                <el-table :data="equipData" class="equipTable"
+                        fixed
+                        ref="multipleTable"
+                        tooltip-effect="dark"
+                        style="width: 100%;cursor:pointer"
+                        height="650"
+                        :row-style="tableRowStyle"
+                        :header-cell-style="tableHeaderColor"
+                        @row-click="openDetails">
+                        
+                    <el-table-column fixed show-overflow-tooltip prop="system" label="系统" width="150" align="center">
+                        <template slot-scope="scope">
+                            <template  v-if="scope.row.edit">
+                                <el-input v-model="scope.row.system" placeholder="系统"></el-input>
+                            </template>
+                            <span v-else>{{ scope.row.system }}</span>                        
+                        </template>
+                    </el-table-column>
+                    <el-table-column  fixed show-overflow-tooltip prop="model" width="120" label="型号" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.edit">
+                                <el-input v-model="scope.row.model" placeholder="型号"></el-input>
+                            </template>
+                            <span v-else>{{ scope.row.model }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column fixed show-overflow-tooltip prop="number" width="80" label="编号" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.edit">
+                                <el-input v-model="scope.row.number" placeholder="编号"></el-input>
+                            </template>
+                            <span v-else>{{ scope.row.number }}</span>                       
+                        </template>
+                    </el-table-column>
+                    <el-table-column sortable prop="createTime" width="250" label="创建时间" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.edit">
+                                <el-date-picker
+                                    v-model="scope.row.createTime"
+                                    type="datetime"
+                                    format="yyyy-MM-dd HH:mm:ss"
+                                    value-format="yyyy-MM-dd HH:mm:ss"
+                                    placeholder="创建时间">
+                                </el-date-picker>
+                            </template>
+                            <span v-else>{{ scope.row.createTime }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip prop="man_porpuse" width="220" label="功能用途" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.edit">
+                                <el-input v-model="scope.row.man_porpuse" placeholder="功能用途"></el-input>
+                            </template>
+                            <span v-else>{{ scope.row.man_porpuse }}</span> 
+                        </template>
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip prop="man_qualifi" width="220" label="主要技术指标" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.edit">
+                                <el-input v-model="scope.row.man_qualifi" placeholder="主要技术指标"></el-input>
+                            </template>
+                            <span v-else>{{ scope.row.man_qualifi }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip prop="man_place" width="120" label="存放地点" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.edit">
+                                <el-input v-model="scope.row.man_place" placeholder="存放地点"></el-input>
+                            </template>
+                            <span v-else>{{ scope.row.man_place }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip prop="man_department" width="220" label="责任部门" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.edit">
+                                <el-input v-model="scope.row.man_department" placeholder="责任部门"></el-input>
+                            </template>
+                            <span v-else>{{ scope.row.man_department }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip prop="man_persion" width="220" label="责任人" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.edit">
+                                <el-input v-model="scope.row.man_persion" placeholder="责任人"></el-input>
+                            </template>
+                            <span v-else>{{ scope.row.man_persion }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip prop="man_mfrs" width="220" label="生产厂家" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.edit">
+                                <el-input v-model="scope.row.man_mfrs" placeholder="生产厂家"></el-input>
+                            </template>
+                            <span v-else>{{ scope.row.man_mfrs }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip prop="man_mfrspersion" width="220" label="厂家联系人" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.edit">
+                                <el-input v-model="scope.row.man_mfrspersion" placeholder="厂家联系人"></el-input>
+                            </template>
+                            <span v-else>{{ scope.row.man_mfrspersion }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip v-if="false" prop="uuid" width="80" label="uuid" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.edit">
+                                <el-input v-model="scope.row.uuid" placeholder=""></el-input>
+                            </template>
+                            <span v-else>{{ scope.row.uuid }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip prop="marks" width="270" label="备注信息" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.edit">
+                                <el-input v-model="scope.row.marks" placeholder="备注信息"></el-input>
+                            </template>
+                            <span v-else>{{ scope.row.marks }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column fixed="right" width="150" align="center" label="操作" v-if = "whetherShow">
+                        <template slot-scope="scope">
+                            <el-button
+                                v-if="!scope.row.edit"
+                                v-model="scope.$index"
+                                :disabled = "(acc_system.indexOf(scope.row.system) >-1&&acc_permission != 0)|| (acc_system.indexOf(scope.row.system) <=-1&&acc_permission == 0)? false:true"
+                                @click="handleEdit(scope.$index, scope.row)"
+                                size="mini" class="handleButton">编辑</el-button>
+                            <el-button 
+                                type="success" 
+                                size="mini"
+                                v-model="scope.$index" 
+                                v-if="scope.row.edit"
+                                @click="exitEquipInfo(scope.row)">保存</el-button>
+                            <el-button
+                                size="mini"
+                                v-if="!scope.row.edit"
+                                v-model="scope.$index"
+                                :disabled = "(acc_system.indexOf(scope.row.system) >-1&&acc_permission != 0)|| (acc_system.indexOf(scope.row.system) <=-1&&acc_permission == 0)? false:true"
+                                type="danger" class="handleButton" >删除</el-button>
+                            <el-button
+                                v-else
+                                size="mini"
+                                type="danger"
+                                v-model="scope.$index"
+                                @click="handleCancle(scope.$index, scope.row)">取消</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-main>
+        </el-container>
+        
     </div>
     
     
@@ -213,6 +199,7 @@
 
 <script>
 import { setTimeout } from 'timers';
+
 export default {
     name:"search",
     data (){
@@ -227,14 +214,15 @@ export default {
             modalValue:"",
             numValue:"",
             whetherShow:"",
-            infoDetail_old:[]               
+            infoDetail_old:[],
+            acc_system:'' ,
+            acc_permission:""              
         }
     },
     mounted(){
         this.setUserName(),
         this.initEquipInfo(),
-        this.initSystem(),
-        this.init()
+        this.initSystem()
     },
     methods: {
         setUserName(){
@@ -242,6 +230,7 @@ export default {
             this.whetherShow = self.$store.state.whetherShow
             self.acc_permission = sessionStorage.getItem("acc_permission");
             self.userName = sessionStorage.getItem("user");
+            self.acc_system = sessionStorage.getItem("acc_system")
             if(self.acc_permission){
                 $(".headRight").hide();
                 $("#user").text(self.userName)
@@ -259,6 +248,15 @@ export default {
         exitUser(){
             this.$router.push({ path: '/login' });
             sessionStorage.removeItem("user")
+        },
+        tableRowStyle({ row, rowIndex }) {
+            
+        },
+
+        tableHeaderColor({ row, column, rowIndex, columnIndex }) {
+            if (rowIndex === 0) {
+                return 'background-color: lightblue;color: #fff;font-weight: 500;'
+            }
         },
         initEquipInfo(){
             this.equipData = []
@@ -456,7 +454,7 @@ export default {
                                     {
                                     "uuid":"["+row.uuid+"]"
                                     },
-                                    {},{},{}
+                                    {},{},{},{}
                                 ]
                             }
 
@@ -528,6 +526,9 @@ export default {
                             },
                             {
                                 
+                            },
+                            {
+                                
                             }
                         ]
             }
@@ -544,29 +545,10 @@ export default {
             })
 
         },
-        init(){
-            let param ={
-                    "msg": {
-                        "fau_uuid":"c539e508-5f86-11e9-89d8-8cec4bb1995b"
-                        }
-                    }
-            this.$axios.post('FaultDBManage/searchinfo/',param                   
-            ).then(function(response){
-                if(response.data.stu == 200){
-                    let arr = response.data.urlmsg[1].fields.url_file
-                    arr  = arr.substr(1)
-                    arr = arr.substr(0, arr.length-1);
-                    let brr = arr.split(",")
-                    console.log(brr)
-
-                }else{
-                    alert("修改失败！") 
-                }
-            }.bind(this)).catch(function (error) { 
-                console.log(error);
-            })
-
-        }
+        addEquip(){
+            this.$router.push({ path: '/addEquip' })
+        },
+        
     }
 }
 </script>
@@ -581,35 +563,12 @@ export default {
         margin: 450px auto 0;
     }
     .container-fluid {
-        padding-right: 40px;
-        padding-left: 40px;
+        padding-right:0px;
+        padding-left:0px;
         margin-right: auto;
         margin-left: auto;
     }
 
-
-    .navbar-inverse {
-        background-color: rgba(0,0,0,0);
-        border-color: #080808;
-    }
-    .navbar-fixed-top {
-        top: 0;
-        border-width: 0 0 1px;
-    }
-
-
-    .navbar-fixed-bottom, .navbar-fixed-top {
-        position: fixed;
-        right: 0;
-        left: 0;
-        z-index: 1030;
-    }
-    .navbar {
-        position: relative;
-        min-height: 50px;
-        margin-bottom: 20px;
-        border: 1px solid transparent;
-    }
     .content h4{font-size:16px; line-height:32px; padding-left:10px; width:100px; float:left; margin-bottom:20px;}
     .noData1,.noData2{font-size:20px; display:none; text-align:center; margin-top:150px;}
     .parList{
@@ -638,10 +597,11 @@ export default {
         float: right;
     }
     .topBox{
-        margin: 50px 0 25px;
+        margin: 7px 0 25px;
     }
     .el-table__footer-wrapper, .el-table__header-wrapper{
         display: none !important;
     }
+    
 </style>
 

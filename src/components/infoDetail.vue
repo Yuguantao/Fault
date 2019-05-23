@@ -1,37 +1,17 @@
 <template>
     <div class="container-fluid container-box">
-        <div class="navbar navbar-inverse navbar-fixed-top" style="top:35px">
-            <div class="container-fluid">
-                <div class="head">
-                    <div class="headLeft fl">
-                        <router-link to= "/FaultAnalysis" style="display:block;font-size: 25px;color: #fff;">故障数据库管理系统</router-link>
-                    </div>
-                    <div class="fr clearfix">
-                        <div class="headRight fl"><a href="login">登录</a></div>
-                        <div class="login" style="width:235px;">
-                            <span class="user" id="user"></span>
-                            <span>　|</span>
-                            <span class="out" @click="exitUser()">退出</span>
-                            <router-link to="/userManage" class="fr" id="useSet">
-                                <img src="../assets/index/useSet.png" width="20" height="23" class="fl" style="margin:14px 5px 0;">
-                                <span class="fl UserManage">配置</span>
-                            </router-link>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+        <vHead></vHead>
         <div class="container-fluid detailBox">
             <div class="container-fluid">
                 <el-tabs v-model="activeName">
                     <el-tab-pane :label="systemName" name="first"></el-tab-pane>
                 </el-tabs>
             </div>
-            <el-container>
+            <el-container style="padding:0 5px;">
                 <el-main style="width:50%;">
                     <el-header>运行信息</el-header>
-                    <div class="container-fluid"  style="height: 135px;border-bottom: 2px dashed #ccc5c5;">
+                    <div class="container-fluid"  style="height: 75px;border-bottom: 2px dashed #ccc5c5;">
                         <div class="basicInfoHead" style="position:relative;">
                             <span class="me-e">设备信息</span>
                             <div class="me-l">
@@ -56,33 +36,50 @@
 											<span class="mf-fn">生产单位</span>
 											<span class="mf-fnv" style="width: 125px;">{{product}}</span>
                                     </div>
-                                    <div class="icon" style="top:80px;">
+                                    <div class="icon" style="left:480px;">
                                         <a class="mf-a"></a>
                                         <span class="mf-fn">引入时间</span>
                                         <span class="mf-fnv" style="width: 125px;">{{inputTime}}</span>
                                     </div>
-                                    <div class="icon" style="top:80px;left:150px;">
+                                    <!-- <div class="icon" style="top:80px;left:150px;">
                                         <a class="mf-a"></a>
                                         <span class="mf-fn">累计工作时长</span>
                                         <span class="mf-fnv" style="width: 125px;"></span>
-                                    </div>
+                                    </div> -->
 								</div>
                         </div>
                     </div>
-                    <div class="container-fluid" style="height: 280px;border-bottom: 2px dashed #ccc5c5;">
+                    <div class="container-fluid" style="height: 270px;border-bottom: 2px dashed #ccc5c5;">
                         <div class="basicInfoHead" style="position:relative;width:100%;height:100%;">
                             <span class="me-e">故障发生次数</span>
                             <div id="numCharts" style="{width: 100%;height: calc(100% - 16px);}"></div>                           
                         </div>
                     </div>
                     <div class="container-fluid">
-                        <div class="basicInfoHead" style="position:relative;">
-                            <span class="me-e">技术资料</span>
-                            
+                        <div class="basicInfoHead" style="position:relative;width:100%;height:220px;">
+                            <span class="me-e">设备音视频信息</span>
+                            <el-table   :data="videoTable"
+                                        ref="multipleTable"
+                                        tooltip-effect="dark"
+                                        style="cursor:pointer"
+                                        height="210" > 
+                                    <el-table-column fixed show-overflow-tooltip sortable prop="data" label="时间" width="190" align="center"></el-table-column>
+                                    <el-table-column fixed show-overflow-tooltip prop="name" label="名称" width="400" align="center"></el-table-column>
+                                    <el-table-column fixed show-overflow-tooltip prop="url" label="路径" v-if="false" width="400" align="center"></el-table-column>
+                                    <el-table-column fixed="right" width="150" align="center" label="操作">
+                                        <template slot-scope="scope">
+                                            <el-button
+                                                v-model="scope.$index"
+                                                @click="playVideo(scope.$index, scope.row)"
+                                                type="text" size="small" class="handleButton">查看</el-button>
+                                        </template>
+                                    </el-table-column>
+                            </el-table>                            
                         </div>
                     </div>
                 </el-main>
                 <el-main class="elMainSecond" style="width:50%;">
+
                     <el-header>维护保障</el-header>
                     <div class="container-fluid"  style="height: 320px;">
                         <div class="basicInfoHead" style="position:relative;">
@@ -197,6 +194,7 @@
                                                 v-if="!scope.row.edit"
                                                 v-model="scope.$index"
                                                 @click="handleEdit(scope.$index, scope.row)"
+                                                :disabled = "(acc_system.indexOf(system) >-1&&acc_permission != 0)||(acc_system.indexOf(system) <=-1&&acc_permission == 0)? false:true"
                                                 size="mini" class="handleButton">编辑</el-button>
                                             <el-button 
                                                 type="success" 
@@ -208,6 +206,7 @@
                                                 size="mini"
                                                 v-if="!scope.row.edit"
                                                 v-model="scope.$index"
+                                                :disabled = "(acc_system.indexOf(system) >-1&&acc_permission != 0)||(acc_system.indexOf(system) <=-1&&acc_permission == 0)? false:true"
                                                 type="danger" class="handleButton" >删除</el-button>
                                             <el-button
                                                 v-else
@@ -262,6 +261,7 @@ require('echarts/lib/chart/line')
 // 引入提示框和title组件
 require('echarts/lib/component/tooltip')
 require('echarts/lib/component/title')
+require('echarts/lib/component/dataZoom')
 
 
 export default {
@@ -280,6 +280,7 @@ export default {
             whetherShow:"",
             faultinfo_old:[],
             videoTable:[],
+            acc_system:''
         }
     },
     mounted(){
@@ -293,6 +294,7 @@ export default {
             this.whetherShow = self.$store.state.whetherShow
             self.acc_permission = sessionStorage.getItem("acc_permission");
             self.userName = sessionStorage.getItem("user");
+            self.acc_system = sessionStorage.getItem("acc_system")
             if(self.acc_permission){
                 $(".headRight").hide();
                 $("#user").text(self.userName)
@@ -549,6 +551,11 @@ export default {
                     var yArr = response.data.y;
                     myChart.setOption({
                         tooltip: {},
+                        dataZoom: [{
+                            
+                        }, {
+                            type: 'inside'
+                        }],
                         xAxis: {
                             data: xArr
                         },
@@ -581,33 +588,10 @@ export default {
         margin: 450px auto 0;
     }
     .container-fluid {
-        padding-right: 40px;
-        padding-left: 40px;
         margin-right: auto;
         margin-left: auto;
     }
-    .navbar-inverse {
-        background-color: rgba(0,0,0,0);
-        border-color: #080808;
-    }
-    .navbar-fixed-top {
-        top: 0;
-        border-width: 0 0 1px;
-    }
 
-
-    .navbar-fixed-bottom, .navbar-fixed-top {
-        position: fixed;
-        right: 0;
-        left: 0;
-        z-index: 1030;
-    }
-    .navbar {
-        position: relative;
-        min-height: 50px;
-        margin-bottom: 20px;
-        border: 1px solid transparent;
-    }
     .content h4{font-size:16px; line-height:32px; padding-left:10px; width:100px; float:left; margin-bottom:20px;}
     .noData1,.noData2{font-size:20px; display:none; text-align:center; margin-top:150px;}
     .parList{

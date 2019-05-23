@@ -7,6 +7,8 @@ import $ from 'jquery'
 import axios from 'axios'
 import store from './store'
 
+import "babel-polyfill"
+
 import qs from 'qs';
 Vue.prototype.$qs = qs;
 
@@ -19,6 +21,14 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+import header from './components/public/header'
+import navMenu from './components/public/navMenu'
+
+ 
+
+Vue.config.productionTip = false
+
 import {
     faPlay,
     faPause,
@@ -37,6 +47,8 @@ library.add(
 );
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
+Vue.component('vHead', header);
+Vue.component('vNavMenu', navMenu);
 
 
 Vue.use(ElementUI)

@@ -14,6 +14,7 @@ import video from '@/components/video'
 import word from '@/components/word'
 import picture from '@/components/picture'
 import audio from '@/components/audio'
+import header from '@/components/public/header'
 
 
 Vue.use(Router)
@@ -95,6 +96,11 @@ export default new Router({
       path:'/audio',
       name:'audio',
       component:audio
+    },
+    {
+      path:'/header',
+      name:'header',
+      component:header
     },
   ]
 })

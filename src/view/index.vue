@@ -23,30 +23,51 @@
             </div>
         </div>
         
-
+        <div class="container-fluid projects searchInput">
+            <div style="position:relative;width:575px;margin:0 auto;">
+                <el-input
+                    placeholder="在搜索框输入需要查询的故障类型，点击搜索"
+                    style="width:500px;"
+                    v-model="searchInput"
+                    @keyup.native="get($event)"
+                    @keydown.down.native="selectDown"
+                    @keydown.up.native="selectUp"
+                    clearable>
+                </el-input>
+                <el-button type="primary" @click="searchKeyword">搜索</el-button>
+                <ul class="keywordBox" style="width:500px;position:absolute;overflow-x:hidden;overflow-y:auto;">
+                    <li class="text-center" v-for ="(value,index) in myData" @click="searchValue($event)">
+                        <span class=" textprimary" :class = "{gray:index==now}" style="display:block;padding-left:5px;color:#000;">{{value}}</span>
+                    </li>
+                </ul>
+            </div>
+            
+        </div>
         <div class="container-fluid projects index">
-            <ul class="content row">
-                <li class="visitor">
-                    <p>新增设备</p>
-                    <img src="../assets/index/computer1.png" alt="">
-                    <router-link to= "/addEquip" >点击进入</router-link>
-                </li>
-                <li class="middle visitor">
-                    <p>故障库</p>
-                    <img src="../assets/index/computer2.png" alt="">
-                    <router-link to="/fault">点击进入</router-link>
-                </li>
-                <li class="visitor">
-                    <p>故障信息录入</p>
-                    <img src="../assets/index/computer4.png" alt="">
-                    <router-link to="/faultInput">点击进入</router-link>
-                </li>
-                <li style="margin-left:13px;">
-                    <p>设备信息查询</p>
-                    <img src="../assets/index/computer5.png" alt="">
-                    <router-link to= "/search" >点击进入</router-link>
-                </li>
-            </ul>
+            <el-row :gutter="20">
+
+                <el-col :span="8">
+                    <div class="grid-content bg-purple">
+                        <p>故障分析</p>
+                        <img src="../assets/index/computer2.png" alt="">
+                        <router-link tag="a" to="/analysis">点击进入</router-link>
+                    </div>
+                </el-col>
+                <el-col :span="8">
+                    <div class="grid-content bg-purple">
+                        <p>故障信息录入</p>
+                        <img src="../assets/index/computer4.png" alt="">
+                        <router-link tag="a" class="normal" to="/faultInput">点击进入</router-link>
+                    </div>
+                </el-col>
+                <el-col :span="8">
+                    <div class="grid-content bg-purple">
+                        <p>设备信息库</p>
+                        <img src="../assets/index/computer5.png" alt="">
+                        <router-link tag="a" to= "/search" >点击进入</router-link>
+                    </div>
+                </el-col>
+            </el-row>
         </div>
         <router-view></router-view>
     </div>
@@ -59,7 +80,11 @@ export default {
     data (){
         return{
             acc_permission:"",
-            userName:""
+            userName:"",
+            searchInput:"",
+            now:-1,
+            myData:[],
+            keyword:'',
         }
     },
     mounted(){
@@ -74,8 +99,8 @@ export default {
                 $(".headRight").hide();
                 $("#user").text(self.userName)
                 if(self.acc_permission == "2"){
-                    $(".visitor a").css("background-color","#999")
-                    $(".visitor a").attr("disabled",true).css("pointer-events","none");
+                    $(".index .normal").css("background-color","#999")
+                    $(".index .normal").attr("disabled",true).css("pointer-events","none");
                     $("#useSet").hide()
                 }else if(self.acc_permission == "1"){
                     $("#useSet").hide()
@@ -89,7 +114,53 @@ export default {
         exitUser(){
             this.$router.push({ path: '/login' });
             sessionStorage.removeItem("user")
-        }
+        },
+        searchKeyword(){
+            sessionStorage.setItem("keyword",this.searchInput)
+            this.$router.push({ path: '/fault' })
+        },
+            get:function (event) {
+                if(event.keyCode==38||event.keyCode==40)return;
+                if(event.keyCode == 13){
+                    this.searchKeyword()
+                    return
+                }
+                let keyword = this.searchInput
+                let userName = sessionStorage.getItem("user");
+                let param =         {
+                            "msg": {
+                                    "wrd_accid": userName,
+                                    "wrd_records": keyword,
+                                }
+                            }
+
+                this.$axios.post('FaultDBManage/searchkeywrd/',param                   
+                ).then(function(response){
+                    if(response.data.stu == 200){
+                        this.myData = response.data.msg
+                        $(".keywordBox").show()
+                    }else{
+                        this.myData = []
+                        $(".keywordBox").hide()
+                    }
+                }.bind(this)).catch(function (error) { 
+                    console.log(error);
+                })
+            },
+            selectDown:function () {
+                this.now++;
+                if(this.now==this.myData.length)this.now=-1;
+                this.searchInput=this.myData[this.now];
+            },
+            selectUp:function () {
+                this.now--;
+                if(this.now==-2)this.now=this.myData.length-1;
+                this.searchInput=this.myData[this.now];
+            },
+            searchValue(event){
+                $(".keywordBox").hide()
+                this.searchInput = event.target.innerText
+            }
     }
 }
 </script>
@@ -128,7 +199,7 @@ export default {
     .icon-arrow-right {background-position: -264px -96px;}
 
     .container-fluid.index{
-        margin: 450px auto 0;
+        margin: 200px auto 0;
     }
     .container-fluid {
         padding-right: 40px;
@@ -146,8 +217,6 @@ export default {
         top: 0;
         border-width: 0 0 1px;
     }
-
-
     .navbar-fixed-bottom, .navbar-fixed-top {
         position: fixed;
         right: 0;
@@ -159,6 +228,81 @@ export default {
         min-height: 50px;
         margin-bottom: 20px;
         border: 1px solid transparent;
+    }
+    .el-row {
+        margin-bottom: 20px;
+        &:last-child {
+        margin-bottom: 0;
+        }
+    }
+    .el-col {
+        border-radius: 4px;
+        text-align: center
+    }
+    .bg-purple-dark {
+        background: #99a9bf;
+    }
+    .bg-purple {
+        background: #d3dce6;
+        width: 254px; height: 205px; background: url(../assets/index/bg.png) repeat; text-align: center;
+        margin: 0 auto;
+    }
+
+    .bg-purple p{width: 100%; height: 52px; font-size: 14px; color: #333; text-align: center; line-height: 52px; font-weight: bold;}
+    .bg-purple img{width: 82px; height: 62px; margin-bottom: 17px;margin-top: 17px;}
+    .bg-purple-light {
+        background: #e5e9f2;
+    }
+    .grid-content {
+        border-radius: 4px;
+        min-height: 36px;
+    }
+    .row-bg {
+        padding: 10px 0;
+        background-color: #f9fafc;
+    }
+
+    .bg-purple a{display: block; width: 120px; height: 34px; line-height: 34px; text-align: center; font-size: 12px; color: #fff; background-color: #28a3f4; border-radius: 4px; margin: 0 auto;}
+    .bg-purple a:hover{background-color: #2092dd;}
+
+    .searchInput{
+        text-align: center;
+        margin: 250px 0;
+    }
+
+
+    .part_t{width: 100%; border-bottom: 1px solid #e1e1e1; margin-top: 25px; padding-bottom: 20px;}
+    .part_t li{font-size: 16px; color: #0077c6; line-height: 28px;}
+    .part_t li img{width: 16px; height: 16px; vertical-align: -2px; margin-right: 8px;}
+    .part_t li.red{color: #d50000; text-decoration: underline;}
+    .part_b{width: 100%; margin-top: 25px; padding-bottom: 40px;}
+    .part_b li{line-height: 22px; margin-bottom: 20px;}
+    .part_b h4{font-size: 16px; color: #0077c6; line-height: 28px;}
+    .part_b h4 img{vertical-align: -2px; margin-right: 8px;}
+
+        .title{
+           color:#ffffff;
+           text-align: center;
+       }
+       .gray{
+           background-color: #dff0d8;
+       }
+       .textprimary{
+           color:#000;
+           text-align: left;
+           font-family: "Microsoft YaHei UI";
+           font-size: 12px;
+       }
+       /* 搜索下拉框  */	
+    .keywordBox{display:none;position: absolute; width: 500px; min-height: 44px; box-sizing: border-box; border-bottom: 1px solid #d1d1d1; border-left: 1px solid #d1d1d1; border-right: 1px solid #d1d1d1; box-shadow: 0 2px 5px #e2e2e2; background-color: #fff; padding: 10px 0; z-index:100;}
+    .keywordBox li{text-indent: 10px; line-height: 32px; cursor: pointer; font-size:14px;}
+    .grey{background-color:#e1e1e1;}
+    .keywordBox li:hover{background-color:#e1e1e1;}
+
+    .container-box{
+        width: 100%;
+        height: 100%;
+        background: url("../assets/login/login.png");
     }
 </style>
 

@@ -1,31 +1,13 @@
 <template>
     <div class="container-fluid container-box">
-        <div class="navbar navbar-inverse navbar-fixed-top" style="top:35px">
-            <div class="container-fluid">
-                <div class="head">
-                    <div class="headLeft fl">
-                        <router-link to= "/FaultAnalysis" style="display:block;font-size: 25px;color: #fff;">故障数据库管理系统</router-link>
-                    </div>
-                    <div class="fr clearfix">
-                        <div class="headRight fl"><a href="login">登录</a></div>
-                        <div class="login" style="width:235px;">
-                            <span class="user" id="user"></span>
-                            <span>　|</span>
-                            <span class="out" @click="exitUser()">退出</span>
-                            <router-link to="/userManage" class="fr" id="useSet">
-                                <img src="../assets/index/useSet.png" width="20" height="23" class="fl" style="margin:14px 5px 0;">
-                                <span class="fl UserManage">配置</span>
-                            </router-link>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid container-addEquipmentBox">
-            <div class="addEquipmentBox modal-content">
+        <vHead></vHead>
+        <el-container class="container-fluid container-addEquipmentBox">
+            <el-aside style="width:200px;height:100%;margin-top:52px;">
+                <vNavMenu></vNavMenu>
+            </el-aside>
+            <el-main class="addEquipmentBox modal-content">
                 <div class="modal-body equipmentBox">
-                    <table width="100%" cellspacing="0" cellpadding="0">
+                    <table width="99%" cellspacing="0" cellpadding="0">
                         <thead>
                             <tr width="100" class="item">
                                 <td class="pl10" colspan="4" style="text-align:center;">新增设备表</td>
@@ -33,7 +15,18 @@
                         </thead>
                         <tbody><tr>
                             <td width="100" class="item">系统</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput inputSystem"></td>
+                            <td class="pl10">
+                                <input type="text" class="form-control equipmentInput inputSystem" v-if="acc_permission == 0">
+                                <el-select v-model="systemValue" placeholder="请选择系统" v-else>
+                                    <el-option
+                                    :disabled="(acc_system.indexOf(item.label) >-1&&acc_permission != 0)||(acc_system.indexOf(item.label) <=-1&&acc_permission == 0)? false:true"
+                                    v-for="item in systemOptions"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </td>
                             <td class="item">型号</td>
                             <td class="pl10"><input type="text" class="form-control equipmentInput inputModel"></td>
                         </tr>
@@ -60,18 +53,11 @@
                                 format="yyyy-MM-dd HH:mm:ss">
                                 </el-date-picker>
                             </td>
-                        </tr>                       
-
-                        <tr>
-                            <td class="item">主要技术指标</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput inputTechnical">
-
-                            </td>
                             <td class="item">存放地点</td>
                             <td class="pl10"><input type="text" class="form-control equipmentInput inputPlace">
 
                             </td>
-                        </tr>
+                        </tr>                      
                         <tr>
                             <td class="item">责任部门</td>
                             <td class="pl10"><input type="text" class="form-control equipmentInput responsible">
@@ -103,6 +89,26 @@
                                 v-model="textarea">
                                 </el-input>
                             </td>										
+                        </tr>
+                        <tr>
+                            <td class="item" style="vertical-align: initial;">主要技术指标</td>
+                            <td class="pl10">
+                                <!-- <input type="text" class="form-control equipmentInput inputTechnical"> -->
+                                <el-upload
+                                    class="upload-demo"
+                                    style="height:95px;width:257px;"
+                                    show-overflow-tooltip
+                                    ref="upload"
+                                    action="123"
+                                    :on-change="addFileA"
+                                    :on-preview="handlePreview"
+                                    :on-remove="handleRemoveA"
+                                    :file-list="fileListAttach"
+                                    multiple
+                                    :auto-upload="false">
+                                    <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
+                                </el-upload>
+                            </td>
                         </tr>
                         <tr style="height: 90px;vertical-align: text-top;width:;overflow:hidden;">
                             <td class="item">音视频信息</td>
@@ -170,8 +176,8 @@
                     </div>
                 </div>
 
-            </div>
-        </div>       
+            </el-main>
+        </el-container>       
         <router-view></router-view>
     </div>
     
@@ -179,6 +185,7 @@
 </template>
 
 <script>
+
 export default {
     name:"addEquipment",
     data (){
@@ -190,17 +197,23 @@ export default {
             fileListImg: [],
             fileListAttach: [],
             mediaUrl:"",
+            acc_permission:'',
+            acc_system:'',
+            systemOptions:[],
+            systemValue:''
         }
     },
     mounted(){
         this.setUserName(),
-        this.setStyle()
+        this.setStyle(),
+        this.initSystem()
     },
     methods: {
         setUserName(){
             var self = this;
             self.acc_permission = sessionStorage.getItem("acc_permission");
             self.userName = sessionStorage.getItem("user");
+            self.acc_system = sessionStorage.getItem("acc_system")
             if(self.acc_permission){
                 $(".headRight").hide();
                 $("#user").text(self.userName)
@@ -213,7 +226,6 @@ export default {
                 alert("请登录！")
                 this.$router.push({ path: '/login' })
             }
-
         },
         exitUser(){
             this.$router.push({ path: '/login' });
@@ -221,12 +233,17 @@ export default {
         },
         addEquipInput(){
             let param = new FormData()
-
-            let man_sys = $(".inputSystem").val()
+            let man_sys
+            if($(".inputSystem").val()){
+                man_sys = $(".inputSystem").val()
+            }else{
+                man_sys = this.systemValue
+            }
+            
             let man_model = $(".inputModel").val()
             let man_num = $(".inputNumber").val()
             let man_porpuse = $(".inputUse").val()
-            let man_qualifi  = $(".inputTechnical").val()
+            let man_qualifi  = ""
             let man_place = $(".inputPlace").val()
             let man_department = $(".responsible").val()
             let man_persion = $(".responsibler").val()
@@ -302,7 +319,12 @@ export default {
         addFileA(file, fileList){
             this.fileListAttach = []
             for(var i = 0; i<fileList.length;i++){
-                this.fileListAttach.push(fileList[i].raw)
+                if(fileList[i].raw){
+                    this.fileListAttach.push(fileList[i].raw)
+                }else{
+                   this.fileListAttach.push(fileList[i]) 
+                }
+                
             }
         },
         handleRemoveV(file, fileList) {
@@ -330,7 +352,11 @@ export default {
         handleRemoveA(file, fileList) {
             this.fileListAttach = []
             for(var i = 0; i<fileList.length;i++){
-                this.fileListAttach.push(fileList[i].raw)
+                if(fileList[i].raw){
+                    this.fileListAttach.push(fileList[i].raw)
+                }else{
+                   this.fileListAttach.push(fileList[i]) 
+                }
             }
         },
         handlePreview(file) {
@@ -342,7 +368,31 @@ export default {
                 "height": "65px",
                 "overflow-x":"hidden",
                 "overflow-y": "auto",})
-        }
+        },
+        initSystem(){
+            let param = {
+                        "msg": {
+                                "search_man": "光电经纬仪"
+                            }
+                        }           
+            this.$axios.post('FaultDBManage/searchinfo/',param,                
+            ).then(function(response){
+                this.systemOptions = []
+                if(response.data.msg.length>0){
+                    var sysArr = response.data.msg
+                    for(var i = 0;i<sysArr.length;i++){
+                        var item = {}
+                        item.value = sysArr[i]
+                        item.label = sysArr[i]
+                        this.systemOptions.push(item)
+                    }                    
+                    
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+
+        },
     }
 }
 </script>
@@ -357,33 +407,12 @@ export default {
         margin: 450px auto 0;
     }
     .container-fluid {
-        padding-right: 40px;
-        padding-left: 40px;
         margin-right: auto;
         margin-left: auto;
-    }
-    .navbar-inverse {
-        background-color: rgba(0,0,0,0);
-        border-color: #080808;
-    }
-    .navbar-fixed-top {
-        top: 0;
-        border-width: 0 0 1px;
+        padding-right:0px;
+        padding-left:0px;
     }
 
-
-    .navbar-fixed-bottom, .navbar-fixed-top {
-        position: fixed;
-        right: 0;
-        left: 0;
-        z-index: 1030;
-    }
-    .navbar {
-        position: relative;
-        min-height: 50px;
-        margin-bottom: 20px;
-        border: 1px solid transparent;
-    }
     .content h4{font-size:16px; line-height:32px; padding-left:10px; width:100px; float:left; margin-bottom:20px;}
     .noData1,.noData2{font-size:20px; display:none; text-align:center; margin-top:150px;}
     .parList{
@@ -453,9 +482,9 @@ export default {
     .equipmentBox td{
         padding: 5px 0;
     }
-    .container-addEquipmentBox{
+    /* .container-addEquipmentBox{
         margin-top:45px;
-    }
+    } */
     .equipmentInput{
         width: 220px;
     }
