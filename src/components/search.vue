@@ -37,6 +37,8 @@
                         </el-option>
                     </el-select>
                 </ul>
+
+                <span class="addMounting" data-toggle="modal" data-target="#addMounting" v-if="acc_permission != 2" @click="initSystemM">新增配件信息</span>
                 
                 <span class="sBtn" id="sureBtn" @click="addEquip" v-if="acc_permission != 2">新增设备</span>
     
@@ -44,7 +46,7 @@
                         fixed
                         ref="multipleTable"
                         tooltip-effect="dark"
-                        style="width: 100%;cursor:pointer"
+                        style="width: 100%;cursor:pointer;color:#111;"
                         height="650"
                         :row-style="tableRowStyle"
                         :header-cell-style="tableHeaderColor"
@@ -160,6 +162,9 @@
                             <span v-else>{{ scope.row.marks }}</span>
                         </template>
                     </el-table-column>
+                    <el-table-column show-overflow-tooltip prop="marks" width="150" label="查看配件信息" align="center">
+                        <el-button id="lookMounting" type="primary" icon="el-icon-edit"></el-button>
+                    </el-table-column>
                     <el-table-column fixed="right" width="150" align="center" label="操作" v-if = "whetherShow">
                         <template slot-scope="scope">
                             <el-button
@@ -189,9 +194,87 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                
             </el-main>
+ 
         </el-container>
-        
+        <div class="modal fade" id="addMounting" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog userBox">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <table width="100%" cellspacing="0" cellpadding="0">
+                            <tbody>
+                                <tr>
+                                    <td width="100" class="item">系统</td>
+                                    <td class="pl10">
+                                        <el-select v-model="systemValueM" @change="gainModalM" placeholder="请选择系统">
+                                            <el-option
+                                            v-for="item in systemOptionsM"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                            </el-option>
+                                        </el-select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="100" class="item">型号</td>
+                                    <td class="pl10">
+                                        <el-select v-model="modalValueM" @change="gainNumberM" placeholder="请选择型号">
+                                            <el-option
+                                            v-for="item in modalOptionsM"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                            </el-option>
+                                        </el-select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="100" class="item">编号</td>
+                                    <td class="pl10">
+                                        <el-select v-model="numValueM" @change="getUuid" placeholder="请选择编号">
+                                            <el-option
+                                            v-for="item in numOptionsM"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                            </el-option>
+                                        </el-select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="100" class="item">配件名称</td>
+                                    <td class="pl10"><input type="text" class="form-control" id="add_name"></td>
+                                </tr>
+                                <tr>
+                                    <td class="item">配件编号</td>
+                                    <td class="pl10"><input type="text" class="form-control" id="add_num"></td>
+                                </tr>
+                                <tr>
+                                    <td class="item">使用状态</td>
+                                    <td class="pl10"><input type="text" class="form-control" id="add_status"></td>
+                                </tr>
+                                <tr>
+                                    <td class="item">存放地点</td>
+                                    <td class="pl10"><input type="text" class="form-control" id="add_place"></td>
+                                </tr>
+                                <tr>
+                                    <td class="item">备注信息</td>
+                                    <td class="pl10">
+                                        <input class="form-control" type="text" id="detailMessage">
+                                    </td>										
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer" style="text-align:center;">
+                        <button type="button" class="btn btn-primary" id="newUser_add" @click="addMounting">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
     
@@ -216,7 +299,14 @@ export default {
             whetherShow:"",
             infoDetail_old:[],
             acc_system:'' ,
-            acc_permission:""              
+            acc_permission:"",
+            systemOptionsM:[],
+            modalOptionsM:[],
+            numOptionsM:[],
+            systemValueM:"",
+            modalValueM:"",
+            numValueM:"",
+            uuidValue:''              
         }
     },
     mounted(){
@@ -252,10 +342,9 @@ export default {
         tableRowStyle({ row, rowIndex }) {
             
         },
-
         tableHeaderColor({ row, column, rowIndex, columnIndex }) {
             if (rowIndex === 0) {
-                return 'background-color: lightblue;color: #fff;font-weight: 500;'
+                return 'background-color: lightblue;color: #fff;font-weight: 500;font-size:15px;'
             }
         },
         initEquipInfo(){
@@ -348,6 +437,9 @@ export default {
                 }  
             }else if(column.target.nodeName =="INPUT"){
                 
+            }else if(column.target.className == "el-icon-edit"||column.target.id == "lookMounting"){
+                sessionStorage.setItem("systemUuid",row.uuid);
+                this.$router.push({ path: '/mountings' })
             }else{
                 sessionStorage.setItem("systemUuid",row.uuid);
                 sessionStorage.setItem("systemName",row.system+" > "+row.model+" > "+row.number);
@@ -378,8 +470,7 @@ export default {
                         item.value = sysArr[i]
                         item.label = sysArr[i]
                         this.systemOptions.push(item)
-                    }                    
-                    
+                    }                                       
                 }
             }.bind(this)).catch(function (error) { 
                 console.log(error);
@@ -548,6 +639,147 @@ export default {
         addEquip(){
             this.$router.push({ path: '/addEquip' })
         },
+        getUuid(){
+            let man_sys = this.systemValueM;
+            let man_model = this.modalValueM;
+            let man_num = this.numValueM;
+            let param = {
+                "msg": {
+                    "man_sys": man_sys,
+                    "man_model": man_model,
+                    "man_num": man_num
+                }
+            }
+            this.$axios.post('FaultDBManage/searchinfo/',param                   
+            ).then(function(response){
+                if(response.data.stu == 200){
+                    this.uuidValue = response.data.msg[0].fields.uuid
+                }else{
+                    
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+        },
+        initSystemM(){
+            let param = {
+                        "msg": {
+                                "search_man": "光电经纬仪"
+                            }
+                        }           
+            this.$axios.post('FaultDBManage/searchinfo/',param,                
+            ).then(function(response){
+                this.systemOptionsM = []
+                this.modalOptionsM  = []
+                this.numOptionsM = []
+                if(response.data.msg.length>0){
+                    var sysArr = response.data.msg
+                    for(var i = 0;i<sysArr.length;i++){
+                        var item = {}
+                        item.value = sysArr[i]
+                        item.label = sysArr[i]
+                        this.systemOptionsM.push(item)
+                    }                                       
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+
+        },
+        gainModalM(){
+            let systemId = this.systemValueM
+            let param = {
+                        "msg": {
+                                "man_sys": systemId
+                            }
+                        }
+            this.$axios.post('FaultDBManage/searchinfo/',param,                
+            ).then(function(response){
+                this.modalOptionsM  = []
+                this.numOptionsM = []
+                if(response.data.msg.length>0){
+                    var modalArr = response.data.msg
+    
+                    for(var i = 0;i<modalArr.length;i++){                           
+                        var temp = {}
+                        temp.label = modalArr[i]
+                        temp.value = modalArr[i]
+                        
+                        this.modalOptionsM.push(temp)
+                    }
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+            if (this.modalValueM) {
+                this.modalValueM = '';
+            }
+            if (this.numValueM) {
+                this.numValueM = '';
+            }
+        },
+        gainNumberM(){
+            let systemId = this.systemValueM
+            let modalId = this.modalValueM
+            let param = {
+                        "msg": {
+                                "man_sys": systemId,
+                                "man_model": modalId
+                            }
+                        }
+            this.$axios.post('FaultDBManage/searchinfo/',param,                
+            ).then(function(response){
+                this.numOptionsM = []
+                if(response.data.msg.length>0){
+                    var numberArr = response.data.msg
+                    for(var i = 0;i<numberArr.length;i++){                           
+                        var temp = {}
+                        temp.label = numberArr[i]
+                        temp.value = numberArr[i]
+                        this.numOptionsM.push(temp)
+                    }
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+            if (this.numValueM) {
+                this.numValueM = '';
+            }
+        },
+        addMounting(){
+            var self = this;
+            let fit_name  = $("#add_name").val()
+            let fit_num   = $("#add_num").val()
+            let fit_isuse = $("#add_status").val()
+            let fit_place = $("#add_place").val()
+            let detailMessage = $("#detailMessage").val()
+
+            let param = new FormData()
+
+            let fit_manInfo = this.uuidValue
+
+            param.append("tablename","fittingstable")
+            param.append("fit_manInfo",fit_manInfo)
+            param.append("fit_name",fit_name)
+            param.append("fit_num",fit_num)
+            param.append("fit_isuse",fit_isuse)
+            param.append("fit_place",fit_place)
+            param.append("fit_remarks",detailMessage)
+            
+
+            this.$axios.post('FaultDBManage/addinfo/',param,{headers: {'Content-Type':'application/x-www-form-urlencoded'}}                
+            ).then(function(response){
+                if(response.data.msg == "true"){
+                    alert("新增配件成功！")
+                    $("#addMounting").modal('hide'); 
+                }else{
+                    alert("新增配件失败!")
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+
+        },
         
     }
 }
@@ -557,6 +789,7 @@ export default {
     @import "../../static/css/reset.css";
     @import "../../static/css/index.css";
     @import "../../static/css/voicePlus.css";
+    @import "../../static/css/UserManage.css";
 
 
     .container-fluid.index{
@@ -603,5 +836,19 @@ export default {
         display: none !important;
     }
     
+    .addMounting{
+        width: 120px;
+        height: 36px;
+        line-height: 36px;
+        background-color: #28a3f4;
+        color: #fff;
+        font-size: 16px;
+        text-align: center;
+        border-radius: 4px;
+        cursor: pointer;
+        display: block;
+        float: right;
+        margin-left: 25px;
+    }
 </style>
 

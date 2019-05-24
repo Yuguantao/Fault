@@ -72,14 +72,13 @@
                             <el-table-column
                                 prop="acc_remarks"
                                 label="备注"
-                                width="400"
+                                width="425"
                                 show-overflow-tooltip
                                 align="center">
                             </el-table-column>
                             <el-table-column
                                 prop="uuid"
                                 label="uuid"
-                                width="85"
                                 v-if="false"
                                 show-overflow-tooltip
                                 align="center">

@@ -15,6 +15,7 @@ import word from '@/components/word'
 import picture from '@/components/picture'
 import audio from '@/components/audio'
 import header from '@/components/public/header'
+import mountings from '@/components/mountings'
 
 
 Vue.use(Router)
@@ -101,6 +102,11 @@ export default new Router({
       path:'/header',
       name:'header',
       component:header
+    },
+    {
+      path:'/mountings',
+      name:'mountings',
+      component:mountings
     },
   ]
 })
