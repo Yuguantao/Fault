@@ -6,6 +6,13 @@
                 <vNavMenu></vNavMenu>
             </el-aside>
             <el-main class="container-fluid">
+                <div class="topBox clearfix">
+                    <div class="page-header">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="javascript:void(0);" class="cmsall">设备知识库</a></li>
+                        </ul>
+                    </div>
+                </div>
                 <div class="container-fluid searchBox">
                     <el-input
                         placeholder="在搜索框输入需要查询的故障类型，点击搜索"
@@ -79,7 +86,8 @@ export default {
             keyword:'',
             now:-1,
             systemValue:'',
-            systemOptions:[]
+            systemOptions:[],
+            valueArr:[]
         }
     },
     mounted(){
@@ -115,6 +123,7 @@ export default {
         },
         searchKeyword(){
             this.items = []
+            this.valueArr = []
             let keyword = this.searchInput
             let userName = sessionStorage.getItem("user");
             let param =         {
@@ -128,8 +137,19 @@ export default {
 
             this.$axios.post('FaultDBManage/analysis/',param                   
             ).then(function(response){
+                let arr = response.data.msg
                 if(response.data.stu == 200){
-                    this.items = response.data.msg
+                    if(!this.systemValue){
+                        this.items = response.data.msg
+                    }else{
+                        for(var i = 0;i<arr.length;i++){
+                            for(var j = 0;j<arr[i].length;j++){
+                                this.valueArr.push(arr[i][j])
+                            }
+                        }
+                        this.items = this.valueArr
+
+                    } 
                     
                 }else{
                      
@@ -183,6 +203,7 @@ export default {
         },
         initSearchKeyword(){
             this.items = []
+            this.valueArr = []
             let keywordInit = sessionStorage.getItem("keyword")
             this.searchInput = keywordInit
             let keyword = this.searchInput
@@ -198,8 +219,18 @@ export default {
 
             this.$axios.post('FaultDBManage/analysis/',param                   
             ).then(function(response){
+                let arr = response.data.msg
                 if(response.data.stu == 200){
-                    this.items = response.data.msg
+                    if(!this.systemValue){
+                        this.items = response.data.msg
+                    }else{
+                        for(var i = 0;i<arr.length;i++){
+                            for(var j = 0;j<arr[i].length;j++){
+                                this.valueArr.push(arr[i][j])
+                            }
+                        }
+                        this.items = this.valueArr
+                    } 
                     
                 }else{
                      
@@ -280,7 +311,7 @@ export default {
         float: right;
     }
     .topBox{
-        margin: 50px 0 25px;
+        margin: 7px 0 25px;
     }
     .el-table__footer-wrapper, .el-table__header-wrapper{
         display: none !important;
@@ -311,6 +342,35 @@ export default {
            font-family: "Microsoft YaHei UI";
            font-size: 12px;
        }
+    .page-header {
+        padding-bottom: 0px;
+        margin: 0px;
+        border-bottom: 1px solid #eee;
+    }
+    .nav {
+        padding-left: 10px;
+        padding-top: 5px;
+        background: #fff;
+    }
+    .nav-tabs>li {
+        float: left;
+        margin-bottom: -1px;
+    }
+    .nav>li {
+        position: relative;
+        display: block;
+    }
+    .nav>li>a {
+        padding: 5px 10px;
+        border-radius: 5px 5px 0px 0px;
+        margin: 0px 5px;
+        cursor: pointer;
+    }
+    .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+        background: #EEF1F6;
+        border: 1px solid #ddd;
+        border-bottom-color: transparent;
+    }
 
 </style>
 

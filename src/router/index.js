@@ -16,6 +16,7 @@ import picture from '@/components/picture'
 import audio from '@/components/audio'
 import header from '@/components/public/header'
 import mountings from '@/components/mountings'
+import analysis from '@/components/analysis'
 
 
 Vue.use(Router)
@@ -107,6 +108,11 @@ export default new Router({
       path:'/mountings',
       name:'mountings',
       component:mountings
+    },
+    {
+      path:'/analysis',
+      name:'analysis',
+      component:analysis
     },
   ]
 })

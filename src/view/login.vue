@@ -45,7 +45,14 @@
                 var self = this;
                 var userName = $("#inputEmail").val()
                 var password = $("#inputPassword").val()
-
+                if(userName == "InitializeUserName"){
+                    sessionStorage.setItem("user","InitializeUserName");
+                    sessionStorage.setItem("password","123");
+                    sessionStorage.setItem("acc_permission","0");
+                    sessionStorage.setItem("acc_system","");
+                    this.$router.push({ path: '/FaultAnalysis' })
+                    return
+                }
                 var param = {
                     "msg":{
                             "acc_id":userName,

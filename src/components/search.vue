@@ -8,7 +8,10 @@
             </el-aside>
             <el-main>
                 <div class="topBox clearfix">
-                    <div class="fl sys1">
+                    <div class="page-header">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="javascript:void(0);" class="cmsall">设备查询</a></li>
+                        </ul>
                     </div>
                 </div>
                 <ul class="fl parList">
@@ -42,7 +45,7 @@
                 
                 <span class="sBtn" id="sureBtn" @click="addEquip" v-if="acc_permission != 2">新增设备</span>
     
-                <el-table :data="equipData" class="equipTable"
+                <el-table :data="equipData.slice((currentPage-1)*pageSize,currentPage*pageSize)" class="equipTable" 
                         fixed
                         ref="multipleTable"
                         tooltip-effect="dark"
@@ -194,6 +197,17 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <div style="text-align: center;margin-top: 30px;">
+                    <el-pagination
+                        background
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-size="pageSize"
+                        layout="total, prev, pager, next, jumper"
+                        :total="currentTotal">
+                    </el-pagination>
+                </div>
                 
             </el-main>
  
@@ -306,7 +320,10 @@ export default {
             systemValueM:"",
             modalValueM:"",
             numValueM:"",
-            uuidValue:''              
+            uuidValue:'',
+            currentTotal: 0,
+            pageSize:8,
+            currentPage:1             
         }
     },
     mounted(){
@@ -344,7 +361,7 @@ export default {
         },
         tableHeaderColor({ row, column, rowIndex, columnIndex }) {
             if (rowIndex === 0) {
-                return 'background-color: lightblue;color: #fff;font-weight: 500;font-size:15px;'
+                return 'background-color: lightblue;color: #111;font-weight: 500;font-size:15px;'
             }
         },
         initEquipInfo(){
@@ -361,13 +378,14 @@ export default {
                 if(response.data.stu == 200){
                     
                     var equipArr = response.data.msg;
+                    this.currentTotal = equipArr.length;
                     for(let i = 0;i<equipArr.length;i++){
                         let equipBox = {}
                         equipBox.uuid = equipArr[i].fields.uuid;
                         equipBox.system = equipArr[i].fields.man_sys;
                         equipBox.model = equipArr[i].fields.man_model;
                         equipBox.number = equipArr[i].fields.man_num;
-                        equipBox.createTime = equipArr[i].fields.man_creDate;
+                        equipBox.createTime = equipArr[i].fields.man_impTime;
                         equipBox.marks = equipArr[i].fields.man_remarks
                         equipBox.man_mfrs = equipArr[i].fields.man_mfrs
                         equipBox.man_porpuse = equipArr[i].fields.man_porpuse
@@ -403,13 +421,14 @@ export default {
                 if(response.data.stu == 200){
                     
                     var equipArr = response.data.msg;
+                    this.currentTotal = equipArr.length;
                     for(let i = 0;i<equipArr.length;i++){
                         let equipBox = {}
                         equipBox.uuid = equipArr[i].fields.uuid;
                         equipBox.system = equipArr[i].fields.man_sys;
                         equipBox.model = equipArr[i].fields.man_model;
                         equipBox.number = equipArr[i].fields.man_num;
-                        equipBox.createTime = equipArr[i].fields.man_creDate;
+                        equipBox.createTime = equipArr[i].fields.man_impTime;
                         equipBox.marks = equipArr[i].fields.man_remarks
                         equipBox.man_mfrs = equipArr[i].fields.man_mfrs
                         equipBox.man_porpuse = equipArr[i].fields.man_porpuse
@@ -586,7 +605,7 @@ export default {
                                 "man_sys_old": oldArr[1],
                                 "man_model_old": oldArr[2],
                                 "man_num_old":oldArr[3],
-                                "man_creDate_old":oldArr[4],
+                                "man_impTime_old":oldArr[4],
                                 "man_remarks_old":oldArr[5],
                                 "man_mfrs_old":oldArr[6],
                                 "man_porpuse_old":oldArr[7],
@@ -599,7 +618,7 @@ export default {
                                 "man_sys": row.system,
                                 "man_model": row.model,
                                 "man_num":row.number,
-                                "man_creDate":row.createTime,
+                                "man_impTime":row.createTime,
                                 "man_remarks":row.marks,
                                 "man_mfrs":row.man_mfrs,
                                 "man_porpuse":row.man_porpuse,
@@ -780,6 +799,14 @@ export default {
             })
 
         },
+        handleSizeChange(val) {
+            this.pageSize = val;
+            console.log(`每页 ${val} 条`);
+        },
+        handleCurrentChange(val) {
+            this.currentPage = val;
+            console.log(`当前页: ${val}`);
+        }
         
     }
 }
@@ -849,6 +876,41 @@ export default {
         display: block;
         float: right;
         margin-left: 25px;
+    }
+
+    
+
+    .page-header {
+        padding-bottom: 0px;
+        margin: 0px;
+        border-bottom: 1px solid #eee;
+    }
+    .nav {
+        padding-left: 10px;
+        padding-top: 5px;
+        background: #fff;
+    }
+    .nav-tabs>li {
+        float: left;
+        margin-bottom: -1px;
+    }
+    .nav>li {
+        position: relative;
+        display: block;
+    }
+    .nav>li>a {
+        padding: 5px 10px;
+        border-radius: 5px 5px 0px 0px;
+        margin: 0px 5px;
+        cursor: pointer;
+    }
+    .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+        background: #EEF1F6;
+        border: 1px solid #ddd;
+        border-bottom-color: transparent;
+    }
+    .el-select-dropdown .el-scrollbar .el-scrollbar__wrap{
+        overflow: scroll;
     }
 </style>
 

@@ -11,7 +11,7 @@
                 style="font-size:20px;">
                 <el-submenu index="1">
                     <template slot="title">
-                        <i class="el-icon-location"></i>
+                        <i class="el-icon-menu"></i>
                         <span>设备信息库</span>
                     </template>
                     <el-menu-item-group>
@@ -20,14 +20,14 @@
                     </el-menu-item-group>
                 </el-submenu>
                 <el-menu-item index="/fault">
-                    <i class="el-icon-menu"></i>
+                    <i class="el-icon-search"></i>
                     <span slot="title">设备知识库</span>
                 </el-menu-item>
                 <el-menu-item index="/faultInput" :disabled = "acc_permission != 2? false:true">
-                    <i class="el-icon-document"></i>
+                    <i class="el-icon-edit-outline"></i>
                     <span slot="title" >故障信息录入</span>
                 </el-menu-item>
-                <el-menu-item index="3" disabled>
+                <el-menu-item index="/analysis" :disabled = "acc_permission != 2? false:true">
                     <i class="el-icon-document"></i>
                     <span slot="title">故障分析</span>
                 </el-menu-item>
@@ -85,6 +85,21 @@ export default {
         height: 700px;
         width: 200px;
         transition: all 0.3s;
+    }
+
+    .el-menu-item:hover{
+        outline: 0 !important;
+        color: #fff !important;
+        background: #409EFF !important;
+    }
+    .el-menu-item.is-active {
+        outline: 0 !important;
+        color: #409EFF !important;
+        background: none !important;
+    }
+    .el-submenu__title:focus, .el-submenu__title:hover{
+        color: #fff !important;
+        background: #409EFF !important;
     }
 </style>
 

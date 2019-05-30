@@ -6,13 +6,15 @@
                 <vNavMenu></vNavMenu>
             </el-aside>
             <el-main class="addEquipmentBox modal-content">
+                <div class="topBox clearfix">
+                    <div class="page-header">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="javascript:void(0);" class="cmsall">新增设备</a></li>
+                        </ul>
+                    </div>
+                </div>
                 <div class="modal-body equipmentBox">
                     <table width="99%" cellspacing="0" cellpadding="0">
-                        <thead>
-                            <tr width="100" class="item">
-                                <td class="pl10" colspan="4" style="text-align:center;">新增设备表</td>
-                            </tr>
-                        </thead>
                         <tbody><tr>
                             <td width="100" class="item">系统</td>
                             <td class="pl10">
@@ -441,14 +443,14 @@ export default {
         float: right;
     }
     .topBox{
-        margin: 50px 0 25px;
+        margin: 7px 0 25px;
     }
     .el-table__footer-wrapper, .el-table__header-wrapper{
         display: none !important;
     }
     .equipmentBox{
         width: 100%;
-        height: 720px;
+        height: 800px;
     }
     .modal-content{
         display: -ms-flexbox;
@@ -459,7 +461,6 @@ export default {
         -webkit-box-direction: normal;
         flex-direction: column;
         width: 780px;
-        height: 770px;
         pointer-events: auto;
         background-clip: padding-box;
         border: 1px solid rgba(0,0,0,.2);
@@ -494,5 +495,35 @@ export default {
         overflow-x:hidden;
         overflow-y: auto !important;
     } */
+
+    .page-header {
+        padding-bottom: 0px;
+        margin: 0px;
+        border-bottom: 1px solid #eee;
+    }
+    .nav {
+        padding-left: 10px;
+        padding-top: 5px;
+        background: #fff;
+    }
+    .nav-tabs>li {
+        float: left;
+        margin-bottom: -1px;
+    }
+    .nav>li {
+        position: relative;
+        display: block;
+    }
+    .nav>li>a {
+        padding: 5px 10px;
+        border-radius: 5px 5px 0px 0px;
+        margin: 0px 5px;
+        cursor: pointer;
+    }
+    .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+        background: #EEF1F6;
+        border: 1px solid #ddd;
+        border-bottom-color: transparent;
+    }
 </style>
 

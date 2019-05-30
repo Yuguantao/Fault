@@ -239,9 +239,7 @@
                                                 type="text" size="small" class="handleButton">查看</el-button>
                                         </template>
                                     </el-table-column>
-                            </el-table>
-                            
-                            
+                            </el-table>  
                         </div>
                     </div>
                 </el-main>
@@ -382,7 +380,7 @@ export default {
                                     {},
                                     {},{
                                         "uuid":"["+row.uuid+"]"
-                                    },{}
+                                    },{},{}
                                 ]
                             }
 
@@ -456,7 +454,7 @@ export default {
                             },
                             {
                                 
-                            }
+                            },{}
                         ]
             }
             this.$axios.post('FaultDBManage/alterinfo/',param                   
@@ -539,6 +537,7 @@ export default {
             let man_uuid = sessionStorage.getItem("systemUuid")
             let param ={
                     "msg": {
+                            "cmd": "faunum_with_fautype",
                             "man_uuid": man_uuid,
                             "starttime":"",
                             "endtime":""
@@ -547,8 +546,8 @@ export default {
             this.$axios.post('FaultDBManage/statisfau/',param                   
             ).then(function(response){
                 if(response.data.stu == 200){
-                    var xArr = response.data.x;
-                    var yArr = response.data.y;
+                    var xArr = response.data.eType;
+                    var yArr = response.data.eNum;
                     myChart.setOption({
                         tooltip: {},
                         dataZoom: [{

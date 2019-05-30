@@ -7,13 +7,15 @@
                 <vNavMenu></vNavMenu>
             </el-aside>
             <el-main class="addEquipmentBox modal-content">
+                <div class="topBox clearfix">
+                    <div class="page-header">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="javascript:void(0);" class="cmsall">故障信息录入</a></li>
+                        </ul>
+                    </div>
+                </div>
                 <div class="modal-body equipmentBox">
                     <table width="100%" cellspacing="0" cellpadding="0">
-                        <thead>
-                            <tr width="100" class="item">
-                                <td class="pl10" colspan="4" style="text-align:center;">故障信息录入表</td>
-                            </tr>
-                        </thead>
                         <tbody>
                             <tr style="line-height: 60px;">
                                 <td width="100" class="item">设备选择</td>
@@ -76,6 +78,7 @@
                                         :value="item.value">
                                         </el-option>
                                     </el-select>
+                                    <el-button type="primary" icon="el-icon-edit" data-toggle="modal" data-target="#addMounting" v-if="acc_permission != 2"></el-button>
                                 </td>
                                 <td class="item">故障现象</td>
                                 <td class="pl10"><input type="text" class="form-control equipmentInput fau_phen">
@@ -175,8 +178,41 @@
                     <div style="text-align:center;position: absolute;right: 50px;bottom: 15px;">
                         <el-button type="primary" style="width:120px;" @click="addEquipFault">录入</el-button>
                     </div>
-                </div>
 
+                </div>
+                <div class="modal fade" id="addMounting" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog userBox">
+                        <div class="modal-content modal-content1">
+                            <div class="modal-body">
+                                <table width="100%" cellspacing="0" cellpadding="0">
+                                    <tbody>
+                                        <tr>
+                                            <td width="100" class="item">系统</td>
+                                            <td class="pl10">
+                                                <el-select v-model="systemValueT" placeholder="请选择系统" style="">
+                                                    <el-option
+                                                    v-for="item in systemOptionsT"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                                    </el-option>
+                                                </el-select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="item">故障类型</td>
+                                            <td class="pl10"><input type="text" class="form-control" id="add_num"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer" style="text-align:center;">
+                                <button type="button" class="btn btn-primary" id="newUser_add" @click="addMounting">确认</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </el-main>
         </el-container>
         <router-view></router-view>
@@ -205,14 +241,17 @@ export default {
             acc_system:'',
             acc_permission:'',
             faultTypeValue:'',
-            faultTypeOptions:[]
+            faultTypeOptions:[],
+            systemOptionsT:[],
+            systemValueT:"",
         }
     },
     mounted(){
         this.setUserName(),
         this.setStyle(),
         this.initSystem(),
-        this.getFaultType()
+        this.getFaultType(),
+        this.initfauTypeSystem()
     },
     methods: {
         setUserName(){
@@ -483,6 +522,7 @@ export default {
                         }
             this.$axios.post('FaultDBManage/fautype/',param,                
             ).then(function(response){
+                this.faultTypeOptions = []
                 if(response.data.msg.length>0){
                     var faultTypeArr = response.data.msg
     
@@ -497,7 +537,61 @@ export default {
             }.bind(this)).catch(function (error) { 
                 console.log(error);
             })
-        }
+        },
+        initfauTypeSystem(){
+            let param = {
+                        "msg": {
+                                "search_man": "光电经纬仪"
+                            }
+                        }           
+            this.$axios.post('FaultDBManage/searchinfo/',param,                
+            ).then(function(response){
+                this.systemOptionsT = []
+                if(response.data.msg.length>0){
+                    var sysArr = response.data.msg
+                    for(var i = 0;i<sysArr.length;i++){
+                        var item = {}
+                        item.value = sysArr[i]
+                        item.label = sysArr[i]
+                        this.systemOptionsT.push(item)
+                    }                                       
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+
+        },
+        addMounting(){
+            var self = this;
+            let fit_name  = this.systemValueT
+            let fit_num   = $("#add_num").val()
+
+            let param = {
+                    "msg": [
+                        {
+                        "fatp_manInfo": "",
+                        "fatp_system": fit_name,
+                        "fatp_name": fit_num,
+                        "fatp_remarks": ""
+                        }, {},{},{}
+                    ]
+                }
+
+
+            this.$axios.post('FaultDBManage/fautype/',param             
+            ).then(function(response){
+                if(response.data.msg == "true"){
+                    alert("故障类型新增成功！")
+                    $("#addMounting").modal('hide');
+                    this.getFaultType() 
+                }else{
+                    alert("故障类型新增失败！")
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+
+        },
     }
 }
 </script>
@@ -505,6 +599,8 @@ export default {
 <style scoped>
     @import "../../static/css/reset.css";
     @import "../../static/css/index.css";
+    @import "../../static/css/UserManage.css";
+    
     .container-fluid.index{
         margin: 450px auto 0;
     }
@@ -540,14 +636,14 @@ export default {
         float: right;
     }
     .topBox{
-        margin: 50px 0 25px;
+        margin: 7px 0 25px;
     }
     .el-table__footer-wrapper, .el-table__header-wrapper{
         display: none !important;
     }
     .equipmentBox{
         width: 100%;
-        height: 720px;
+        height: 800px;
     }
     .modal-content{
         display: -ms-flexbox;
@@ -558,7 +654,6 @@ export default {
         -webkit-box-direction: normal;
         flex-direction: column;
         width: 765px;
-        height: 720px;
         pointer-events: auto;
         background-clip: padding-box;
         border: 1px solid rgba(0,0,0,.2);
@@ -583,6 +678,48 @@ export default {
     }
     .equipmentInput{
         width: 220px;
+    }
+    .page-header {
+        padding-bottom: 9px;
+        margin: 10px 0 10px;
+        border-bottom: 1px solid #eee;
+    }
+    .page-header {
+        padding-bottom: 0px;
+        margin: 0px;
+    }
+    .nav {
+        padding-left: 10px;
+        padding-top: 5px;
+        background: #fff;
+    }
+    .nav-tabs>li {
+        float: left;
+        margin-bottom: -1px;
+    }
+    .nav>li {
+        position: relative;
+        display: block;
+    }
+    
+    .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+        color: #555;
+        cursor: default;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-bottom-color: transparent;
+    }
+    .nav>li>a {
+        padding: 5px 10px;
+        border-radius: 5px 5px 0px 0px;
+        margin: 0px 5px;
+        cursor: pointer;
+    }
+    .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+        background: #EEF1F6;
+    }
+    .modal-content1{
+        width: 350px;
     }
 </style>
 

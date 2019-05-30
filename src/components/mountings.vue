@@ -8,7 +8,10 @@
             </el-aside>
             <el-main>
                 <div class="topBox clearfix">
-                    <div class="fl sys1">
+                    <div class="page-header">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="javascript:void(0);" class="cmsall">配件信息</a></li>
+                        </ul>
                     </div>
                 </div>
     
@@ -157,7 +160,7 @@ export default {
 
         tableHeaderColor({ row, column, rowIndex, columnIndex }) {
             if (rowIndex === 0) {
-                return 'background-color: lightblue;color: #fff;font-weight: 500;font-size:15px;'
+                return 'background-color: lightblue;color: #111;font-weight: 500;font-size:15px;'
             }
         },
         initEquipInfo(){
@@ -344,5 +347,53 @@ export default {
         display: none !important;
     }
     
+    .page-header {
+        padding-bottom: 9px;
+        margin: 10px 0 10px;
+        border-bottom: 1px solid #eee;
+    }
+    .page-header {
+        padding-bottom: 0px;
+        margin: 0px;
+    }
+    .nav {
+        padding-left: 10px;
+        padding-top: 5px;
+        background: #fff;
+    }
+    .nav-tabs>li {
+        float: left;
+        margin-bottom: -1px;
+    }
+    .nav>li {
+        position: relative;
+        display: block;
+    }
+    
+    .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+        color: #555;
+        cursor: default;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-bottom-color: transparent;
+    }
+    .nav>li>a {
+        padding: 5px 10px;
+        border-radius: 5px 5px 0px 0px;
+        margin: 0px 5px;
+        cursor: pointer;
+    }
+    .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+        background: #EEF1F6;
+	}
+	.first-page-content{
+		background: #EEF1F6;
+		padding-bottom: 30px;
+		min-width: 1165px;
+		min-height: 770px;
+	}
+	.el-main{
+		padding:0px;
+	}
 </style>
 
