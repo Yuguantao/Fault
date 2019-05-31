@@ -196,7 +196,7 @@
 								<div class="repair-status-li four-page-bg" style="margin-right:0px">
 									<img alt="" src="../assets/analysis/设备.png">
 									<span class="repair-status-font" style="font-size: 14.07px;">设备完好率</span>
-									<span class="repair-status-number sbwhl" style="font-size: 28.35px;">78%</span>
+									<span class="repair-status-number sbwhl" style="font-size: 28.35px;">{{equipmentP}}</span>
 								</div>
 							</div>
 							
@@ -206,8 +206,8 @@
 										<img src="../assets/analysis/del1.png">
 									</span>
 									<span class="device-value-content">
-										<div class="ybfnum" style="font-size: 28.35px;">1</div>
-										<div class="" style="font-size: 14.07px;">已报废数量</div>
+										<div class="ybfnum" style="font-size: 28.35px;">{{mountNum}}</div>
+										<div class="" style="font-size: 14.07px;">配件总数量</div>
 									</span>
 								</li>
 								<li>
@@ -276,7 +276,10 @@ export default {
 			uuidValue:'',
 			equipmentNum:0,
 			addEquipment:0,
-			faultNum:0 
+			faultNum:0,
+			mountNum:0,
+			equipmentP:"100%",
+			equipmentBadArr:''
         }
     },
     mounted(){
@@ -287,6 +290,8 @@ export default {
 		this.drawLinePie()
 		this.getFauNumber()
 		this.getManNumber()
+		this.getMountNumber()
+		this.getBadEquipNumber()
     },
     methods: {
         initSystem(){
@@ -673,6 +678,34 @@ export default {
 			this.$axios.post('FaultDBManage/statisfau/',paramMan,                
             ).then(function(response){
                 this.equipmentNum = response.data.msg
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+			})
+		},
+		getMountNumber(){
+			let paramMan = {
+						"msg": {
+								"cmd": "allfit_num"
+							}
+						}
+			this.$axios.post('FaultDBManage/statisfau/',paramMan,                
+            ).then(function(response){
+                this.mountNum = response.data.msg
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+			})
+		},
+		getBadEquipNumber(){
+			let paramMan = {
+						"msg": {
+								"cmd": "man_with_fau"
+							}
+						}
+
+			this.$axios.post('FaultDBManage/statisfau/',paramMan,                
+            ).then(function(response){
+				this.equipmentBadArr = response.data.msg
+				this.equipmentP = parseFloat(1-this.equipmentBadArr/this.equipmentNum)*100+"%"
             }.bind(this)).catch(function (error) { 
                 console.log(error);
 			})

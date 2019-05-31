@@ -58,7 +58,7 @@
                     <div class="container-fluid">
                         <div class="basicInfoHead" style="position:relative;width:100%;height:220px;">
                             <span class="me-e">设备音视频信息</span>
-                            <el-table   :data="videoTable"
+                            <el-table   :data="videoManTable"
                                         ref="multipleTable"
                                         tooltip-effect="dark"
                                         style="cursor:pointer"
@@ -278,7 +278,8 @@ export default {
             whetherShow:"",
             faultinfo_old:[],
             videoTable:[],
-            acc_system:''
+            acc_system:'',
+            videoManTable:[]
         }
     },
     mounted(){
@@ -349,6 +350,34 @@ export default {
                         faultBox.edit = false
                         this.faultTable.push(faultBox)
                     }
+
+
+                    var manVedioArr = response.data.urlmsg;
+                    let urlArrName = []
+                    for(let i = 0;i<manVedioArr.length;i++){
+
+                        let urlArr = manVedioArr[i].fields.url_file
+                            urlArr = urlArr.substr(1)
+                            urlArr = urlArr.substr(0, urlArr.length-1);
+                            urlArr = urlArr.split(",")
+                            for(var h = 0;h<urlArr.length;h++){
+                                let brr = [];
+                                brr = urlArr[h].split("/")
+                                urlArrName.push(brr[brr.length-1])
+                            }
+
+                        for(var j = 0;j<urlArr.length;j++){
+                            let faultVideoBox = {}
+                                faultVideoBox.data = manVedioArr[i].fields.url_creDate;
+                                faultVideoBox.name = urlArrName[j];
+                                let url = "http://192.168.34.110:9999"+urlArr[j].trim().substr(1)
+                                url = encodeURI(url);
+                                faultVideoBox.url = url.replace("#","%23")
+                                
+                            this.videoManTable.push(faultVideoBox)
+                        }
+                    }
+
                 }else{
                     
                 }
