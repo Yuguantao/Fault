@@ -66,7 +66,8 @@
                 var param = {
                     "msg":{
                             "acc_id":userName,
-                            "acc_pwd":password
+                            "acc_pwd":password,
+                            "acc_stu":"1"
                         }
                 }
                 this.$axios.post('FaultDBManage/loginuser/',param                   

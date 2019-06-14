@@ -21,6 +21,7 @@
                             <span class=" textprimary" :class = "{gray:index==now}" style="display:block;padding-left:5px;color:#000;">{{value}}</span>
                         </li>
                     </ul>
+                    
                     <div class="fr clearfix">
                         <div class="headRight fl"><a href="login">登录</a></div>
                         <div class="login" style="width:235px;">
@@ -34,6 +35,19 @@
                             
                         </div>
                     </div>
+                    <div class="headLeft fr gotofu" style="line-height:50px;position:relative;margin-right:50px;">
+                        <span class="btn-home"></span>
+                        <div class="goToFu">换肤</div>
+                    </div>
+                    <div class="headLeft fr gotohome" style="line-height:50px;position:relative;margin-right:20px;">
+                        <router-link tag="a" class="btn-home" to= "/FaultAnalysis"></router-link>
+                        <div class="goToHome">主页</div>
+                    </div>
+                </div>
+            </div>
+            <div class="warn-t" id="warn-main">
+                <div>
+                    用户状态
                 </div>
             </div>
             <router-view></router-view>
@@ -41,6 +55,20 @@
 </template>
 
 <script>
+
+$(function(){
+		 $(".warn-t").click(function () {
+            if ($(".warn-c").css("display") == "none") {
+                $(".warn-c").show('slide', { direction: 'right' }, 500);
+                $(".warn-t").animate({ right: "490px" }, 500);
+            }
+            else {
+                $(".warn-c").hide('slide', { direction: 'right' }, 500);
+                $(".warn-t").animate({ right: "0px" }, 500);
+            }
+        });
+    });
+    
 export default {
     name:"",
     data (){
@@ -79,8 +107,26 @@ export default {
 
         },
         exitUser(){
+            var self = this;
+            var userName = sessionStorage.getItem("user");
+            var password = sessionStorage.getItem("password");
+            
+            var param = {
+                "msg":{
+                        "acc_id":userName,
+                        "acc_pwd":password,
+                        "acc_stu":"0"
+                    }
+            }
+            this.$axios.post('FaultDBManage/loginuser/',param                   
+            ).then(function(response){
+                
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })   
             this.$router.push({ path: '/login' });
             sessionStorage.removeItem("user")
+
         },
         handleClick(tab, event) {
             console.log(tab, event);
@@ -206,6 +252,49 @@ export default {
            font-family: "Microsoft YaHei UI";
            font-size: 12px;
        }
-
+        .warn-t{width:28px;height:118px;position:absolute;right:0;top:85px;  background: #449ccc;border-radius: 5px 0 0 5px;;cursor: pointer;opacity: 0.8;z-index:99999;line-height: 28px;}
+        .warn-t div{color:#fff;font-size:13px;width: 15px;margin: 0 auto;height: 118px;}
+        .gotohome a{
+            background: url("../../assets/home.png");
+            background-size: 100% 100%;
+            width:35px;
+            height:35px;
+            cursor: pointer;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .gotofu span{
+            background: url("../../assets/skin.png");
+            background-size: 100% 100%;
+            width:35px;
+            height:35px;
+            cursor: pointer;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .goToHome,.goToFu{
+            position: absolute;
+            border-radius: 5px;
+            margin: -8px 8px 0px;
+            border: 1px solid #c9c9c9;
+            color: #444;
+            background: #f0f0f0;
+            padding: 0px 5px;
+            text-align: center;
+            z-index: 9999999999;
+            width: 45px;
+            height: 20px;
+            line-height: 20px;
+            display: none;
+            font-size: 12px;
+            left: -13px;
+            
+        }
+        .gotohome:hover>.goToHome{
+            display: block;
+        }
+        .gotofu:hover>.goToFu{
+            display: block;
+        }
 </style>
 
