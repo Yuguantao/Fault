@@ -168,7 +168,7 @@
                     <el-table-column show-overflow-tooltip prop="marks" width="150" label="查看配件信息" align="center">
                         <el-button id="lookMounting" type="primary" icon="el-icon-edit"></el-button>
                     </el-table-column>
-                    <el-table-column fixed="right" width="150" align="center" label="操作" v-if = "whetherShow">
+                    <el-table-column fixed="right" width="160" align="center" label="操作" v-if = "whetherShow">
                         <template slot-scope="scope">
                             <el-button
                                 v-if="!scope.row.edit"
@@ -467,7 +467,16 @@ export default {
                 sessionStorage.setItem("number",row.number);
                 sessionStorage.setItem("inputTime",row.createTime);
                 sessionStorage.setItem("man_mfrs",row.man_mfrs);
-                this.$router.push({ path: '/infoDetail' });
+                sessionStorage.setItem("man_remarks",row.marks);
+                sessionStorage.setItem("man_porpuse",row.man_porpuse);
+                sessionStorage.setItem("man_qualifi",row.man_qualifi);
+                sessionStorage.setItem("man_department",row.man_department);
+                sessionStorage.setItem("man_place",row.man_place);
+                sessionStorage.setItem("man_mfrspersion",row.man_mfrspersion);
+                sessionStorage.setItem("man_persion",row.man_persion);
+                let routeData = this.$router.resolve({ path: '/infoDetail' });
+                window.open(routeData.href, '_blank');
+                
             }
             
         },

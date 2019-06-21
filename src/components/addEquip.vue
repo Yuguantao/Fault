@@ -50,9 +50,8 @@
                                 v-model="time"
                                 type="datetime"
                                 placeholder="选择日期时间"
-                                default-time="12:00:00"
-                                value-format="yyyy-MM-dd HH:mm:ss"
-                                format="yyyy-MM-dd HH:mm:ss">
+                                value-format="yyyy-MM-dd"
+                                format="yyyy-MM-dd">
                                 </el-date-picker>
                             </td>
                             <td class="item">存放地点</td>

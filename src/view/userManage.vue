@@ -90,7 +90,7 @@
                                 show-overflow-tooltip
                                 align="center">
                             </el-table-column>
-                            <el-table-column fixed="right" label="操作" width="150" align="center">
+                            <el-table-column fixed="right" label="操作" width="160" align="center">
                                 <template slot-scope="scope">
                                     <el-button
                                     size="mini" @click="editUserBox(scope.row)" data-toggle="modal" data-target="#editBox">编辑</el-button>

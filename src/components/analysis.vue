@@ -195,7 +195,7 @@
 								</div>
 								<div class="repair-status-li four-page-bg" style="margin-right:0px">
 									<img alt="" src="../assets/analysis/设备.png">
-									<span class="repair-status-font" style="font-size: 14.07px;">设备完好率</span>
+									<span class="repair-status-font" style="font-size: 14.07px;">设备完好</span>
 									<span class="repair-status-number sbwhl" style="font-size: 28.35px;">{{equipmentP}}</span>
 								</div>
 							</div>
@@ -705,7 +705,7 @@ export default {
 			this.$axios.post('FaultDBManage/statisfau/',paramMan,                
             ).then(function(response){
 				this.equipmentBadArr = response.data.msg
-				this.equipmentP = parseFloat(1-this.equipmentBadArr/this.equipmentNum)*100+"%"
+				this.equipmentP = (parseFloat(1-this.equipmentBadArr/this.equipmentNum)*100).toFixed(2)+"%"
             }.bind(this)).catch(function (error) { 
                 console.log(error);
 			})

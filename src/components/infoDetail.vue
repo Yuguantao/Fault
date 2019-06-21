@@ -3,7 +3,7 @@
 
         <vHead></vHead>
         <div class="container-fluid detailBox">
-            <div class="container-fluid">
+            <div class="container-fluid" >
                 <el-tabs v-model="activeName">
                     <el-tab-pane :label="systemName" name="first"></el-tab-pane>
                 </el-tabs>
@@ -11,48 +11,71 @@
             <el-container style="padding:0 5px;">
                 <el-main style="width:50%;">
                     <el-header>运行信息</el-header>
-                    <div class="container-fluid"  style="height: 75px;border-bottom: 2px dashed #ccc5c5;">
+                    <div class="container-fluid"  style="height: 400px;border-bottom: 2px dashed #ccc5c5;">
                         <div class="basicInfoHead" style="position:relative;">
                             <span class="me-e">设备信息</span>
                             <div class="me-l">
-									<div class="icon" >
-											<a class="mf-a"></a>
-											<span class="mf-fn">系统</span>
-											<span class="mf-fnv" style="width: 100px;">{{system}}</span>
-                                    </div>
-                                    <div class="icon" style="left:120px;">
+                                <div class="icon" >
                                         <a class="mf-a"></a>
-                                        <span class="mf-fn">型号</span>
-                                        <span class="mf-fnv" style="width: 100px;">{{model}}</span>
-                                    </div>
-                                    
-                                    <div class="icon" style="left:240px;">
-                                        <a class="mf-a"></a>
-                                        <span class="mf-fn">编号</span>
-                                        <span class="mf-fnv" style="width: 100px;">{{number}}</span>
-                                    </div>
-                                    <div class="icon" style="left:360px;">
-											<a class="mf-a" ></a>
-											<span class="mf-fn">生产单位</span>
-											<span class="mf-fnv" style="width: 125px;">{{product}}</span>
-                                    </div>
-                                    <div class="icon" style="left:480px;">
-                                        <a class="mf-a"></a>
-                                        <span class="mf-fn">引入时间</span>
-                                        <span class="mf-fnv" style="width: 125px;">{{inputTime}}</span>
-                                    </div>
-                                    <!-- <div class="icon" style="top:80px;left:150px;">
-                                        <a class="mf-a"></a>
-                                        <span class="mf-fn">累计工作时长</span>
-                                        <span class="mf-fnv" style="width: 125px;"></span>
-                                    </div> -->
-								</div>
-                        </div>
-                    </div>
-                    <div class="container-fluid" style="height: 270px;border-bottom: 2px dashed #ccc5c5;">
-                        <div class="basicInfoHead" style="position:relative;width:100%;height:100%;">
-                            <span class="me-e">故障发生次数</span>
-                            <div id="numCharts" style="{width: 100%;height: calc(100% - 16px);}"></div>                           
+                                        <span class="mf-fn">系统</span>
+                                        <span class="mf-fnv" style="width: 178px;">{{system}}</span>
+                                </div>
+                                <div class="icon" style="left:200px;">
+                                    <a class="mf-a"></a>
+                                    <span class="mf-fn">型号</span>
+                                    <span class="mf-fnv" style="width: 178px;">{{model}}</span>
+                                </div>
+                                <div class="icon" style="left:400px;">
+                                    <a class="mf-a"></a>
+                                    <span class="mf-fn">编号</span>
+                                    <span class="mf-fnv" style="width: 178px;">{{number}}</span>
+                                </div>
+
+                                <div class="icon" style="top:110px;">
+                                    <a class="mf-a"></a>
+                                    <span class="mf-fn">存放地点</span>
+                                    <span class="mf-fnv" style="width: 178px;">{{man_place}}</span>
+                                </div>
+                                <div class="icon" style="top:110px;left:200px;">
+                                    <a class="mf-a"></a>
+                                    <span class="mf-fn">责任人</span>
+                                    <span class="mf-fnv" style="width: 178px;">{{man_persion}}</span>
+                                </div>
+                                <div class="icon" style="top:110px;left:400px;">
+                                    <a class="mf-a"></a>
+                                    <span class="mf-fn">责任部门</span>
+                                    <span class="mf-fnv" style="width: 178px;">{{man_department}}</span>
+                                </div>
+
+                                <div class="icon" style="top:178px;">
+                                    <a class="mf-a"></a>
+                                    <span class="mf-fn">生产厂家</span>
+                                    <span class="mf-fnv" style="width: 178px;">{{man_mfrs}}</span>
+                                </div>
+                                <div class="icon" style="top:178px;left:200px;">
+                                    <a class="mf-a"></a>
+                                    <span class="mf-fn">厂家联系人</span>
+                                    <span class="mf-fnv" style="width: 178px;">{{man_mfrspersion}}</span>
+                                </div>
+                                <div class="icon" style="top:178px;left:400px;">
+                                    <a class="mf-a"></a>
+                                    <span class="mf-fn">进场日期</span>
+                                    <span class="mf-fnv" style="width: 178px;">{{inputTime}}</span>
+                                </div>
+
+                                <div class="icon" style="top:246px;">
+                                    <a class="mf-a"></a>
+                                    <span class="mf-fn">功能用途</span>
+                                    <span class="mf-fnv" style="width: 400px;">{{man_enclosure}}</span>
+                                </div>
+
+                                <div class="icon" style="top:314px;">
+                                    <a class="mf-a"></a>
+                                    <span class="mf-fn">备注</span>
+                                    <span class="mf-fnv" style="width: 400px;">{{man_remarks}}</span>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                     <div class="container-fluid">
@@ -79,17 +102,17 @@
                     </div>
                 </el-main>
                 <el-main class="elMainSecond" style="width:50%;">
-
                     <el-header>维护保障</el-header>
-                    <div class="container-fluid"  style="height: 320px;">
+                    <div class="container-fluid"  style="height: 350px;margin-bottom: 46px;">
                         <div class="basicInfoHead" style="position:relative;">
                             <div class="basicInfoHead" style="position:relative;">
                                 <span class="me-e">故障信息</span>
+                                <span data-toggle="modal"  data-target="#addMounting" style="position:absolute;right:14px;top:-4px;color:#fff;background-color: #409EFF;border-radius:5px;border:1px solid #409EFF;width:108px;padding:5px;cursor:pointer;" @click="drawLineSetTimeout">故障发生次数</span>
                                 <el-table :data="faultTable"
                                         ref="multipleTable"
                                         tooltip-effect="dark"
                                         style="cursor:pointer"
-                                        height="300" 
+                                        height="330" 
                                         @row-click="openDetails"> 
                                     <el-table-column fixed show-overflow-tooltip sortable prop="fau_time" label="故障时间" width="190" align="center">
                                         <template slot-scope="scope">
@@ -188,7 +211,7 @@
                                         </template>
                                     </el-table-column>
                                     <el-table-column v-if="false" show-overflow-tooltip prop="uuid" width="80" label="uuid" align="center"></el-table-column>                                   
-                                    <el-table-column fixed="right" width="150" align="center" label="操作" v-if="whetherShow">
+                                    <el-table-column fixed="right" width="160" align="center" label="操作" v-if="whetherShow">
                                         <template slot-scope="scope">
                                             <el-button
                                                 v-if="!scope.row.edit"
@@ -245,6 +268,20 @@
                 </el-main>
             </el-container>
         </div>
+        
+        <div class="modal fade" id="addMounting" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog userBox" style="width:520px;height:400px;">
+                <div class="modal-content" style="width:500px;">
+                    <div class="container-fluid" style="border-bottom: 2px dashed #ccc5c5;width:500px;">
+                        <div class="basicInfoHead" style="position:relative;width:500px;height:400px;">
+                            <span class="me-e">故障发生次数</span>
+                            <button style="position:absolute;top:0;right:0;" type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <div id="numCharts" style="width: 500px;height: 300px;"></div>                           
+                        </div>
+                    </div>   
+                </div>
+            </div>
+        </div>
         <router-view></router-view>
     </div>
     
@@ -252,6 +289,7 @@
 </template>
 
 <script>
+import { setTimeout } from 'timers';
 // 引入基本模板
 let echarts = require('echarts/lib/echarts')
 // 引入柱状图组件
@@ -272,14 +310,22 @@ export default {
             system:"",
             model:"",
             number:"",
-            inputTime:"",
-            product:"",
             faultTable: [],
             whetherShow:"",
             faultinfo_old:[],
             videoTable:[],
             acc_system:'',
-            videoManTable:[]
+            videoManTable:[],
+            inputTime:'',
+            man_porpuse: "",
+            man_qualifi: "",
+            man_place: "",
+            man_enclosure: "",
+            man_department: "",
+            man_persion: "",
+            man_mfrs: "",
+            man_mfrspersion: "",
+            man_remarks: ""
         }
     },
     mounted(){
@@ -311,13 +357,18 @@ export default {
             this.model = sessionStorage.getItem("model");
             this.number = sessionStorage.getItem("number");
             this.inputTime = sessionStorage.getItem("inputTime");
-            this.product = sessionStorage.getItem("man_mfrs");
+            this.man_porpuse = sessionStorage.getItem("man_porpuse");
+            this.man_qualifi = sessionStorage.getItem("man_qualifi");
+            this.man_place = sessionStorage.getItem("man_place");
+            this.man_enclosure = sessionStorage.getItem("man_enclosure");
+            this.man_department = sessionStorage.getItem("man_department");
+            this.man_persion = sessionStorage.getItem("man_persion");
+            this.man_mfrs = sessionStorage.getItem("man_mfrs");
+            this.man_mfrspersion = sessionStorage.getItem("man_mfrspersion");
+            this.man_remarks = sessionStorage.getItem("man_remarks");
+            
             this.systemName = "设备："+systemName
 
-        },
-        exitUser(){
-            this.$router.push({ path: '/login' });
-            sessionStorage.removeItem("user")
         },
         getInfoDetail(){
             this.faultTable = []
@@ -557,12 +608,15 @@ export default {
             }           
             window.open(routeData.href, '_blank');
         },
+        drawLineSetTimeout(){
+            this.drawLine()
+        },
         drawLine(){
             // 基于准备好的dom，初始化echarts实例
             let myChart = echarts.init(document.getElementById('numCharts'))
             // 绘制图表
 
-            
+            let option={}
             let man_uuid = sessionStorage.getItem("systemUuid")
             let param ={
                     "msg": {
@@ -572,12 +626,13 @@ export default {
                             "endtime":""
                         }
                     }
+            var xArr,yArr;
             this.$axios.post('FaultDBManage/statisfau/',param                   
             ).then(function(response){
                 if(response.data.stu == 200){
-                    var xArr = response.data.eType;
-                    var yArr = response.data.eNum;
-                    myChart.setOption({
+                    xArr = response.data.eType;
+                    yArr = response.data.eNum;
+                    option = {
                         tooltip: {},
                         dataZoom: [{
                             
@@ -593,13 +648,17 @@ export default {
                             type: 'line',
                             data: yArr
                         }]
-                    });                  
+                    };
+                    myChart.setOption(option)                  
                 }else{
                     
                 }
             }.bind(this)).catch(function (error) { 
                 console.log(error);
             })
+
+            
+            myChart.resize()
                        
         }
     }
@@ -610,6 +669,7 @@ export default {
     @import "../../static/css/reset.css";
     @import "../../static/css/index.css";
     @import "../../static/css/voicePlus.css";
+    @import "../../static/css/UserManage.css";
 
 
     .container-fluid.index{
@@ -654,15 +714,15 @@ export default {
         display: none !important;
     }
     .detailBox{
-        margin-top:70px;
+        margin-top:45px;
         width:100%;
-        height:735px;
+        height:785px;
         background: #e2e2e2;
     }
       .el-main {
         background-color: #E9EEF3;
         color: #333;
-        height: 660px;
+        height: 725px;
         margin-right:20px;
         border: 1px solid #acafb1;
         border-radius: 5px;
@@ -678,8 +738,9 @@ export default {
         line-height: 35px;
         border-bottom: 1px solid #B3C0D1;
         margin-bottom:5px;
+        font-size: 25px;
     }
-    span.me-e{width:150px;display: block;font-family: Youyuan;font-size: 13px;font-weight: bold;color: #333;margin-top: 15px;border-left: 4px solid #3A9EE0;padding-left: 6px;height: 16px;line-height: 16px;}
+    span.me-e{width:250px;display: block;font-family: Youyuan;font-size: 20px;font-weight: bold;color: #333;margin-top: 15px;border-left: 4px solid #3A9EE0;padding-left: 6px;height: 30px;line-height: 30px;margin-bottom:15px;}
 	div.basicInfoHead a.mf-a{display:block;background:url(../assets/icon.png) center center no-repeat;width:10px;height:15px;float:left;}
     .icon{
         position: absolute;
@@ -690,7 +751,8 @@ export default {
        margin-right: 5px;
     }
     .icon .mf-fn{
-        font-size: 12px;
+        font-size: 16px;
+        font-weight: bold;
     }
     div.mf-fnv{
         width: 100%;
@@ -700,10 +762,13 @@ export default {
         border-radius: 5px;
     }
     span.mf-fnv{
-        font-size: 12px;
+        font-size: 13px;
         position: absolute;
         left: 15px;
         margin-top: 10px;       
+    }
+    .container-fluid >>> .el-tabs__item{
+        font-size: 22px;
     }
 </style>
 

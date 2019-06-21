@@ -1,13 +1,17 @@
 <template>
         <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container-fluid">
+            <div class="container-fluid" style="height:80px;line-height:80px;">
                 <div class="head">
-                    <div class="headLeft fl">
-                        <router-link to= "/FaultAnalysis" style="display:block;font-size: 25px;color: #fff;">故障数据库管理系统</router-link>
+                    <div class="headLeft fl" style="margin-right:20px;">
+                        <img src="../../assets/login/login1.png" alt="" style="width:80PX;height:78px;float:left;margin-right:10px;">
+                        <router-link to= "/FaultAnalysis" style="display:block;font-size: 25px;color: #fff;float:left">故障数据库管理系统</router-link>
                     </div>
+                    <el-select v-model="query" style="width:120px;" v-if="$route.path != '/fault'">
+                        <el-option v-for="item in options" :key="item.value" :value="item.value" :label="item.label"></el-option>
+                    </el-select>
                     <el-input
-                        placeholder="在搜索框输入需要查询的故障类型，点击搜索"
-                        style="width:390px;"
+                        placeholder="输入需要搜索的内容"
+                        style="width:220px;"
                         v-model="searchInput"
                         @keyup.native="get($event)"
                         @keydown.down.native="selectDown"
@@ -15,8 +19,16 @@
                         v-if="$route.path != '/fault'"
                         clearable>
                     </el-input>
-                    <el-button type="primary" @click="searchKeyword" v-if="$route.path != '/fault'">搜索</el-button>
-                    <ul v-if="$route.path != '/fault'" class="keywordBox" style="width:390px;position:absolute;overflow-x:hidden;overflow-y:auto;left: 325px;top: 58px;">
+                    <el-select v-model="systemValue" clearable  placeholder="请选择" style="width:125px;" v-if="$route.path != '/fault'">
+                            <el-option
+                        v-for="item in systemOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-button type="primary" @click="searchKeyword" v-if="$route.path != '/fault'" style="font-size:16px;width:120px;">搜　 索</el-button>
+                    <ul v-if="$route.path != '/fault'" class="keywordBox" style="width:219px;position:absolute;overflow-x:hidden;overflow-y:auto;left: 460px;top: 58px;">
                         <li class="text-center" v-for ="(value,index) in myData" @click="searchValue($event)">
                             <span class=" textprimary" :class = "{gray:index==now}" style="display:block;padding-left:5px;color:#000;">{{value}}</span>
                         </li>
@@ -24,22 +36,22 @@
                     
                     <div class="fr clearfix">
                         <div class="headRight fl"><a href="login">登录</a></div>
-                        <div class="login" style="width:235px;">
+                        <div class="login" style="width:160px;">
                             <span class="user" id="user"></span>
                             <span>　|</span>
                             <span class="out" @click="exitUser()">退出</span>
                             <router-link to="/userManage" class="fr" id="useSet">
-                                <img src="../../assets/index/useSet.png" width="20" height="23" class="fl" style="margin:14px 5px 0;">
-                                <span class="fl UserManage">配置</span>
+                                <img src="../../assets/index/useSet.png" width="20" height="23" class="fl" style="margin:27px 5px 0;">
+                                <span class="fl UserManage" style="line-height:80px;">配置</span>
                             </router-link>
                             
                         </div>
                     </div>
-                    <div class="headLeft fr gotofu" style="line-height:50px;position:relative;margin-right:50px;">
+                    <div class="headLeft fr gotofu" style="line-height:80px;position:relative;margin-right:50px;">
                         <span class="btn-home"></span>
                         <div class="goToFu">换肤</div>
                     </div>
-                    <div class="headLeft fr gotohome" style="line-height:50px;position:relative;margin-right:20px;">
+                    <div class="headLeft fr gotohome" style="line-height:80px;position:relative;margin-right:20px;">
                         <router-link tag="a" class="btn-home" to= "/FaultAnalysis"></router-link>
                         <div class="goToHome">主页</div>
                     </div>
@@ -81,7 +93,24 @@ export default {
             keyword:'',
             now:-1,
             systemValue:'',
-            systemOptions:[]
+            systemOptions:[
+                {
+                    value: '1',
+                    label: '故障数据库'
+                }, {
+                    value: '2',
+                    label: '设备信息库'
+                }
+            ],
+            valueArr:[],
+            options: [{
+                    value: '0',
+                    label: '模糊搜索'
+                }, {
+                    value: '1',
+                    label: '精确搜索'
+                }],
+            query: '1',
         }
     },
     mounted(){
@@ -133,6 +162,8 @@ export default {
         },
         searchKeyword(){
             sessionStorage.setItem("keyword",this.searchInput)
+            sessionStorage.setItem("query",this.query)
+            sessionStorage.setItem("query1",this.query1)
             this.$router.push({ path: '/fault' })
         },
         get:function (event) {
@@ -295,6 +326,10 @@ export default {
         }
         .gotofu:hover>.goToFu{
             display: block;
+        }
+        .head{
+            height: 80px;
+            line-height: 80px;
         }
 </style>
 

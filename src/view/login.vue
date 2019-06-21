@@ -2,30 +2,43 @@
     <div class="container-fluid">
         <div class="fh-login">
             <div class="fh-login-left">
-                <img src="../assets/login/login-logo.png">
+                <img src="../assets/login/login1.png">
                 <h2>故障数据库管理系统</h2>
-                <img src="../assets/login/gif.gif" style="margin-top:10px;">
+                
             </div>
-            <div class="fh-login-right">
+            <div class="fh-login-right" >
                 <div class="login-title">欢迎使用</div>
-                <div class="form-signin">
+                <div class="form-signin" style="height:280px;">
 
                     <div class="group">
 						<img src="../assets/login/fh-user.png" style="width:30px">
 						<input type="text" class="input-control" id="inputEmail" autocomplete="off" placeholder="用户名" style="height: 50px; line-height: 50px;" required autofocus>
 					</div>
                     
-                    <div class="group" style="margin-bottom:55px;">
+                    <div class="group" style="margin-bottom:20px;">
 						<img src="../assets/login/suo.png" style="width:30px">
 						<input type="password" class="input-control" id="inputPassword" autocomplete="off" placeholder="密　码" style="height: 50px; line-height: 50px;">
 					</div>
+                    <el-select v-model="value" placeholder="请选择" style="width: 295px;  height: 40px;">
+                        <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
 
                     <div class="group">
+                        
 						<button style="width: 100%; border: none; background: rgb(82, 166, 212); color: rgb(255, 255, 255); height: 50px;" type="button" class="btn btn-default" id="loginBtn" @click="GetLoginInfo">登  录</button>
 					</div>
+                    
+                      
                 </div>
             </div>
+           <div style="float:right; margin-left:600px;  margin-top:70px; font-size:10px;">故障数据库管理系统项目组2019</div>
         </div>
+         
     </div>
 </template>
 
@@ -34,7 +47,25 @@
         name: 'login',
         data(){
             return{
-    
+                options: [
+                    {
+                        value: '选项1',
+                        label: '光电测试用户'
+                    }, 
+                    {
+                        value: '选项2',
+                        label: '雷达设备用户'
+                    }, 
+                    {
+                        value: '选项3',
+                        label: '遥测设备用户'
+                    }, 
+                    {
+                        value: '选项4',
+                        label: '新增设备用户'
+                    }
+                ],
+                value: ''
             }
         },
         mounted(){
@@ -130,7 +161,7 @@
         border-top-right-radius: 0;
     }
     .fh-login {
-        background: url(http://demo.windasoft.com:8080/windaedm/img/login/fh-login.png) no-repeat;
+        background: url("../assets/login/fh-login.png") no-repeat;
         width: 860px;
         height: 465px;
         position: fixed;
@@ -179,7 +210,7 @@
     }
     .fh-login-right .group {
         display: inline-block;
-        border: 1px solid #ccc;
+        border: 1px solid #000;
         margin: 10px 0px;
         width: 80%;
         border-radius: 5px;

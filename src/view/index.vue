@@ -24,18 +24,24 @@
         </div>
         
         <div class="container-fluid projects searchInput">
-            <div style="position:relative;width:575px;margin:0 auto;">
+            <div style="position:relative;width:780px;margin:0 auto;">
+                <el-select v-model="query" style="width:120px;">
+                    <el-option v-for="item in options" :key="item.value" :value="item.value" :label="item.label"></el-option>
+                </el-select>
                 <el-input
                     placeholder="在搜索框输入需要查询的故障类型，点击搜索"
-                    style="width:500px;"
+                    style="width:400px;"
                     v-model="searchInput"
                     @keyup.native="get($event)"
                     @keydown.down.native="selectDown"
                     @keydown.up.native="selectUp"
                     clearable>
                 </el-input>
-                <el-button type="primary" @click="searchKeyword">搜索</el-button>
-                <ul class="keywordBox" style="width:500px;position:absolute;overflow-x:hidden;overflow-y:auto;">
+                <el-select v-model="query1" style="width:125px;">
+                    <el-option v-for="item in options1" :key="item.value" :value="item.value" :label="item.label"></el-option>
+                </el-select>
+                <el-button type="primary" @click="searchKeyword" style="font-size:16px;width:120px;">搜　 索</el-button>
+                <ul class="keywordBox" style="width:400px;position:absolute;overflow-x:hidden;overflow-y:auto;margin-left:124px;">
                     <li class="text-center" v-for ="(value,index) in myData" @click="searchValue($event)">
                         <span class=" textprimary" :class = "{gray:index==now}" style="display:block;padding-left:5px;color:#000;">{{value}}</span>
                     </li>
@@ -85,6 +91,22 @@ export default {
             now:-1,
             myData:[],
             keyword:'',
+            options: [{
+                    value: '0',
+                    label: '模糊搜索'
+                }, {
+                    value: '1',
+                    label: '精确搜索'
+                }],
+            query: '1',
+            options1: [{
+                    value: '1',
+                    label: '故障数据库'
+                }, {
+                    value: '2',
+                    label: '设备信息库'
+                }],
+            query1: ''
         }
     },
     mounted(){
@@ -117,6 +139,8 @@ export default {
         },
         searchKeyword(){
             sessionStorage.setItem("keyword",this.searchInput)
+            sessionStorage.setItem("query",this.query)
+            sessionStorage.setItem("query1",this.query1)
             this.$router.push({ path: '/fault' })
         },
             get:function (event) {

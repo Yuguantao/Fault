@@ -14,9 +14,12 @@
                     </div>
                 </div>
                 <div class="container-fluid searchBox">
+                    <el-select v-model="query" style="width:120px;">
+                        <el-option v-for="item in options" :key="item.value" :value="item.value" :label="item.label"></el-option>
+                    </el-select>
                     <el-input
                         placeholder="在搜索框输入需要查询的故障类型，点击搜索"
-                        style="width:500px;"
+                        style="width:400px;"
                         v-model="searchInput"
                         @keyup.native="get($event)"
                         @keydown.down.native="selectDown"
@@ -24,7 +27,7 @@
                         clearable>
                     </el-input>
 
-                    <el-select v-model="systemValue" clearable  placeholder="请选择系统" style="width:150px;">
+                    <el-select v-model="systemValue" clearable  placeholder="请选择" style="width:125px;">
                             <el-option
                         v-for="item in systemOptions"
                         :key="item.value"
@@ -32,20 +35,29 @@
                         :value="item.value">
                         </el-option>
                     </el-select>
-
-                    <el-button type="primary" @click="searchKeyword">搜索</el-button>
-                    <ul class="keywordBox" style="width:500px;position:absolute;overflow-x:hidden;overflow-y:auto;">
+                    <el-button type="primary" @click="searchKeyword" style="font-size:16px;width:120px;">搜索</el-button>
+                    <ul class="keywordBox" style="width:400px;position:absolute;overflow-x:hidden;overflow-y:auto;margin-left:124px;">
                         <li class="text-center" v-for ="(value,index) in myData" @click="searchValue($event)">
                             <span class=" textprimary" :class = "{gray:index==now}" style="display:block;padding-left:5px;color:#000;">{{value}}</span>
                         </li>
                     </ul>
-                    <!-- <p>
-                        <h2 v-show="true" class="text-warning text-center">(*^__^*)暂时没有数据</h2>
-                    </p> -->
                 </div>
                 <div class="container-fluid searchResult">
                     <div class="container-fluid" style="height:570px;overflow-x:hidden;overflow-y:auto;background-color:#fff;">
                         <ul class="part_b">
+                            <li v-for="(data,index) in Htems" v-if = "Htems.length != 0">
+                                <h4><b>设备名称：</b>{{data.fields.man_sys}}-{{data.fields.man_model}}-{{data.fields.man_num}}</h4>
+                                <p class="describe c66"><b>功能用途：</b>{{data.fields.man_porpuse}}</p>
+                                <p class="describe c66"><b>存放地点：</b>{{data.fields.man_place}}</p>
+                                <p class="describe c66"><b>备注信息：</b>{{data.fields. man_remarks}}</p>
+                                <div class="source">
+                                    <span class="c66"><b>创建时间：</b></span><span class="c33 mr15">{{data.fields.man_impTime}}</span>
+                                    <span class="c66"><b>责任部门：</b></span><span class="c33 mr15">{{data.fields.man_department}}</span>
+                                    <span class="c66"><b>责任人：</b></span><span class="c33 mr15">{{data.fields.man_persion}}</span>
+                                    <span class="c66"><b>生产厂家：</b></span><span class="c33 mr15">{{data.fields.man_mfrs}}</span>
+                                    <span class="c66"><b>厂家联系人：</b></span><span class="c33 mr15">{{data.fields.man_mfrspersion}}</span>
+                                </div>
+                            </li>
                             <li v-for="(data,index) in items" v-if = "items.length != 0">
                                 <h4><b>故障现象：</b>{{data.fields.fau_phen}}</h4>
                                 <p class="describe c66"><b>故障描述：</b>{{data.fields.fau_desc}}</p>
@@ -57,6 +69,7 @@
                                     <span class="c66"><b>人员信息：</b></span><span class="c33 mr15">{{data.fields.fau_peopleInfo}}</span>
                                 </div>
                             </li>
+
                             <span v-else-if = "items.length == 0">暂无数据！</span>
                         </ul>
                         
@@ -82,18 +95,34 @@ export default {
             searchInput:"",
             activeName:"first",
             items:[],
+            Htems:[],
             myData:[],
             keyword:'',
             now:-1,
             systemValue:'',
-            systemOptions:[],
-            valueArr:[]
+            systemOptions:[
+                {
+                    value: '1',
+                    label: '故障数据库'
+                }, {
+                    value: '2',
+                    label: '设备信息库'
+                }
+            ],
+            valueArr:[],
+            options: [{
+                    value: '0',
+                    label: '模糊搜索'
+                }, {
+                    value: '1',
+                    label: '精确搜索'
+                }],
+            query: '1',
         }
     },
     mounted(){
         this.setUserName()
         this.initSearchKeyword()
-        this.initSystem()
     },
     methods: {
         setUserName(){
@@ -123,36 +152,40 @@ export default {
         },
         searchKeyword(){
             this.items = []
-            this.valueArr = []
+            this.Htems = []
             let keyword = this.searchInput
             let userName = sessionStorage.getItem("user");
-            let param =         {
+            let ismanage,isfault;
+            if(!this.systemValue){
+                ismanage = "1";
+                isfault = "1";
+            }else{
+                if(this.systemValue == "2"){
+                    ismanage = "1";
+                    isfault = "0"
+                }else{
+                    ismanage = "0";
+                    isfault = "1"
+                }
+            }
+            let param ={
                         "msg": {
                                 "wrd_accid": userName,
-                                "wrd_records": keyword,
-                                "fau_type": keyword,
-                                "man_sys": this.systemValue
+                                "isaccurate":this.query,
+                                "ismanage":ismanage,
+                                "isfault":isfault,
+                                "condition": this.searchInput
                             }
                         }
 
-            this.$axios.post('FaultDBManage/analysis/',param                   
+
+            this.$axios.post('FaultDBManage/searchdetail/',param                   
             ).then(function(response){
-                let arr = response.data.msg
+                let arr = response.data.resu_fault
+                let brr = response.data.resu_manage
                 if(response.data.stu == 200){
-                    if(!this.systemValue){
-                        this.items = response.data.msg
-                    }else{
-                        for(var i = 0;i<arr.length;i++){
-                            for(var j = 0;j<arr[i].length;j++){
-                                this.valueArr.push(arr[i][j])
-                            }
-                        }
-                        this.items = this.valueArr
-
-                    } 
-                    
-                }else{
-                     
+                    this.items = arr
+                    this.Htems = brr  
                 }
                 $(".keywordBox").hide()
             }.bind(this)).catch(function (error) { 
@@ -203,67 +236,46 @@ export default {
         },
         initSearchKeyword(){
             this.items = []
-            this.valueArr = []
+            this.Htems = []
             let keywordInit = sessionStorage.getItem("keyword")
             this.searchInput = keywordInit
             let keyword = this.searchInput
             let userName = sessionStorage.getItem("user");
-            let param =         {
+            let ismanage,isfault;
+            if(!this.systemValue){
+                ismanage = "1";
+                isfault = "1";
+            }else{
+                if(this.systemValue == "2"){
+                    ismanage = "1";
+                    isfault = "0"
+                }else{
+                    ismanage = "0";
+                    isfault = "1"
+                }
+            }
+            let param ={
                         "msg": {
                                 "wrd_accid": userName,
-                                "wrd_records": keyword,
-                                "fau_type": keyword,
-                                "man_sys": this.systemValue
+                                "isaccurate":this.query,
+                                "ismanage":ismanage,
+                                "isfault":isfault,
+                                "condition": this.searchInput
                             }
                         }
-
-            this.$axios.post('FaultDBManage/analysis/',param                   
+            this.$axios.post('FaultDBManage/searchdetail/',param                   
             ).then(function(response){
-                let arr = response.data.msg
+                let arr = response.data.resu_fault
+                let brr = response.data.resu_manage
                 if(response.data.stu == 200){
-                    if(!this.systemValue){
-                        this.items = response.data.msg
-                    }else{
-                        for(var i = 0;i<arr.length;i++){
-                            for(var j = 0;j<arr[i].length;j++){
-                                this.valueArr.push(arr[i][j])
-                            }
-                        }
-                        this.items = this.valueArr
-                    } 
-                    
-                }else{
-                     
+                    this.items = arr
+                    this.Htems = brr  
                 }
                 $(".keywordBox").hide()
             }.bind(this)).catch(function (error) { 
                 console.log(error);
             })
-        },
-        initSystem(){
-            let param = {
-                        "msg": {
-                                "search_man": "光电经纬仪"
-                            }
-                        }           
-            this.$axios.post('FaultDBManage/searchinfo/',param,                
-            ).then(function(response){
-                this.systemOptions = []
-                if(response.data.msg.length>0){
-                    var sysArr = response.data.msg
-                    for(var i = 0;i<sysArr.length;i++){
-                        var item = {}
-                        item.value = sysArr[i]
-                        item.label = sysArr[i]
-                        this.systemOptions.push(item)
-                    }                    
-                    
-                }
-            }.bind(this)).catch(function (error) { 
-                console.log(error);
-            })
-
-        },
+        }
     }
 }
 </script>
