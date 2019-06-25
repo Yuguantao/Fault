@@ -8,11 +8,7 @@
             </el-aside>
             <el-main>
                 <div class="topBox clearfix">
-                    <div class="page-header">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="javascript:void(0);" class="cmsall">人员管理</a></li>
-                        </ul>
-                    </div>
+                    <vTabs></vTabs>
                 </div>
                 <div class="container-fluid userArray">
                     <div class="topBox clearfix">
@@ -425,7 +421,7 @@ export default {
             let username = $("#search_user").val()
             let param = {
                     "msg": {
-                    "acc_id":username
+                        "acc_id":username
                     }
                 }
                 

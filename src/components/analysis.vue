@@ -8,11 +8,7 @@
             </el-aside>
             <el-main>
                 <div class="topBox clearfix">
-                    <div class="page-header">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="javascript:void(0);" class="cmsall">故障分析</a></li>
-                        </ul>
-                    </div>
+                    <vTabs></vTabs>
                 </div>
                 <div class="first-page-content" style="min-width: 1170px;">
 					<div class="content-view-one">

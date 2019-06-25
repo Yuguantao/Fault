@@ -7,11 +7,7 @@
             </el-aside>
             <el-main class="container-fluid">
                 <div class="topBox clearfix">
-                    <div class="page-header">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="javascript:void(0);" class="cmsall">设备知识库</a></li>
-                        </ul>
-                    </div>
+                    <vTabs></vTabs>
                 </div>
                 <div class="container-fluid searchBox">
                     <el-select v-model="query" style="width:120px;">

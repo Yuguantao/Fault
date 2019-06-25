@@ -24,8 +24,16 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import header from './components/public/header'
 import navMenu from './components/public/navMenu'
+import tabs from './components/public/tabs'
+//import index from './view/FaultAnalysis'
 
- 
+
+
+import TabRoute from '@/router/TabRoute'
+import RouterMethods from '@/router/RouterMethods'
+
+Vue.use(TabRoute)
+Vue.use(RouterMethods)
 
 Vue.config.productionTip = false
 
@@ -49,6 +57,7 @@ library.add(
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.component('vHead', header);
 Vue.component('vNavMenu', navMenu);
+Vue.component('vTabs', tabs);
 
 
 Vue.use(ElementUI)
@@ -63,5 +72,6 @@ new Vue({
   router,
   store,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  //render: v => v(index)
 })

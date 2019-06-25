@@ -1,10 +1,10 @@
 <template>
         <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container-fluid" style="height:80px;line-height:80px;">
+            <div class="container-fluid" style="height:115px;line-height:115px;">
                 <div class="head">
                     <div class="headLeft fl" style="margin-right:20px;">
-                        <img src="../../assets/login/login1.png" alt="" style="width:80PX;height:78px;float:left;margin-right:10px;">
-                        <router-link to= "/FaultAnalysis" style="display:block;font-size: 25px;color: #fff;float:left">故障数据库管理系统</router-link>
+                        <img src="../../assets/login/login1.png" alt="" style="width:115px;height:115px;float:left;margin-right:10px;">
+                        <router-link to= "/FaultAnalysis" style="display:block;font-size: 30px;color: #fff;float:left">故障数据库管理系统</router-link>
                     </div>
                     <el-select v-model="query" style="width:120px;" v-if="$route.path != '/fault'">
                         <el-option v-for="item in options" :key="item.value" :value="item.value" :label="item.label"></el-option>
@@ -41,45 +41,53 @@
                             <span>　|</span>
                             <span class="out" @click="exitUser()">退出</span>
                             <router-link to="/userManage" class="fr" id="useSet">
-                                <img src="../../assets/index/useSet.png" width="20" height="23" class="fl" style="margin:27px 5px 0;">
-                                <span class="fl UserManage" style="line-height:80px;">配置</span>
+                                <img src="../../assets/index/useSet.png" width="20" height="23" class="fl" style="margin:44px 5px 0;">
+                                <span class="fl UserManage" style="line-height:115px;">配置</span>
                             </router-link>
                             
                         </div>
                     </div>
-                    <div class="headLeft fr gotofu" style="line-height:80px;position:relative;margin-right:50px;">
+                    <div class="headLeft fr gotofu" style="line-height:115px;position:relative;margin-right:50px;">
                         <span class="btn-home"></span>
                         <div class="goToFu">换肤</div>
                     </div>
-                    <div class="headLeft fr gotohome" style="line-height:80px;position:relative;margin-right:20px;">
+                    <div class="headLeft fr gotohome" style="line-height:115px;position:relative;margin-right:20px;">
                         <router-link tag="a" class="btn-home" to= "/FaultAnalysis"></router-link>
                         <div class="goToHome">主页</div>
                     </div>
                 </div>
             </div>
-            <div class="warn-t" id="warn-main">
+            <div class="warn-t" id="warn-main" @click="move">
                 <div>
                     用户状态
                 </div>
+            </div>
+            <div class="warn-c" style="width: 220px;height: 666px;position: absolute;right:0;top: 120px;background: #999;border-radius: 5px 0 0 5px;cursor: pointer;z-index: 999999;display:none;">
+                <el-table
+                :data="userData"
+                :row-style="tableRowStyle"
+                :header-cell-style="tableHeaderColor"
+                style="width: 100%">
+                    <el-table-column
+                        prop="name"
+                        label="用户名"
+                        align="center"
+                        show-overflow-tooltip
+                        width="165">
+                    </el-table-column>
+                    <el-table-column
+                        prop="status"
+                        label="状态"
+                        align="center"
+                        width="55">
+                    </el-table-column>
+                </el-table>
             </div>
             <router-view></router-view>
         </div>  
 </template>
 
 <script>
-
-$(function(){
-		 $(".warn-t").click(function () {
-            if ($(".warn-c").css("display") == "none") {
-                $(".warn-c").show('slide', { direction: 'right' }, 500);
-                $(".warn-t").animate({ right: "490px" }, 500);
-            }
-            else {
-                $(".warn-c").hide('slide', { direction: 'right' }, 500);
-                $(".warn-t").animate({ right: "0px" }, 500);
-            }
-        });
-    });
     
 export default {
     name:"",
@@ -93,6 +101,7 @@ export default {
             keyword:'',
             now:-1,
             systemValue:'',
+            userData:[],
             systemOptions:[
                 {
                     value: '1',
@@ -111,10 +120,14 @@ export default {
                     label: '精确搜索'
                 }],
             query: '1',
+            timer:'',
+            
         }
     },
     mounted(){
-        this.setUserName()
+        this.setUserName(),
+        this.initSearchUser()
+        this.timer = setInterval(this.initSearchUser, 10000);
     },
     methods: {
         setUserName(){
@@ -133,7 +146,6 @@ export default {
                 alert("请登录！")
                 this.$router.push({ path: '/login' })
             }
-
         },
         exitUser(){
             var self = this;
@@ -208,6 +220,59 @@ export default {
             $(".keywordBox").hide()
             this.searchInput = event.target.innerText
         },
+        initSearchUser(){
+            this.userData = []
+            let userName = sessionStorage.getItem("user");
+            let password = sessionStorage.getItem("password");
+            let param = {
+                "msg": {
+                    "acc_id":userName,
+                    "acc_pwd":password,
+                }
+            }
+            this.$axios.post('FaultDBManage/searchuser/',param                   
+            ).then(function(response){
+                if(response.data.stu == 200){
+                    
+                    var userArr = response.data.msg;
+                    for(let i = 0;i<userArr.length;i++){
+                        let userBox = {}
+                        userBox.name = userArr[i].fields.acc_id;
+                        let permissionName;
+                        if(userArr[i].fields.acc_stu == 0){
+                            permissionName = "离线"
+                        }else if(userArr[i].fields.acc_stu == 1){
+                            permissionName = "在线"
+                        }
+                        userBox.status = permissionName
+                        this.userData.push(userBox)
+                    }
+                }else{
+                    
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+        },
+        move(){
+
+            if ($(".warn-c").css("display") == "none") {
+                $(".warn-c").css("display","block");
+                $(".warn-t").css({"right": "220px"});
+            }
+            else {
+                $(".warn-c").css("display","none");
+                $(".warn-t").css({"right": "0px"});
+            }
+        },
+        tableHeaderColor({ row, column, rowIndex, columnIndex }) {
+            if (rowIndex === 0) {
+                return 'background-color: lightblue;color: #fff;font-weight: 500;'
+            }
+        },
+        tableRowStyle({ row, rowIndex }) {
+            return 'background-color: #ccc'
+        },
     }
 }
 </script>
@@ -219,9 +284,8 @@ export default {
 
     .navbar {
         position: relative;
-        height: 80px;
-        line-height: 80px;
-        border: 1px solid transparent;
+        height: 115px;
+        line-height: 115px;
         background: #449CCC;
     }
     .content h4{font-size:16px; line-height:32px; padding-left:10px; width:100px; float:left; margin-bottom:20px;}
@@ -283,7 +347,7 @@ export default {
            font-family: "Microsoft YaHei UI";
            font-size: 12px;
        }
-        .warn-t{width:28px;height:118px;position:absolute;right:0;top:85px;  background: #449ccc;border-radius: 5px 0 0 5px;;cursor: pointer;opacity: 0.8;z-index:99999;line-height: 28px;}
+        .warn-t{width:28px;height:118px;position:absolute;right:0;top:120px;  background: #449ccc;border-radius: 5px 0 0 5px;;cursor: pointer;opacity: 0.8;z-index:99999;line-height: 28px;}
         .warn-t div{color:#fff;font-size:13px;width: 15px;margin: 0 auto;height: 118px;}
         .gotohome a{
             background: url("../../assets/home.png");
@@ -328,8 +392,8 @@ export default {
             display: block;
         }
         .head{
-            height: 80px;
-            line-height: 80px;
+            height: 115px;
+            line-height: 115px;
         }
 </style>
 

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import login from '@/view/login'
-import FaultAnalysis from '@/view/index'
+import FaultAnalysis from '@/view/FaultAnalysis'
 import search from '@/components/search'
 import addEquipment from '@/components/addEquipment'
 import addEquip from '@/components/addEquip'
@@ -17,6 +17,9 @@ import audio from '@/components/audio'
 import header from '@/components/public/header'
 import mountings from '@/components/mountings'
 import analysis from '@/components/analysis'
+import index from '@/components/index'
+import search1 from '@/components/search1'
+import addEquip1 from '@/components/addEquip1'
 
 
 Vue.use(Router)
@@ -114,5 +117,21 @@ export default new Router({
       name:'analysis',
       component:analysis
     },
+    {
+      path:'/index',
+      name:'index',
+      component:index
+    },
+    {
+      path:'/search1',
+      name:'search1',
+      component:search1
+    },
+    {
+      path:'/addEquip1',
+      name:'addEquip1',
+      component:addEquip1
+    },
+    
   ]
 })

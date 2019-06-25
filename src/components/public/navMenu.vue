@@ -2,7 +2,7 @@
     <div class="navMenu">
         <el-row class="tac">
             <el-col>
-                <el-menu
+                <!-- <el-menu
                 router 
                 :default-active="$route.path"
                 class="el-menu-vertical-demo"
@@ -40,6 +40,27 @@
                         <el-menu-item index="/userManage">实施人员管理</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
+                <el-menu-item index="5">
+                    <i class="el-icon-question"></i>
+                    <span slot="title" >帮助</span>
+                </el-menu-item>
+                </el-menu> -->
+                <el-menu :default-active="currentTabIndex" :default-openeds="spreadedMenus"  background-color="#fff">
+                    <el-submenu v-for="(item,index) in menuList" :key="index" :index="item.menuId">
+                    <template slot="title">
+                        <i :class="item.icon"></i>
+                        <span>{{item.title}}</span>
+                    </template>
+                    <el-menu-item-group>
+                        <el-menu-item v-for="(subItem,subIndex) in item.sub"
+                                    :key="subIndex"
+                                    @click="openTab(subItem)"
+                                    :index="subItem.menuId">
+                        {{subItem.title}}
+                        </el-menu-item>
+                    </el-menu-item-group>
+                    </el-submenu>
+
                 </el-menu>
             </el-col>
         </el-row>
@@ -47,25 +68,47 @@
 </template>
 
 <script>
+
+import config from '../../router/MainConf'
+
 export default {
     name:"nvaHead",
     data (){
         return{
-            acc_permission:''
+            acc_permission:'',
+            menuList:[],
+            config: config, 
+            spreadedMenus: [], 
         }
     },
+    computed: {
+		// 当前 tab 项的 name
+		currentTabIndex () {
+			return this.$store.getters.GetCurrentTabIndex
+		},
+		// 打开的页签列表
+		openedTabs () {
+			// console.log(this.$store.getters.GetOpenedTabs)
+			return this.$store.getters.GetOpenedTabs
+		},
+        // 主页 tab 的 menuId
+        homeTabMenuId () {
+                return this.$store.getters.GetHomeTabMenuId
+        }
+	},
     mounted(){
         this.setUserName()
-        this.setStyle()
+        this.setStyle(),
+        this.initializeMemu()
     },
     methods: {
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      setUserName(){
+        handleOpen(key, keyPath) {
+            console.log(key, keyPath);
+        },
+        handleClose(key, keyPath) {
+            console.log(key, keyPath);
+        },
+        setUserName(){
             var self = this;
             self.acc_permission = sessionStorage.getItem("acc_permission");
         },
@@ -73,16 +116,21 @@ export default {
             $(".el-submenu__title").css({"font-size": "18px"})
             $(".el-menu-item").css({"font-size": "18px"})
         },
+        initializeMemu () {
+			this.menuList = JSON.parse(JSON.stringify(this.config.menu))
+        },
+        openTab (item) {
+			this.$tab.open(item)
+			this.initializeMemu()
+		},
     }
 }
 </script>
 
 <style scoped>
     .navMenu{
-        position: relative;
-        top: 0;
-        left: 0;
-        height: 700px;
+        float: left;
+        height: 100%;
         width: 200px;
         transition: all 0.3s;
     }
@@ -90,16 +138,21 @@ export default {
     .el-menu-item:hover{
         outline: 0 !important;
         color: #fff !important;
-        background: #409EFF !important;
+        background: #409EFF;
     }
     .el-menu-item.is-active {
-        outline: 0 !important;
-        color: #409EFF !important;
-        background: none !important;
+        outline: 0;
+        color: #409EFF;
     }
     .el-submenu__title:focus, .el-submenu__title:hover{
         color: #fff !important;
-        background: #409EFF !important;
+        background: #409EFF;
+    }
+    .el-menu-item-group__title {
+        padding: 0px 0 0px 20px;
+        line-height: normal;
+        font-size: 12px;
+        color: #909399;
     }
 </style>
 

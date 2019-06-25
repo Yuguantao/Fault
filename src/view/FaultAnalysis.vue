@@ -56,21 +56,21 @@
                     <div class="grid-content bg-purple">
                         <p>故障分析</p>
                         <img src="../assets/index/computer2.png" alt="">
-                        <router-link tag="a" to="/analysis">点击进入</router-link>
+                        <router-link tag="a" to="/index">点击进入</router-link>
                     </div>
                 </el-col>
                 <el-col :span="8">
                     <div class="grid-content bg-purple">
                         <p>故障信息录入</p>
                         <img src="../assets/index/computer4.png" alt="">
-                        <router-link tag="a" class="normal" to="/faultInput">点击进入</router-link>
+                        <router-link tag="a" class="normal" to="/index">点击进入</router-link>
                     </div>
                 </el-col>
                 <el-col :span="8">
                     <div class="grid-content bg-purple">
                         <p>设备信息库</p>
                         <img src="../assets/index/computer5.png" alt="">
-                        <router-link tag="a" to= "/search" >点击进入</router-link>
+                        <router-link tag="a" to= "/index" >点击进入</router-link>
                     </div>
                 </el-col>
             </el-row>
@@ -82,7 +82,7 @@
 
 <script>
 export default {
-    name:"index",
+    name:"FaultAnalysis",
     data (){
         return{
             acc_permission:"",

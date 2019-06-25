@@ -8,13 +8,8 @@
             </el-aside>
             <el-main>
                 <div class="topBox clearfix">
-                    <div class="page-header">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="javascript:void(0);" class="cmsall">配件信息</a></li>
-                        </ul>
-                    </div>
+                    <vTabs></vTabs>
                 </div>
-    
                 <el-table :data="equipData" class="equipTable"
                         fixed
                         ref="multipleTable"

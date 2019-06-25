@@ -14,8 +14,6 @@ export default {
     },
     methods:{
         initWordSrc(){
-
-            //this.wordSrc = "https://view.officeapps.live.com/op/view.aspx?src="+sessionStorage.getItem("url");
             this.wordSrc = sessionStorage.getItem("url")
         }
     },

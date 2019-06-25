@@ -1,14 +1,10 @@
 <template>
     <div class="container-fluid container-box">
-        <vHead></vHead>
+ 
         <el-container class="container-fluid container-addEquipmentBox">
-            <el-aside style="width:200px;height:100%;margin-top:52px;">
-                <vNavMenu></vNavMenu>
-            </el-aside>
+
             <el-main class="addEquipmentBox modal-content">
-                <div class="topBox clearfix">
-                    <vTabs></vTabs>
-                </div>
+
                 <div class="modal-body equipmentBox">
                     <table width="99%" cellspacing="0" cellpadding="0">
                         <tbody><tr>
@@ -175,7 +171,6 @@
 
             </el-main>
         </el-container>       
-        <router-view></router-view>
     </div>
     
     
@@ -184,7 +179,7 @@
 <script>
 
 export default {
-    name:"addEquipment",
+    name:"addEquip1",
     data (){
         return{
             userName:"",

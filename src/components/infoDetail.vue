@@ -275,7 +275,7 @@
                     <div class="container-fluid" style="border-bottom: 2px dashed #ccc5c5;width:500px;">
                         <div class="basicInfoHead" style="position:relative;width:500px;height:400px;">
                             <span class="me-e">故障发生次数</span>
-                            <button style="position:absolute;top:0;right:0;" type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button style="position:absolute;top:0;right:0;" type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                             <div id="numCharts" style="width: 500px;height: 300px;"></div>                           
                         </div>
                     </div>   

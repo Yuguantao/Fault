@@ -20,7 +20,7 @@ export default {
 }
   #app{
       width:100%;
-      height:900px;
-      margin:90px auto 0;
+      height:990px;
+      margin:45px auto 0;
     }
 </style>

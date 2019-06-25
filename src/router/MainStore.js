@@ -1,4 +1,4 @@
-import store from "@/Store";
+import store from "@/store";
 import conf from './MainConf'
 import {Base64} from 'js-base64'
 
@@ -158,4 +158,3 @@ export default {
 	},
 	actions: {},
 }
-

@@ -8,11 +8,7 @@
             </el-aside>
             <el-main class="addEquipmentBox modal-content">
                 <div class="topBox clearfix">
-                    <div class="page-header">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="javascript:void(0);" class="cmsall">故障信息录入</a></li>
-                        </ul>
-                    </div>
+                    <vTabs></vTabs>
                 </div>
                 <div class="modal-body equipmentBox">
                     <table width="100%" cellspacing="0" cellpadding="0">

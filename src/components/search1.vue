@@ -1,15 +1,7 @@
 <template>
     <div class="container-fluid container-box">
-        <vHead></vHead>
-        <router-view></router-view>
         <el-container class="container-fluid fl">
-            <el-aside style="width:200px;height:100%;margin-top:52px;">
-                <vNavMenu></vNavMenu>
-            </el-aside>
             <el-main>
-                <div class="topBox clearfix">
-                    <vTabs></vTabs>
-                </div>
                 <ul class="fl parList">
                     <el-select v-model="systemValue" @change="gainModal" placeholder="请选择系统" style="width:30%;">
                         <el-option
@@ -46,7 +38,7 @@
                         ref="multipleTable"
                         tooltip-effect="dark"
                         style="width: 100%;cursor:pointer;color:#111;"
-                        height="650"
+                        height="610"
                         :row-style="tableRowStyle"
                         :header-cell-style="tableHeaderColor"
                         @row-click="openDetails">
@@ -294,7 +286,7 @@
 import { setTimeout } from 'timers';
 
 export default {
-    name:"search",
+    name:"search1",
     data (){
         return{
             userName:"",
