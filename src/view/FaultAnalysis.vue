@@ -81,6 +81,8 @@
 </template>
 
 <script>
+import config from '../router/MainConf'
+
 export default {
     name:"FaultAnalysis",
     data (){
@@ -106,7 +108,9 @@ export default {
                     value: '2',
                     label: '设备信息库'
                 }],
-            query1: ''
+            query1: '',
+            config:config,
+            menuList:[]
         }
     },
     mounted(){
@@ -141,7 +145,15 @@ export default {
             sessionStorage.setItem("keyword",this.searchInput)
             sessionStorage.setItem("query",this.query)
             sessionStorage.setItem("query1",this.query1)
-            this.$router.push({ path: '/fault' })
+            let item = {
+                            component: "fault",
+                            menuId: "2-1",
+                            title: "设备知识库"
+                        }
+            
+            this.openTab(item)
+            this.$router.push({ path: '/index' });
+            
         },
             get:function (event) {
                 if(event.keyCode==38||event.keyCode==40)return;
@@ -184,7 +196,14 @@ export default {
             searchValue(event){
                 $(".keywordBox").hide()
                 this.searchInput = event.target.innerText
-            }
+            },
+            initializeMemu () {
+                this.menuList = JSON.parse(JSON.stringify(this.config.menu))
+            },
+            openTab (item) {
+                this.$tab.open(item)
+                this.initializeMemu()
+            },
     }
 }
 </script>

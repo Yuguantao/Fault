@@ -27,7 +27,7 @@
   </div>
 </template>
 <script>
-import config from '../router/MainConf'
+import config from '../../router/MainConf'
 
 export default {
 	name:"index",
@@ -441,7 +441,7 @@ export default {
     z-index: 999;
   }
 
-  .fullRight .content11 {
+  .fullRight .content {
     width: 100vw;
     height: 100vh;
     overflow-y: scroll;
@@ -533,7 +533,7 @@ export default {
     color: #399CFF;
   }
 
-  .content1 {
+  .content {
     width: 100%;
     height: calc(100% - 46px);
     overflow-y: scroll;

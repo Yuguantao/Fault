@@ -285,6 +285,8 @@
 <script>
 import { setTimeout } from 'timers';
 
+import config from '../../router/MainConf'
+
 export default {
     name:"search1",
     data (){
@@ -311,7 +313,9 @@ export default {
             uuidValue:'',
             currentTotal: 0,
             pageSize:8,
-            currentPage:1             
+            currentPage:1,
+            menuList:[],
+            config:config             
         }
     },
     mounted(){
@@ -445,8 +449,12 @@ export default {
             }else if(column.target.nodeName =="INPUT"){
                 
             }else if(column.target.className == "el-icon-edit"||column.target.id == "lookMounting"){
-                sessionStorage.setItem("systemUuid",row.uuid);
-                this.$router.push({ path: '/mountings' })
+                let item = {
+                            component: "mountings",
+                            menuId: "1-2",
+                            title: "配件信息"
+                        }
+                this.openTab(item)
             }else{
                 sessionStorage.setItem("systemUuid",row.uuid);
                 sessionStorage.setItem("systemName",row.system+" > "+row.model+" > "+row.number);
@@ -654,12 +662,11 @@ export default {
         },
         addEquip(){
             let item = {
-                            component: "addEquip1",
-                            menuId: "1-2",
+                            component: "addEquip",
+                            menuId: "1-1",
                             title: "新增设备"
                         }
             this.openTab(item)
-            //this.$router.push({ path: '/addEquip1' })
         },
         getUuid(){
             let man_sys = this.systemValueM;
@@ -823,10 +830,10 @@ export default {
 </script>
 
 <style scoped>
-    @import "../../static/css/reset.css";
-    @import "../../static/css/index.css";
-    @import "../../static/css/voicePlus.css";
-    @import "../../static/css/UserManage.css";
+    @import "../../../static/css/reset.css";
+    @import "../../../static/css/index.css";
+    @import "../../../static/css/voicePlus.css";
+    @import "../../../static/css/UserManage.css";
 
 
     .container-fluid.index{

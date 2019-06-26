@@ -6,7 +6,7 @@
                         <img src="../../assets/login/login1.png" alt="" style="width:115px;height:115px;float:left;margin-right:10px;">
                         <router-link to= "/FaultAnalysis" style="display:block;font-size: 30px;color: #fff;float:left">故障数据库管理系统</router-link>
                     </div>
-                    <el-select v-model="query" style="width:120px;" v-if="$route.path != '/fault'">
+                    <el-select v-model="query" style="width:120px;" v-if="isShow != '2-1'&& $route.path != '/infoDetail'">
                         <el-option v-for="item in options" :key="item.value" :value="item.value" :label="item.label"></el-option>
                     </el-select>
                     <el-input
@@ -16,10 +16,10 @@
                         @keyup.native="get($event)"
                         @keydown.down.native="selectDown"
                         @keydown.up.native="selectUp"
-                        v-if="$route.path != '/fault'"
+                        v-if="isShow != '2-1'&& $route.path != '/infoDetail'"
                         clearable>
                     </el-input>
-                    <el-select v-model="systemValue" clearable  placeholder="请选择" style="width:125px;" v-if="$route.path != '/fault'">
+                    <el-select v-model="systemValue" clearable  placeholder="请选择" style="width:125px;" v-if="isShow != '2-1'&& $route.path != '/infoDetail'">
                             <el-option
                         v-for="item in systemOptions"
                         :key="item.value"
@@ -27,8 +27,8 @@
                         :value="item.value">
                         </el-option>
                     </el-select>
-                    <el-button type="primary" @click="searchKeyword" v-if="$route.path != '/fault'" style="font-size:16px;width:120px;">搜　 索</el-button>
-                    <ul v-if="$route.path != '/fault'" class="keywordBox" style="width:219px;position:absolute;overflow-x:hidden;overflow-y:auto;left: 460px;top: 58px;">
+                    <el-button type="primary" @click="searchKeyword" v-if="isShow != '2-1'&& $route.path != '/infoDetail'" style="font-size:16px;width:120px;">搜　 索</el-button>
+                    <ul v-if="isShow != '2-1'&& $route.path != '/infoDetail'" class="keywordBox" style="width: 220px;position: absolute;overflow: hidden auto;left: 539px;top: 76px;">
                         <li class="text-center" v-for ="(value,index) in myData" @click="searchValue($event)">
                             <span class=" textprimary" :class = "{gray:index==now}" style="display:block;padding-left:5px;color:#000;">{{value}}</span>
                         </li>
@@ -89,6 +89,8 @@
 
 <script>
     
+import config from '../../router/MainConf'
+
 export default {
     name:"",
     data (){
@@ -121,6 +123,8 @@ export default {
                 }],
             query: '1',
             timer:'',
+            config:config,
+            menuList:[]
             
         }
     },
@@ -129,6 +133,11 @@ export default {
         this.initSearchUser()
         this.timer = setInterval(this.initSearchUser, 10000);
     },
+    computed:{
+        isShow(){
+            return this.$store.getters.GetCurrentTabIndex;
+        }
+  },
     methods: {
         setUserName(){
             var self = this;
@@ -176,7 +185,13 @@ export default {
             sessionStorage.setItem("keyword",this.searchInput)
             sessionStorage.setItem("query",this.query)
             sessionStorage.setItem("query1",this.query1)
-            this.$router.push({ path: '/fault' })
+            let item = {
+                            component: "fault",
+                            menuId: "2-1",
+                            title: "设备知识库"
+                        }
+            this.openTab(item)
+            this.$router.push({ path: '/index' })
         },
         get:function (event) {
             if(event.keyCode==38||event.keyCode==40)return;
@@ -273,6 +288,13 @@ export default {
         tableRowStyle({ row, rowIndex }) {
             return 'background-color: #ccc'
         },
+        initializeMemu () {
+			this.menuList = JSON.parse(JSON.stringify(this.config.menu))
+        },
+        openTab (item) {
+			this.$tab.open(item)
+			this.initializeMemu()
+		},
     }
 }
 </script>

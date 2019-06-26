@@ -391,9 +391,9 @@ export default {
 </script>
 
 <style scoped>
-    @import "../../static/css/reset.css";
-    @import "../../static/css/index.css";
-    @import "../../static/css/voicePlus.css";
+    @import "../../../static/css/reset.css";
+    @import "../../../static/css/index.css";
+    @import "../../../static/css/voicePlus.css";
 
 
     .container-fluid.index{
