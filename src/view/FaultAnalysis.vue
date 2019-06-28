@@ -12,10 +12,10 @@
                             <span class="user" id="user"></span>
                             <span>　|</span>
                             <span class="out" @click="exitUser()">退出</span>
-                            <router-link to="/userManage" class="fr" id="useSet">
+                            <div @click="UserManage" class="fr" id="useSet" style="cursor:pointer;">
                                 <img src="../assets/index/useSet.png" width="20" height="23" class="fl" style="margin:14px 5px 0;">
                                 <span class="fl UserManage">配置</span>
-                            </router-link>
+                            </div>
                             
                         </div>
                     </div>
@@ -53,24 +53,24 @@
             <el-row :gutter="20">
 
                 <el-col :span="8">
-                    <div class="grid-content bg-purple">
+                    <div class="grid-content bg-purple" style="cursor:pointer;">
                         <p>故障分析</p>
                         <img src="../assets/index/computer2.png" alt="">
-                        <router-link tag="a" to="/index">点击进入</router-link>
+                        <a  @click="router(1)">点击进入</a>
                     </div>
                 </el-col>
                 <el-col :span="8">
-                    <div class="grid-content bg-purple">
+                    <div class="grid-content bg-purple" style="cursor:pointer;">
                         <p>故障信息录入</p>
                         <img src="../assets/index/computer4.png" alt="">
-                        <router-link tag="a" class="normal" to="/index">点击进入</router-link>
+                        <a  class="normal" @click="router(2)">点击进入</a>
                     </div>
                 </el-col>
                 <el-col :span="8">
-                    <div class="grid-content bg-purple">
+                    <div class="grid-content bg-purple" style="cursor:pointer;">
                         <p>设备信息库</p>
                         <img src="../assets/index/computer5.png" alt="">
-                        <router-link tag="a" to= "/index" >点击进入</router-link>
+                        <a  @click="router(3)">点击进入</a>
                     </div>
                 </el-col>
             </el-row>
@@ -138,10 +138,12 @@ export default {
 
         },
         exitUser(){
+            this.$store.state.changeColorFlag = true
             this.$router.push({ path: '/login' });
             sessionStorage.removeItem("user")
         },
         searchKeyword(){
+            this.$store.state.changeColorFlag = true
             sessionStorage.setItem("keyword",this.searchInput)
             sessionStorage.setItem("query",this.query)
             sessionStorage.setItem("query1",this.query1)
@@ -154,6 +156,15 @@ export default {
             this.openTab(item)
             this.$router.push({ path: '/index' });
             
+        },
+        UserManage(){
+            let item = {
+                            component: "userManage",
+                            menuId: "5-1",
+                            title: "实施人员管理"
+                        }
+            this.openTab(item)
+            this.$router.push({ path: '/index' })
         },
             get:function (event) {
                 if(event.keyCode==38||event.keyCode==40)return;
@@ -203,6 +214,33 @@ export default {
             openTab (item) {
                 this.$tab.open(item)
                 this.initializeMemu()
+            },
+            router(index){
+                
+                let item
+                if(index == 1){
+                    item = {
+                                    component: "analysis",
+                                    menuId: "4-1",
+                                    title: "故障综合分析"
+                                }
+                    
+                }else if(index == 2){
+                    item = {
+                                    component: "faultInput",
+                                    menuId: "3-1",
+                                    title: "故障信息录入"
+                                }
+                }else if(index == 3){
+                    item = {
+                                    component: "search",
+                                    menuId: "search",
+                                    title: "设备信息"
+                                }
+                }
+                this.openTab(item)
+                this.$store.state.changeColorFlag = true
+                this.$router.push({ path: '/index' })
             },
     }
 }

@@ -17,7 +17,7 @@
                                 <td width="100" class="item">设备选择</td>
                                 <td class="pl10" colspan="3">
                                         <div>
-                                            <el-select v-model="systemValue" @change="gainModal" placeholder="请选择系统" style="width:20%;">
+                                            <el-select v-model="systemValue" @change="gainModal" placeholder="请选择系统" style="width:20%;" filterable>
                                                 <el-option
                                                 :disabled="(acc_system.indexOf(item.label) >-1&&acc_permission != 0)||(acc_system.indexOf(item.label) <=-1&&acc_permission == 0)? false:true"
                                                 v-for="item in systemOptions"
@@ -26,7 +26,7 @@
                                                 :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="modalValue" @change="gainNumber" placeholder="请选择型号" style="width:20%;">
+                                            <el-select v-model="modalValue" @change="gainNumber" placeholder="请选择型号" style="width:20%;" filterable>
                                                 <el-option
                                                 v-for="item in modalOptions"
                                                 :key="item.value"
@@ -34,7 +34,7 @@
                                                 :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="numValue" @change="gainUuid" placeholder="请选择编号" style="width:20%;">
+                                            <el-select v-model="numValue" @change="gainUuid" placeholder="请选择编号" style="width:20%;" filterable>
                                                 <el-option
                                                 v-for="item in numOptions"
                                                 :key="item.value"

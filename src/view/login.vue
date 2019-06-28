@@ -91,7 +91,8 @@
                     sessionStorage.setItem("password","123");
                     sessionStorage.setItem("acc_permission","0");
                     sessionStorage.setItem("acc_system","");
-                    this.$router.push({ path: '/FaultAnalysis' })
+                    //this.$router.push({ path: '/FaultAnalysis' })
+                    this.$router.push({ path: '/index' })
                     return
                 }
                 var param = {
@@ -113,7 +114,8 @@
                         }else{
                             this.$store.state.whetherShow = true
                         }
-                        this.$router.push({ path: '/FaultAnalysis' })
+                        //this.$router.push({ path: '/FaultAnalysis' })
+                        this.$router.push({ path: '/index' })
                     }else{
                         alert("用户名密码错误！")
                     }

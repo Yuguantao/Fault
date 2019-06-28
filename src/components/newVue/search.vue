@@ -73,8 +73,8 @@
                                 <el-date-picker
                                     v-model="scope.row.createTime"
                                     type="datetime"
-                                    format="yyyy-MM-dd HH:mm:ss"
-                                    value-format="yyyy-MM-dd HH:mm:ss"
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd"
                                     placeholder="创建时间">
                                 </el-date-picker>
                             </template>

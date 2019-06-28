@@ -292,8 +292,8 @@ export default {
     width: 200px;
     height: 100%;
     display: block;
-    /*background: #fff;*/
-    background: #071526;
+    background: #fff;
+    /* background: rgb(84, 92, 100); */
     /*border-right: 1px solid #e6e6e6;*/
     overflow-y: scroll;
     overflow-x: hidden;

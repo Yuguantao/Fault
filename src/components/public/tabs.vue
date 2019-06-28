@@ -141,6 +141,10 @@ export default {
     overflow-y: scroll;
     box-sizing: border-box;
   }
+  .el-tabs__item.is-active{
+        background: #909399;
+        color:#fff;
+    }
 </style>
 
 

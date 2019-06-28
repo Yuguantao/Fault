@@ -9,7 +9,7 @@
                     <table width="99%" cellspacing="0" cellpadding="0">
                         <tbody><tr>
                             <td width="100" class="item">系统</td>
-                            <td class="pl10">
+                            <!-- <td class="pl10">
                                 <input type="text" class="form-control equipmentInput inputSystem" v-if="acc_permission == 0">
                                 <el-select v-model="systemValue" placeholder="请选择系统" v-else>
                                     <el-option
@@ -20,14 +20,35 @@
                                     :value="item.value">
                                     </el-option>
                                 </el-select>
+                            </td> -->
+                            <td class="pl10">
+                                <select class="form-control select-box" v-model="systemValue">
+                                    <option v-for="(item, index) in systemOptions" :key="index" :value="item.value">{{item.value}}</option>
+                                </select>
+                                <input type="text" class="input-box inputSystem" ref="inputBoxSys" :value="inputValueS" @input="changeValueS()">
                             </td>
+
                             <td class="item">型号</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput inputModel"></td>
+                            <!-- <td class="pl10"><input type="text" class="form-control equipmentInput inputModel"></td> -->
+                            <td class="pl10">
+                                <select class="form-control select-box" v-model="modalValue">
+                                    <option v-for="(item, index) in modalOptions" :key="index" :value="item.value">{{item.value}}</option>
+                                </select>
+                                <input type="text" class="input-box inputModel" ref="inputBoxM" :value="inputValueM" @input="changeValueM()">
+                            </td>
+                            
+
                         </tr>
 
                         <tr>
                             <td class="item">编号</td>
-                            <td class="pl10"><input type="text" class="form-control equipmentInput inputNumber">
+                            <!-- <td class="pl10"><input type="text" class="form-control equipmentInput inputNumber"> -->
+                            <td class="pl10">
+                                <select class="form-control select-box" v-model="numValue">
+                                    <option v-for="(item, index) in numOptions" :key="index" :value="item.value">{{item.value}}</option>
+                                </select>
+                                <input type="text" class="input-box inputNumber" style="top:69px;" ref="inputBoxN" :value="inputValueN" @input="changeValueN()">
+                            </td>
 
                             </td>
                             <td class="item">功能用途</td>
@@ -192,7 +213,53 @@ export default {
             acc_permission:'',
             acc_system:'',
             systemOptions:[],
-            systemValue:''
+            modalOptions:[],
+            numOptions:[],
+            systemValue:"",
+            modalValue:"",
+            numValue:"",
+
+        }
+    },
+    computed: {
+
+        // 获取select框中所选文本值
+        inputValueS () {
+            const self = this;
+            var value;
+            //遍历找到对应文本值
+
+                this.systemOptions.forEach(function (item, index) {
+                    if (item.value === self.systemValue) {
+                        value = item.value;
+                    }
+                });
+            this.gainModal()
+            return value;
+        },
+        inputValueM () {
+            const self = this;
+            var value;
+            //遍历找到对应文本值
+                this.modalOptions.forEach(function (item, index) {
+                    if (item.value === self.modalValue) {
+                        value = item.value;
+                    }
+                });
+            this.gainNumber()
+            return value;
+        },
+        inputValueN () {
+            const self = this;
+            var value;
+            //遍历找到对应文本值
+
+                this.numOptions.forEach(function (item, index) {
+                    if (item.value === self.numValue) {
+                        value = item.value;
+                    }
+                });
+            return value;
         }
     },
     mounted(){
@@ -201,6 +268,43 @@ export default {
         this.initSystem()
     },
     methods: {
+        changeValueS() {
+                    const self = this;
+                  
+                        var text = this.$refs.inputBoxSys.value;
+ 
+                        //遍历修改对应文本值
+                        this.systemOptions.forEach(function (item, index) {
+                            if (item.value === self.systemValue) {
+                                item.value = text;
+                            }
+                        });
+                },
+                changeValueM() {
+                    const self = this;
+                   
+                        var text = this.$refs.inputBoxM.value;
+ 
+                        //遍历修改对应文本值
+                        this.modalOptions.forEach(function (item, index) {
+                            if (item.value === self.modalValue) {
+                                item.value = text;
+                            }
+                        });
+                },
+                changeValueN() {
+                    const self = this;
+                
+                    var text = this.$refs.inputBoxN.value;
+
+                    //遍历修改对应文本值
+                    this.numOptions.forEach(function (item, index) {
+                        if (item.value === self.numValue) {
+                            item.value = text;
+                        }
+                    });
+                },
+
         setUserName(){
             var self = this;
             self.acc_permission = sessionStorage.getItem("acc_permission");
@@ -225,15 +329,17 @@ export default {
         },
         addEquipInput(){
             let param = new FormData()
-            let man_sys
-            if($(".inputSystem").val()){
-                man_sys = $(".inputSystem").val()
-            }else{
-                man_sys = this.systemValue
-            }
+            let man_sys = $(".inputSystem").val()
+            // if($(".inputSystem").val()){
+            //     man_sys = $(".inputSystem").val()
+            // }else{
+            //     man_sys = this.systemValue
+            // }
             
             let man_model = $(".inputModel").val()
             let man_num = $(".inputNumber").val()
+
+
             let man_porpuse = $(".inputUse").val()
             let man_qualifi  = ""
             let man_place = $(".inputPlace").val()
@@ -385,6 +491,57 @@ export default {
             })
 
         },
+        gainModal(){
+            let systemId = this.systemValue
+            let param = {
+                        "msg": {
+                                "man_sys": systemId
+                            }
+                        }
+            this.$axios.post('FaultDBManage/searchinfo/',param,                
+            ).then(function(response){
+                this.modalOptions  = []
+                this.numOptions = []
+                if(response.data.msg.length>0){
+                    var modalArr = response.data.msg
+    
+                    for(var i = 0;i<modalArr.length;i++){                           
+                        var temp = {}
+                        temp.label = modalArr[i]
+                        temp.value = modalArr[i]
+                        
+                        this.modalOptions.push(temp)
+                    }
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+        },
+        gainNumber(){
+            let systemId = this.systemValue
+            let modalId = this.modalValue
+            let param = {
+                        "msg": {
+                                "man_sys": systemId,
+                                "man_model": modalId
+                            }
+                        }
+            this.$axios.post('FaultDBManage/searchinfo/',param,                
+            ).then(function(response){
+                this.numOptions = []
+                if(response.data.msg.length>0){
+                    var numberArr = response.data.msg
+                    for(var i = 0;i<numberArr.length;i++){                           
+                        var temp = {}
+                        temp.label = numberArr[i]
+                        temp.value = numberArr[i]
+                        this.numOptions.push(temp)
+                    }
+                }
+            }.bind(this)).catch(function (error) { 
+                console.log(error);
+            })
+        },
         
     }
 }
@@ -516,5 +673,29 @@ export default {
         border: 1px solid #ddd;
         border-bottom-color: transparent;
     }
+
+     .select-box {
+            width: 220px;
+            padding-left: 20px;
+        }
+ 
+        .input-box {
+                outline: none;
+                border: none;
+                position: absolute;
+                box-sizing: border-box;
+                border-right: none;
+                top: 21px;
+                width: 200px;
+                height: 36px;
+                padding-left: 23px;
+                margin-left: 3px;
+                outline: 0;
+        }
+        .input-box:focus{ 
+            outline: none;
+            border: 0 ;
+        }
+
 </style>
 

@@ -7,99 +7,6 @@
             <el-main>
                 <div class="first-page-content" style="min-width: 1170px;">
 					<div class="content-view-one">
-						<!-- <div class="page-view-1">
-							<div class="repair-status">
-								<div class="repair-status-li first-page-bg" style="margin-left:1%">
-									<img alt="" src="../../assets/analysis/报修设备.png">
-									<span class="repair-status-font" style="font-size: 14.07px;">未处理报修</span>
-									<span class="repair-status-number ndbxnum" style="font-size: 28.35px;">4</span>
-								</div>
-								<div class="repair-status-li scond-page-bg">
-									<img alt="" src="../../assets/analysis/报事报修.png">
-									<span class="repair-status-font" style="font-size: 14.07px;">今日报修</span>
-									<span class="repair-status-number jrbxnum" style="font-size: 28.35px;">1</span>
-								</div>
-								<div class="repair-status-li third-page-bg">
-									<img alt="" src="../../assets/analysis/故障_99.png">
-									<span class="repair-status-font" style="font-size: 14.07px;">故障数</span>
-									<span class="repair-status-number gznum" style="font-size: 28.35px;">10</span>
-								</div>
-								<div class="repair-status-li four-page-bg" style="margin-right:0px">
-									<img alt="" src="../../assets/analysis/设备.png">
-									<span class="repair-status-font" style="font-size: 14.07px;">设备完好率</span>
-									<span class="repair-status-number sbwhl" style="font-size: 28.35px;">78%</span>
-								</div>
-							</div>
-							
-							<ul class="device-value">
-								<li>
-									<span>
-										<img src="../../assets/analysis/del1.png">
-									</span>
-									<span class="device-value-content">
-										<div class="ybfnum" style="font-size: 28.35px;">1</div>
-										<div class="" style="font-size: 14.07px;">已报废数量</div>
-									</span>
-								</li>
-								<li>
-									<span>
-										<img src="../../assets/analysis/del3.png">
-									</span>
-									<span class="device-value-content">
-										<div class="bfjznum" style="font-size: 28.35px;">61,700</div>
-										<div class="" style="font-size: 14.07px;">报废价值</div>
-									</span>
-								</li>
-								<li>
-									<span>
-										<img src="../../assets/analysis/del2.png">
-									</span>
-									<span class="device-value-content">
-										<div class="jnbfnum" style="font-size: 28.35px;">1</div>
-										<div class="" style="font-size: 14.07px;">今年报废数量</div>
-									</span>
-								</li>
-								<li>
-									<span>
-										<img src="../../assets/analysis/del4.png">
-									</span>
-									<span class="device-value-content">
-										<div class="jnbfjznum" style="font-size: 28.35px;">61,700</div>
-										<div class="" style="font-size: 14.07px;">今年报废价值</div>
-									</span>
-								</li>
-							</ul>
-						</div>
-						<div class="page-view-2">
-							<div class="page-view-2-li">
-								<img src="../../assets/analysis/组-28.png">
-								<span class="device-value-content" style="margin-left:5%;">
-									<div class="dallnum" style="font-size: 28.35px;">45</div>
-									<div class="" style="font-size: 14.07px;">设备总数</div>
-								</span>
-							</div>
-							<div class="page-view-2-li">
-								<img src="../../assets/analysis/组-29.png">
-								<span class="device-value-content" style="margin-left:5%;">
-									<div class="dallprice" style="font-size: 28.35px;">44,811,129</div>
-									<div class="" style="font-size: 14.07px;">设备总价值</div>
-								</span>
-							</div>
-							<div class="page-view-2-li">
-								<img src="../../assets/analysis/组-30.png">
-								<span class="device-value-content" style="margin-left:5%;">
-									<div class="jndnum" style="font-size: 28.35px;">24</div>
-									<div class="" style="font-size: 14.07px;">今年新增设备</div>
-								</span>
-							</div>
-							<div class="page-view-2-li">
-								<img src="../../assets/analysis/组-31.png">
-								<span class="device-value-content" style="margin-left:5%;">
-									<div class="jnallprice" style="font-size: 28.35px;">6,523,288</div>
-									<div class="" style="font-size: 14.07px;">今年新增设备价值</div>
-								</span>
-							</div>
-						</div> -->
 						<div class="page-view-3" style="height: 398px;width: 47%;margin-right: 15px;">
 							<span class="eachrt-title">近一年月份新增设备趋势图</span>
 							<div id="repair-chargeMan" style="height: 398px; width: 100%; -webkit-tap-highlight-color: transparent; user-select: none;">
@@ -487,7 +394,8 @@ export default {
                     });                  
                 }else{
                     
-                }
+				}
+				
             }.bind(this)).catch(function (error) { 
                 console.log(error);
             })
@@ -556,7 +464,7 @@ export default {
                     });                  
                 }else{
                     
-                }
+				}
             }.bind(this)).catch(function (error) { 
                 console.log(error);
             })
@@ -640,7 +548,7 @@ export default {
                     });                  
                 }else{
                     
-                }
+				}
             }.bind(this)).catch(function (error) { 
                 console.log(error);
             })

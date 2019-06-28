@@ -577,7 +577,7 @@ export default {
         margin: 450px auto 0;
     }
     .userArray{
-        height: 450px;
+        height: 550px;
     }
 
     .icheckbox_minimal-blue,.icheckbox_minimal-blue.checked{display: inline-block; top: 3px;}

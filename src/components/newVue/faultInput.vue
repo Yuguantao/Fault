@@ -1,7 +1,6 @@
 <template>
     <div class="container-fluid container-box">
         <el-container class="container-fluid container-addEquipmentBox" >
-
             <el-main class="addEquipmentBox modal-content">
                 <div class="modal-body equipmentBox">
                     <table width="100%" cellspacing="0" cellpadding="0">
@@ -10,7 +9,7 @@
                                 <td width="100" class="item">设备选择</td>
                                 <td class="pl10" colspan="3">
                                         <div>
-                                            <el-select v-model="systemValue" @change="gainModal" placeholder="请选择系统" style="width:20%;">
+                                            <el-select v-model="systemValue" @change="gainModal" placeholder="请选择系统" style="width:20%;" filterable>
                                                 <el-option
                                                 :disabled="(acc_system.indexOf(item.label) >-1&&acc_permission != 0)||(acc_system.indexOf(item.label) <=-1&&acc_permission == 0)? false:true"
                                                 v-for="item in systemOptions"
@@ -19,7 +18,7 @@
                                                 :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="modalValue" @change="gainNumber" placeholder="请选择型号" style="width:20%;">
+                                            <el-select v-model="modalValue" @change="gainNumber" placeholder="请选择型号" style="width:20%;" filterable>
                                                 <el-option
                                                 v-for="item in modalOptions"
                                                 :key="item.value"
@@ -27,7 +26,7 @@
                                                 :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="numValue" @change="gainUuid" placeholder="请选择编号" style="width:20%;">
+                                            <el-select v-model="numValue" @change="gainUuid" placeholder="请选择编号" style="width:20%;" filterable>
                                                 <el-option
                                                 v-for="item in numOptions"
                                                 :key="item.value"
@@ -67,7 +66,7 @@
                                         :value="item.value">
                                         </el-option>
                                     </el-select>
-                                    <el-button type="primary" icon="el-icon-edit" data-toggle="modal" data-target="#addMounting" v-if="acc_permission != 2"></el-button>
+                                    <el-button type="primary" icon="el-icon-edit" @click="dialogFormVisible = true" v-if="acc_permission != 2"></el-button>
                                 </td>
                                 <td class="item">故障现象</td>
                                 <td class="pl10"><input type="text" class="form-control equipmentInput fau_phen">
@@ -169,39 +168,35 @@
                     </div>
 
                 </div>
-                <div class="modal fade" id="addMounting" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                    <div class="modal-dialog userBox">
-                        <div class="modal-content modal-content1">
-                            <div class="modal-body">
-                                <table width="100%" cellspacing="0" cellpadding="0">
-                                    <tbody>
-                                        <tr>
-                                            <td width="100" class="item">系统</td>
-                                            <td class="pl10">
-                                                <el-select v-model="systemValueT" placeholder="请选择系统" style="">
-                                                    <el-option
-                                                    v-for="item in systemOptionsT"
-                                                    :key="item.value"
-                                                    :label="item.label"
-                                                    :value="item.value">
-                                                    </el-option>
-                                                </el-select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="item">故障类型</td>
-                                            <td class="pl10"><input type="text" class="form-control" id="add_num"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="modal-footer" style="text-align:center;">
-                                <button type="button" class="btn btn-primary" id="newUser_add" @click="addMounting">确认</button>
-                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            </div>
+                <el-dialog title="新增故障类型" :visible.sync="dialogFormVisible">
+                        <table width="50%" cellspacing="0" cellpadding="0" style="margin:0 auto;">
+                            <tbody>
+                                <tr style="margin-bottom:15px;">
+                                    <td width="100" class="item">系统</td>
+                                    <td class="pl10">
+                                        <el-select v-model="systemValueT" placeholder="请选择系统" style="">
+                                            <el-option
+                                            v-for="item in systemOptionsT"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                            </el-option>
+                                        </el-select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="item">故障类型</td>
+                                    <td class="pl10">
+                                        <el-input v-model="faultName" type="text" style="width:220px;" ></el-input>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="dialogFormVisible = false">取 消</el-button>
+                            <el-button type="primary" @click="addMounting">确 定</el-button>
                         </div>
-                    </div>
-                </div>
+                </el-dialog>
             </el-main>
         </el-container>
         <router-view></router-view>
@@ -233,6 +228,8 @@ export default {
             faultTypeOptions:[],
             systemOptionsT:[],
             systemValueT:"",
+            dialogFormVisible:false,
+            faultName:''
         }
     },
     mounted(){
@@ -514,12 +511,10 @@ export default {
                 this.faultTypeOptions = []
                 if(response.data.msg.length>0){
                     var faultTypeArr = response.data.msg
-    
                     for(var i = 0;i<faultTypeArr.length;i++){                           
                         var temp = {}
                         temp.label = faultTypeArr[i].fields.fatp_name
                         temp.value = faultTypeArr[i].fields.fatp_name
-                        
                         this.faultTypeOptions.push(temp)
                     }
                 }
@@ -551,9 +546,10 @@ export default {
 
         },
         addMounting(){
+            
             var self = this;
             let fit_name  = this.systemValueT
-            let fit_num   = $("#add_num").val()
+            let fit_num   = this.faultName
 
             let param = {
                     "msg": [
@@ -571,7 +567,7 @@ export default {
             ).then(function(response){
                 if(response.data.msg == "true"){
                     alert("故障类型新增成功！")
-                    $("#addMounting").modal('hide');
+                    this.dialogFormVisible = false
                     this.getFaultType() 
                 }else{
                     alert("故障类型新增失败！")

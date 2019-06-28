@@ -1,5 +1,7 @@
 import store from '@/store/index'
 
+let echarts = require('echarts/lib/echarts')
+
 const RouterMethods = Object.create(null)
 
 // 处理 push 和 replace 2个接口的附带参数
@@ -41,7 +43,11 @@ RouterMethods.install = function (Vue, options) {
   Vue.prototype.$tab = {
     // 设置当前显示的 tab name
     showTab(data) {
+      // if(data == "4-1"){
+      //   echarts.init(document.getElementById('repair-chargeMan'))
+      // }
       store.commit('SetCurrentTabIndex', data)
+      
     },
     // 打开新的 tab  项
     open (item) {

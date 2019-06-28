@@ -9,8 +9,10 @@ route.install = function (vue) {
 	vue.component('addEquip', (resolve) => {require.ensure([], ()=>resolve(require('@/components/newVue/addEquip.vue')), 'addEquip')})
 	vue.component('analysis', (resolve) => {require.ensure([], ()=>resolve(require('@/components/newVue/analysis.vue')), 'analysis')})
 	vue.component('faultInput', (resolve) => {require.ensure([], ()=>resolve(require('@/components/newVue/faultInput.vue')), 'faultInput')})
+	vue.component('searchFault', (resolve) => {require.ensure([], ()=>resolve(require('@/components/newVue/searchFault.vue')), 'searchFault')})
 	vue.component('fault', (resolve) => {require.ensure([], ()=>resolve(require('@/components/newVue/fault.vue')), 'fault')})
 	vue.component('userManage', (resolve) => {require.ensure([], ()=>resolve(require('@/components/newVue/userManage.vue')), 'userManage')})
+	vue.component('faultAnalysis', (resolve) => {require.ensure([], ()=>resolve(require('@/components/newVue/faultAnalysis.vue')), 'faultAnalysis')})
 }
 
 

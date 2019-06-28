@@ -4,7 +4,7 @@
                 <div class="head">
                     <div class="headLeft fl" style="margin-right:20px;">
                         <img src="../../assets/login/login1.png" alt="" style="width:115px;height:115px;float:left;margin-right:10px;">
-                        <router-link to= "/FaultAnalysis" style="display:block;font-size: 30px;color: #fff;float:left">故障数据库管理系统</router-link>
+                        <router-link to= "/index" style="display:block;font-size: 30px;color: #fff;float:left">故障数据库管理系统</router-link>
                     </div>
                     <el-select v-model="query" style="width:120px;" v-if="isShow != '2-1'&& $route.path != '/infoDetail'">
                         <el-option v-for="item in options" :key="item.value" :value="item.value" :label="item.label"></el-option>
@@ -40,16 +40,20 @@
                             <span class="user" id="user"></span>
                             <span>　|</span>
                             <span class="out" @click="exitUser()">退出</span>
-                            <router-link to="/userManage" class="fr" id="useSet">
+                            <div @click="UserManage" class="fr" id="useSet" style="cursor:pointer;">
                                 <img src="../../assets/index/useSet.png" width="20" height="23" class="fl" style="margin:44px 5px 0;">
                                 <span class="fl UserManage" style="line-height:115px;">配置</span>
-                            </router-link>
+                            </div>
                             
                         </div>
                     </div>
                     <div class="headLeft fr gotofu" style="line-height:115px;position:relative;margin-right:50px;">
-                        <span class="btn-home"></span>
+                        <span class="btn-home" @click="changeC"></span>
                         <div class="goToFu">换肤</div>
+                        <ul class="skin">
+                            <li @click="changeColor(1)"><span></span></li>
+                            <li @click="changeColor(2)"><span></span></li>
+                        </ul>
                     </div>
                     <div class="headLeft fr gotohome" style="line-height:115px;position:relative;margin-right:20px;">
                         <router-link tag="a" class="btn-home" to= "/FaultAnalysis"></router-link>
@@ -124,8 +128,7 @@ export default {
             query: '1',
             timer:'',
             config:config,
-            menuList:[]
-            
+            menuList:[],
         }
     },
     mounted(){
@@ -189,6 +192,15 @@ export default {
                             component: "fault",
                             menuId: "2-1",
                             title: "设备知识库"
+                        }
+            this.openTab(item)
+            this.$router.push({ path: '/index' })
+        },
+        UserManage(){
+            let item = {
+                            component: "userManage",
+                            menuId: "5-1",
+                            title: "实施人员管理"
                         }
             this.openTab(item)
             this.$router.push({ path: '/index' })
@@ -294,8 +306,34 @@ export default {
         openTab (item) {
 			this.$tab.open(item)
 			this.initializeMemu()
-		},
-    }
+        },
+        changeC(){
+            if($(".skin").css("display") == "none"){
+                $(".skin").css("display","block")
+            }else{
+                $(".skin").css("display","none")
+            }
+            
+            //$(".navbar").css("background-color","rgb(84, 92, 100)")
+        },
+        changeColor(index){
+            if(index == 1){
+                $(".navbar").css("background-color","#449CCC")
+                $(".left").css("background-color","#fff")
+                $(".el-tabs__item,.is-active").css({"background": "#fff;","color":"#449CCC;"})
+                this.$store.state.changeColorFlag = true
+                //this.$store.getters.setColorFlag
+            }else if(index == 2){
+                $(".navbar").css("background-color","rgb(84, 92, 100)")
+                $(".left").css("background-color","rgb(84, 92, 100)")
+                $(".el-tabs__item,.is-active").css({"background": "#909399;","color":"#fff;"})
+
+                this.$store.state.changeColorFlag = false
+                //this.$store.getters.setColorFlag
+            }
+        }
+    },
+    
 }
 </script>
 
@@ -309,6 +347,7 @@ export default {
         height: 115px;
         line-height: 115px;
         background: #449CCC;
+        /* background: rgb(84, 92, 100) */
     }
     .content h4{font-size:16px; line-height:32px; padding-left:10px; width:100px; float:left; margin-bottom:20px;}
     .noData1,.noData2{font-size:20px; display:none; text-align:center; margin-top:150px;}
@@ -398,13 +437,14 @@ export default {
             background: #f0f0f0;
             padding: 0px 5px;
             text-align: center;
-            z-index: 9999999999;
+            z-index: 100;
             width: 45px;
             height: 20px;
             line-height: 20px;
             display: none;
             font-size: 12px;
             left: -13px;
+            top:85px;
             
         }
         .gotohome:hover>.goToHome{
@@ -416,6 +456,39 @@ export default {
         .head{
             height: 115px;
             line-height: 115px;
+        }
+        .skin{
+            position: absolute;
+            right: -22px;
+            top: 74px;
+            padding: 3px;
+            width: 78px;
+            background-color: #fff;
+            box-shadow: darkgrey 1px 2px 15px 0px;
+            display: none;
+            z-index: 101;
+        }
+        .skin li{
+            float: left;
+            line-height: 0px;
+            padding: 2px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+        .skin li span{
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .skin li:nth-child(1) span {
+            background: #449CCC;
+        }
+        .skin li+li {
+            margin-left: 2px;
+        }
+        .skin li:nth-child(2) span {
+            background: #23283F;
         }
 </style>
 

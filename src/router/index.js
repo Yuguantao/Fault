@@ -17,7 +17,7 @@ import audio from '@/components/audio'
 import header from '@/components/public/header'
 import mountings from '@/components/mountings'
 import analysis from '@/components/analysis'
-import index from '@/components/index'
+import index from '@/components/newVue/index'
 import search1 from '@/components/search1'
 import addEquip1 from '@/components/addEquip1'
 

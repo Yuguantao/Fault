@@ -7,9 +7,10 @@ export default {
 			icon: 'el-icon-menu',   // 一级菜单 icon
 			menuId: '1',                // 索引(必须唯一，是字符串)
 			sub: [                      // 子菜单(二级菜单)
+				{title: '设备信息', component: 'search', menuId: 'search'},
 				{title: '新增设备', component: 'addEquip', menuId: '1-1'},
 				{title: '配件信息', component: 'mountings', menuId: '1-2'},
-				{title: '设备信息', component: 'search', menuId: 'search'}
+				
 			]
 		},
 		{
@@ -36,8 +37,13 @@ export default {
 				},
 				{
 					title: '故障信息查询',      // 菜单名称
-					component:'faultInput',    // 点击菜单打开的组件名称
+					component:'searchFault',    // 点击菜单打开的组件名称
 					menuId: '3-2'           // 索引 (用于识别当前打开的tab,必须唯一，是字符串)
+				},
+				{
+					title: '故障信息汇总分析',      // 菜单名称
+					component:'faultAnalysis',    // 点击菜单打开的组件名称
+					menuId: '3-3'           // 索引 (用于识别当前打开的tab,必须唯一，是字符串)
 				}
 			]
 		},

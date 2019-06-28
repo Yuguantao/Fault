@@ -45,7 +45,13 @@
                     <span slot="title" >帮助</span>
                 </el-menu-item>
                 </el-menu> -->
-                <el-menu :default-active="currentTabIndex" :default-openeds="spreadedMenus"  background-color="#fff">
+                <el-menu :default-active="currentTabIndex" :default-openeds="spreadedMenus" 
+                    
+                    @open="handleOpen"
+                    @close="handleClose"
+                    :background-color="count ? '':'#545c64'"
+                    :text-color="count ? '':'#fff'"
+                    :active-text-color="count ? '':'#ffd04b'">
                     <el-submenu v-for="(item,index) in menuList" :key="index" :index="item.menuId">
                     <template slot="title">
                         <i :class="item.icon"></i>
@@ -54,6 +60,7 @@
                     <el-menu-item-group>
                         <el-menu-item v-for="(subItem,subIndex) in item.sub"
                                     :key="subIndex"
+                                    :disabled = "ifnotpermission(subItem.menuId)"
                                     @click="openTab(subItem)"
                                     :index="subItem.menuId">
                         {{subItem.title}}
@@ -78,7 +85,8 @@ export default {
             acc_permission:'',
             menuList:[],
             config: config, 
-            spreadedMenus: [], 
+            spreadedMenus: [],
+            colorFlag:"",
         }
     },
     computed: {
@@ -94,7 +102,11 @@ export default {
         // 主页 tab 的 menuId
         homeTabMenuId () {
                 return this.$store.getters.GetHomeTabMenuId
+        },   
+        count () {
+            return this.$store.state.changeColorFlag
         }
+  
 	},
     mounted(){
         this.setUserName()
@@ -122,7 +134,22 @@ export default {
         openTab (item) {
 			this.$tab.open(item)
 			this.initializeMemu()
-		},
+        },
+        ifnotpermission(id){
+            let ifnot;
+            if(id == "1-1"){
+                ifnot = this.acc_permission == 2? true:false; 
+            }else if(id == "5-1"){
+                ifnot = this.acc_permission == 2? true:false;
+            }else{
+                ifnot = false
+            }
+
+            return ifnot
+        },
+        init(){
+            this.colorFlag = this.$store.state.setColorFlag
+        }
     }
 }
 </script>
@@ -131,7 +158,7 @@ export default {
     .navMenu{
         float: left;
         height: 100%;
-        width: 200px;
+        width: 201px;
         transition: all 0.3s;
     }
 
@@ -154,6 +181,8 @@ export default {
         font-size: 12px;
         color: #909399;
     }
+
+    
 </style>
 
 
