@@ -8,7 +8,7 @@
                 <div class="modal-body equipmentBox">
                     <table width="99%" cellspacing="0" cellpadding="0">
                         <tbody><tr>
-                            <td width="100" class="item">系统</td>
+                            <td width="100" class="item">设备名称</td>
                             <!-- <td class="pl10">
                                 <input type="text" class="form-control equipmentInput inputSystem" v-if="acc_permission == 0">
                                 <el-select v-model="systemValue" placeholder="请选择系统" v-else>
@@ -28,7 +28,7 @@
                                 <input type="text" class="input-box inputSystem" ref="inputBoxSys" :value="inputValueS" @input="changeValueS()">
                             </td>
 
-                            <td class="item">型号</td>
+                            <td class="item">设备型号</td>
                             <!-- <td class="pl10"><input type="text" class="form-control equipmentInput inputModel"></td> -->
                             <td class="pl10">
                                 <select class="form-control select-box" v-model="modalValue">
@@ -41,7 +41,7 @@
                         </tr>
 
                         <tr>
-                            <td class="item">编号</td>
+                            <td class="item">设备编号</td>
                             <!-- <td class="pl10"><input type="text" class="form-control equipmentInput inputNumber"> -->
                             <td class="pl10">
                                 <select class="form-control select-box" v-model="numValue">

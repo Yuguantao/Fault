@@ -3,8 +3,8 @@
             <div class="container-fluid" style="height:115px;line-height:115px;">
                 <div class="head">
                     <div class="headLeft fl" style="margin-right:20px;">
-                        <img src="../../assets/login/login1.png" alt="" style="width:115px;height:115px;float:left;margin-right:10px;">
-                        <router-link to= "/index" style="display:block;font-size: 30px;color: #fff;float:left">故障数据库管理系统</router-link>
+                        <img src="../../assets/login/logoB.png" alt="" style="height:115px;float:left;margin-right:10px;">
+                        <!-- <router-link to= "/index" style="display:block;font-size: 30px;color: #fff;float:left">故障数据库管理系统</router-link> -->
                     </div>
                     <el-select v-model="query" style="width:120px;" v-if="isShow != '2-1'&& $route.path != '/infoDetail'">
                         <el-option v-for="item in options" :key="item.value" :value="item.value" :label="item.label"></el-option>
