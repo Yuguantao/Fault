@@ -82,10 +82,14 @@
                             <el-table-column fixed="right" label="操作" width="160" align="center">
                                 <template slot-scope="scope">
                                     <el-button
-                                    size="mini" @click="editUserBox(scope.row)" data-toggle="modal" data-target="#editBox">编辑</el-button>
+                                    size="mini" @click="editUserBox(scope.row)" data-toggle="modal" data-target="#editBox"
+                                    :disabled = "ifnotpermission(scope.row)"
+                                    >编辑</el-button>
                                     <el-button
                                     size="mini"
-                                    type="danger" @click="deleteUser(scope.row)">删除</el-button>
+                                    type="danger" @click="deleteUser(scope.row)"
+                                    :disabled = "ifnotpermission(scope.row)"
+                                    >删除</el-button>
                                 </template>
                             </el-table-column>
                     </el-table>
@@ -560,6 +564,17 @@ export default {
                     })    
                 }
             }
+        },
+        ifnotpermission(id){
+            let ifnot;
+            let userName = sessionStorage.getItem("user");
+
+            if(id.name != userName && this.acc_permission != 0){
+                ifnot = true
+            }else{
+                ifnot = false
+            }
+            return ifnot
         },
 
     }

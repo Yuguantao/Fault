@@ -8,7 +8,7 @@
                 <div class="modal-body equipmentBox">
                     <table width="99%" cellspacing="0" cellpadding="0">
                         <tbody><tr>
-                            <td width="100" class="item">设备名称</td>
+                            <td width="100" class="item">系统</td>
                             <!-- <td class="pl10">
                                 <input type="text" class="form-control equipmentInput inputSystem" v-if="acc_permission == 0">
                                 <el-select v-model="systemValue" placeholder="请选择系统" v-else>
@@ -22,32 +22,32 @@
                                 </el-select>
                             </td> -->
                             <td class="pl10">
-                                <select class="form-control select-box" v-model="systemValue">
+                                <select class="form-control select-box" v-model="systemValue" @change="gainModal">
                                     <option v-for="(item, index) in systemOptions" :key="index" :value="item.value">{{item.value}}</option>
                                 </select>
-                                <input type="text" class="input-box inputSystem" ref="inputBoxSys" :value="inputValueS" @input="changeValueS()">
+                                <el-input type="text" class="input-box inputSystem" ref="inputBoxSys"  @input="changeValueS()" :value="inputValueS" v-model="systemValue"></el-input>
                             </td>
 
-                            <td class="item">设备型号</td>
+                            <td class="item">型号</td>
                             <!-- <td class="pl10"><input type="text" class="form-control equipmentInput inputModel"></td> -->
                             <td class="pl10">
-                                <select class="form-control select-box" v-model="modalValue">
+                                <select class="form-control select-box" v-model="modalValue" @change="gainNumber">
                                     <option v-for="(item, index) in modalOptions" :key="index" :value="item.value">{{item.value}}</option>
                                 </select>
-                                <input type="text" class="input-box inputModel" ref="inputBoxM" :value="inputValueM" @input="changeValueM()">
+                                <el-input type="text" class="input-box inputModel" ref="inputBoxM"  :value="inputValueM" @input="changeValueM()" v-model="modalValue"></el-input>
                             </td>
                             
 
                         </tr>
 
                         <tr>
-                            <td class="item">设备编号</td>
+                            <td class="item">编号</td>
                             <!-- <td class="pl10"><input type="text" class="form-control equipmentInput inputNumber"> -->
                             <td class="pl10">
                                 <select class="form-control select-box" v-model="numValue">
                                     <option v-for="(item, index) in numOptions" :key="index" :value="item.value">{{item.value}}</option>
                                 </select>
-                                <input type="text" class="input-box inputNumber" style="top:69px;" ref="inputBoxN" :value="inputValueN" @input="changeValueN()">
+                                <el-input type="text" class="input-box inputNumber" style="top:69px;" ref="inputBoxN" :value="inputValueN" @input="changeValueN()" v-model="numValue"></el-input>
                             </td>
 
                             </td>
@@ -218,49 +218,50 @@ export default {
             systemValue:"",
             modalValue:"",
             numValue:"",
+            inputValueS:''
 
         }
     },
     computed: {
 
-        // 获取select框中所选文本值
-        inputValueS () {
-            const self = this;
-            var value;
-            //遍历找到对应文本值
+       // 获取select框中所选文本值
+        // inputValueS () {
+        //     const self = this;
+        //     var value;
+        //     //遍历找到对应文本值
 
-                this.systemOptions.forEach(function (item, index) {
-                    if (item.value === self.systemValue) {
-                        value = item.value;
-                    }
-                });
-            this.gainModal()
-            return value;
-        },
-        inputValueM () {
-            const self = this;
-            var value;
-            //遍历找到对应文本值
-                this.modalOptions.forEach(function (item, index) {
-                    if (item.value === self.modalValue) {
-                        value = item.value;
-                    }
-                });
-            this.gainNumber()
-            return value;
-        },
-        inputValueN () {
-            const self = this;
-            var value;
-            //遍历找到对应文本值
+        //         this.systemOptions.forEach(function (item, index) {
+        //             if (item.value === self.systemValue) {
+        //                 value = item.value;
+        //             }
+        //         });
+        //     this.gainModal()
+        //     return value;
+        // },
+        // inputValueM () {
+        //     const self = this;
+        //     var value;
+        //     //遍历找到对应文本值
+        //         this.modalOptions.forEach(function (item, index) {
+        //             if (item.value === self.modalValue) {
+        //                 value = item.value;
+        //             }
+        //         });
+        //     this.gainNumber()
+        //     return value;
+        // },
+        // inputValueN () {
+        //     const self = this;
+        //     var value;
+        //     //遍历找到对应文本值
 
-                this.numOptions.forEach(function (item, index) {
-                    if (item.value === self.numValue) {
-                        value = item.value;
-                    }
-                });
-            return value;
-        }
+        //         this.numOptions.forEach(function (item, index) {
+        //             if (item.value === self.numValue) {
+        //                 value = item.value;
+        //             }
+        //         });
+        //     return value;
+        // }
     },
     mounted(){
         this.setUserName(),
@@ -271,14 +272,14 @@ export default {
         changeValueS() {
                     const self = this;
                   
-                        var text = this.$refs.inputBoxSys.value;
- 
-                        //遍历修改对应文本值
-                        this.systemOptions.forEach(function (item, index) {
-                            if (item.value === self.systemValue) {
-                                item.value = text;
-                            }
-                        });
+                    var text = this.$refs.inputBoxSys.value;
+
+                    //遍历修改对应文本值
+                    this.systemOptions.forEach(function (item, index) {
+                        if (item.value === self.systemValue) {
+                            item.value = text;
+                        }
+                    });
                 },
                 changeValueM() {
                     const self = this;
@@ -329,16 +330,20 @@ export default {
         },
         addEquipInput(){
             let param = new FormData()
-            let man_sys = $(".inputSystem").val()
+            
             // if($(".inputSystem").val()){
             //     man_sys = $(".inputSystem").val()
             // }else{
             //     man_sys = this.systemValue
             // }
             
-            let man_model = $(".inputModel").val()
-            let man_num = $(".inputNumber").val()
+            //let man_sys = $(".inputSystem").val()  20190806 注释
+            // let man_model = $(".inputModel").val()
+            // let man_num = $(".inputNumber").val()
 
+            let man_sys = this.systemValue
+            let man_model = this.modalValue
+            let man_num = this.numValue
 
             let man_porpuse = $(".inputUse").val()
             let man_qualifi  = ""
@@ -516,6 +521,12 @@ export default {
             }.bind(this)).catch(function (error) { 
                 console.log(error);
             })
+            if (this.modalValue) {
+                this.modalValue = '';
+            }
+            if (this.numValue) {
+                this.numValue = '';
+            }
         },
         gainNumber(){
             let systemId = this.systemValue
@@ -541,6 +552,9 @@ export default {
             }.bind(this)).catch(function (error) { 
                 console.log(error);
             })
+            if (this.numValue) {
+                this.numValue = '';
+            }
         },
         
     }
@@ -696,6 +710,15 @@ export default {
             outline: none;
             border: 0 ;
         }
-
 </style>
+<style>
+    .inputSystem input.el-input__inner,
+    .inputModel input.el-input__inner,
+    .inputNumber input.el-input__inner{
+            border: none;
+            height: 35px;
+            padding: 0;
+        }
+</style>
+
 

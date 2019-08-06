@@ -34,7 +34,7 @@
                 <div class="container-fluid searchResult" style="position:absolute;top:120px;left:0;">
                     <div class="container-fluid" style="height:570px;overflow-x:hidden;overflow-y:auto;background-color:#fff;">
                         <ul class="part_b" >
-                            <li v-for="(data,index) in Htems" v-if = "Htems.length != 0" style="width:100%;text-align: left;">
+                            <li v-for="(data,index) in Htems" v-if = "Htems.length != 0 && videoTable.length == 0" style="width:100%;text-align: left;">
                                 <h4 style="text-align: left;"><b>设备名称：</b>{{data.fields.man_sys}}-{{data.fields.man_model}}-{{data.fields.man_num}}</h4>
                                 <p class="describe c66"><b>功能用途：</b>{{data.fields.man_porpuse}}</p>
                                 <p class="describe c66"><b>存放地点：</b>{{data.fields.man_place}}</p>
@@ -47,7 +47,7 @@
                                     <span class="c66"><b>厂家联系人：</b></span><span class="c33 mr15">{{data.fields.man_mfrspersion}}</span>
                                 </div>
                             </li>
-                            <li v-for="(data,index) in items" v-if = "items.length != 0" style="width:100%;text-align: left;">
+                            <li v-for="(data,index) in items" v-if = "items.length != 0 && videoTable.length == 0" style="width:100%;text-align: left;">
                                 <h4 style="text-align: left;"><b>故障现象：</b>{{data.fields.fau_phen}}</h4>
                                 <p class="describe c66"><b>故障描述：</b>{{data.fields.fau_desc}}</p>
                                 <p class="describe c66"><b>故障原因：</b>{{data.fields.fau_reason}}</p>
@@ -59,7 +59,26 @@
                                 </div>
                             </li>
 
-                            <span v-else-if = "items.length == 0">暂无数据！</span>
+                            <el-table   :data="videoTable"
+                                        ref="multipleTable"
+                                        tooltip-effect="dark"
+                                        style="cursor:pointer"
+                                        height="500" 
+                                        v-if= "systemValue == 3 && videoTable.length != 0"> 
+                                    <el-table-column fixed show-overflow-tooltip sortable prop="data" label="时间" width="190" align="center"></el-table-column>
+                                    <el-table-column fixed show-overflow-tooltip prop="sysName" label="系统名称"  width="400" align="center"></el-table-column>
+                                    <el-table-column fixed show-overflow-tooltip prop="name" label="文件名称" width="400" align="center"></el-table-column>
+                                    <el-table-column fixed show-overflow-tooltip prop="url" label="路径" v-if="false" width="400" align="center"></el-table-column>
+                                    <el-table-column fixed="right" width="150" align="center" label="操作">
+                                        <template slot-scope="scope">
+                                            <el-button
+                                                v-model="scope.$index"
+                                                @click="playVideo(scope.$index, scope.row)"
+                                                type="text" size="small" class="handleButton">查看</el-button>
+                                        </template>
+                                    </el-table-column>
+                            </el-table>
+
                         </ul>
                         
                     </div>
@@ -96,6 +115,10 @@ export default {
                 }, {
                     value: '2',
                     label: '设备信息库'
+                },
+                {
+                    value: '3',
+                    label: '文件知识库'
                 }
             ],
             valueArr:[],
@@ -107,6 +130,7 @@ export default {
                     label: '精确搜索'
                 }],
             query: '1',
+            videoTable:[],
         }
     },
     mounted(){
@@ -144,17 +168,25 @@ export default {
             this.Htems = []
             let keyword = this.searchInput
             let userName = sessionStorage.getItem("user");
-            let ismanage,isfault;
+            this.videoTable = [];
+            let ismanage,isfault,isurl;
             if(!this.systemValue){
                 ismanage = "1";
                 isfault = "1";
+                isurl = "0"
             }else{
                 if(this.systemValue == "2"){
                     ismanage = "1";
-                    isfault = "0"
+                    isfault = "0";
+                    isurl = "0";
+                }else if(this.systemValue == "3"){
+                    ismanage = "0";
+                    isfault = "0";
+                    isurl = "1"
                 }else{
                     ismanage = "0";
-                    isfault = "1"
+                    isfault = "1";
+                    isurl = "0"
                 }
             }
             let param ={
@@ -163,6 +195,7 @@ export default {
                                 "isaccurate":this.query,
                                 "ismanage":ismanage,
                                 "isfault":isfault,
+                                "isurl":isurl,
                                 "condition": this.searchInput
                             }
                         }
@@ -172,9 +205,22 @@ export default {
             ).then(function(response){
                 let arr = response.data.resu_fault
                 let brr = response.data.resu_manage
+                let crr = response.data.resu_url
                 if(response.data.stu == 200){
                     this.items = arr
-                    this.Htems = brr  
+                    this.Htems = brr
+                    for(var i = 0;i<crr.length;i++){
+                        let faultVideoBox = {};
+                        let Box = crr[i].split("/");
+                            faultVideoBox.data = Box[6];
+                            faultVideoBox.name = Box[7];
+                            faultVideoBox.sysName = Box[3]+"-"+Box[4]+"-"+Box[5];
+                            let url = "http://192.168.34.110:9999"+crr[i].trim().substr(1)
+                            url = encodeURI(url);
+                            faultVideoBox.url = url.replace("#","%23")
+                                
+                            this.videoTable.push(faultVideoBox)
+                    }  
                 }
                 $(".keywordBox").hide()
             }.bind(this)).catch(function (error) { 
@@ -230,17 +276,25 @@ export default {
             this.searchInput = keywordInit
             let keyword = this.searchInput
             let userName = sessionStorage.getItem("user");
-            let ismanage,isfault;
+            this.videoTable = []
+            let ismanage,isfault,isurl;
             if(!this.systemValue){
                 ismanage = "1";
                 isfault = "1";
+                isurl = "0"
             }else{
                 if(this.systemValue == "2"){
                     ismanage = "1";
-                    isfault = "0"
+                    isfault = "0";
+                    isurl = "0";
+                }else if(this.systemValue == "3"){
+                    ismanage = "0";
+                    isfault = "0";
+                    isurl = "1"
                 }else{
                     ismanage = "0";
-                    isfault = "1"
+                    isfault = "1";
+                    isurl = "0"
                 }
             }
             let param ={
@@ -249,6 +303,7 @@ export default {
                                 "isaccurate":this.query,
                                 "ismanage":ismanage,
                                 "isfault":isfault,
+                                "isurl":isurl,
                                 "condition": this.searchInput
                             }
                         }
@@ -256,15 +311,42 @@ export default {
             ).then(function(response){
                 let arr = response.data.resu_fault
                 let brr = response.data.resu_manage
+                let crr = response.data.resu_url
                 if(response.data.stu == 200){
                     this.items = arr
-                    this.Htems = brr  
+                    this.Htems = brr
+                    for(var i = 0;i<crr.length;i++){
+                        let faultVideoBox = {};
+                        let Box = crr[i].split("/");
+                            faultVideoBox.data = Box[6];
+                            faultVideoBox.name = Box[7];
+                            faultVideoBox.sysName = Box[3]+"-"+Box[4]+"-"+Box[5];
+                            let url = "http://192.168.34.110:9999"+crr[i].trim().substr(1)
+                            url = encodeURI(url);
+                            faultVideoBox.url = url.replace("#","%23")
+                                
+                            this.videoTable.push(faultVideoBox)
+                    }  
                 }
                 $(".keywordBox").hide()
             }.bind(this)).catch(function (error) { 
                 console.log(error);
             })
-        }
+        },
+        playVideo(index,row){
+            sessionStorage.setItem("url",row.url);
+            let routeData
+            if(row.name.indexOf("docx")>-1||row.name.indexOf("doc")>-1||row.name.indexOf("xls")>-1||row.name.indexOf("xlsx")>-1){
+                routeData = this.$router.resolve({ path: '/word' });
+            }else if(row.name.indexOf("jpg")>-1||row.name.indexOf("png")>-1){
+                routeData = this.$router.resolve({ path: '/picture' });
+            }else if(row.name.indexOf("mp3")>-1||row.name.indexOf("mid")>-1||row.name.indexOf("wav")>-1){
+                routeData = this.$router.resolve({ path: '/audio' });
+            }else{
+                routeData = this.$router.resolve({ path: '/video' });
+            }           
+            window.open(routeData.href, '_blank');
+        },
     }
 }
 </script>

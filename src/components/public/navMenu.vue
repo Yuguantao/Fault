@@ -144,7 +144,6 @@ export default {
             }else{
                 ifnot = false
             }
-
             return ifnot
         },
         init(){
