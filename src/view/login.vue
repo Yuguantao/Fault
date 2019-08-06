@@ -32,7 +32,7 @@
                  <img src="../assets/login/logoA.png" alt="" style="margin-top:222px;">
              </h1>
              <h2>
-                 <span style="color:#fff;font-family:'华文行楷';font-size:50px;    margin-top: 80px;display: block;margin-left: 243px;font-weight: bold;">故障数据库管理系统</span>
+                 <span style="color:#fff;font-family:'华文行楷';font-size:50px;margin-top: 80px;display: block;margin-left: 243px;font-weight: bold;">故障数据库管理系统</span>
              </h2>
              <h3>
                  <span class="line" style="display:block;width:100%;height:10px;margin-top:225px;"></span>
@@ -47,7 +47,7 @@
              </div>
              <div class="fh-login">
                 <div class="fh-login-right" >
-                    <div class="login-title">欢迎使用</div>
+                    <div class="login-title">登录管理系统</div>
                     <div class="form-signin" style="height:280px;">
                         <div class="group">
                             <img src="../assets/login/fh-user.png" style="width:30px">
@@ -200,9 +200,9 @@
         position: absolute;
         background:#fff;
         border: 1px solid #000;
-        border-radius: 15px;
-        box-shadow: #333;
-        width: 350px;
+        border-radius: 7px;
+        box-shadow: 5px 5px 15px #171616;
+        width: 300px;
         height: 450px;
         top: 267px;
         right: 111px;
@@ -243,7 +243,7 @@
         display: inline-block;
         border: 1px solid #000;
         margin: 10px 0px;
-        width: 80%;
+        width: 95%;
         border-radius: 5px;
     }
     .fh-login-right .group>img {
@@ -262,7 +262,7 @@
 }
 
 .container-fluid{
-    width: 100%;
+    width: 1920px;
     height: 100%;
     background: url("../assets/login/login.png") no-repeat;
     background-size: 100% 35%;

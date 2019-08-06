@@ -28,7 +28,7 @@
                         </el-option>
                     </el-select>
                     <el-button type="primary" @click="searchKeyword" v-if="isShow != '2-1'&& $route.path != '/infoDetail'" style="font-size:16px;width:120px;">搜　 索</el-button>
-                    <ul v-if="isShow != '2-1'&& $route.path != '/infoDetail'" class="keywordBox" style="width: 220px;position: absolute;overflow: hidden auto;left: 539px;top: 76px;">
+                    <ul v-if="isShow != '2-1'&& $route.path != '/infoDetail'" class="keywordBox" style="width: 220px;position: absolute;overflow: hidden auto;left: 614px;top: 76px;">
                         <li class="text-center" v-for ="(value,index) in myData" @click="searchValue($event)">
                             <span class=" textprimary" :class = "{gray:index==now}" style="display:block;padding-left:5px;color:#000;">{{value}}</span>
                         </li>
@@ -115,6 +115,9 @@ export default {
                 }, {
                     value: '2',
                     label: '设备信息库'
+                }, {
+                    value: '3',
+                    label: '文件知识库'
                 }
             ],
             valueArr:[],

@@ -107,6 +107,9 @@ export default {
                 }, {
                     value: '2',
                     label: '设备信息库'
+                }, {
+                    value: '3',
+                    label: '文件知识库'
                 }],
             query1: '',
             config:config,
